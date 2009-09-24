@@ -8,12 +8,15 @@
 #include "Quadratic.h" // class to test
 #include <iostream>
 
+#include <math.h>
+
 void
 test_equal(double v1, double v2)
 {
-  if (v1 != v2) {
-    std::cerr << "FAIL! " << v1 << " != " << v2 << std::endl;
-    exit(-1);
+  bool result = true;
+  if (fabs(v1 - v2) > 1e-06) {
+    std::cerr << "FAIL! (" << v1 << " != " << v2 << ")" << std::endl;
+    throw;
   } else {
     std::cout << ".";
   }
@@ -58,9 +61,9 @@ main(int argc, char* argv[])
 
   Quadratic q5(0.25, 0.5, 0.125);
 
-  test_equal(q5.evaluate(.2), 1);
-  test_equal(q5.evaluate(-.2), 1);
-  test_equal(q5.evaluate(1.3), 1);
+  test_equal(q5.evaluate(.2), .235);
+  test_equal(q5.evaluate(-.2), .035);
+  test_equal(q5.evaluate(1.3), 1.1975);
 
   std::cout << std::endl << "All tests passed!" << std::endl;
 
