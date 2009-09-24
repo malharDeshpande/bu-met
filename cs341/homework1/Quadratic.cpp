@@ -1,9 +1,12 @@
 // Terry Lorber
-// U...
+// tgl@rideside.net
+// U61244526
 
 // MET CS341
 // Fall 2009
 // Maslanka
+
+// Homework #1
 
 #include "Quadratic.h" // class implemented
 
