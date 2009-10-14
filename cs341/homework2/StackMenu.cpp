@@ -61,15 +61,15 @@ main(int argc, char* argv[])
     switch (choice) {
     case 'A': stack.push(get_number());
       break;
-    case 'S': if (!stack.empty()) stack.pop();
+    case 'D': if (!stack.empty()) stack.pop();
       break;
-    case 'P': if (!stack.empty()) std::cout << "Top of the stack: " << stack.peek() << std::endl;
+    case 'P': if (!stack.empty()) std::cout << "\nTop of the stack: " << stack.peek() << std::endl << std::endl;
       break;
-    case 'L': stack.dump();
+    case 'L': std::cout << std::endl; stack.dump(); std::cout << std::endl; 
       break;
-    case 'Q': std::cout << "I'm still not sure I understand ambiguity." << std::endl;
+    case 'Q': std::cout << "\n\nI'm still not sure I understand ambiguity." << std::endl;
       break;
-    default: std::cout << choice << " is invalid." << std::endl;
+    default: std::cout << "\n" << choice << " is invalid.\n" << std::endl;
     }
   } while ('Q' != choice);
 
