@@ -14,22 +14,20 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace lorber_homework2;
-
 void print_menu()
 {
   std::cout << "Make a selection: " << std::endl;
-  std::cout << " +    Put data onto the stack" << std::endl;
-  std::cout << " -    Pop data from the stack" << std::endl; 
-  std::cout << " P    Show the data on the top of the stack" << std::endl;
-  std::cout << " S    List all data on the stack" << std::endl;
+  std::cout << " A    Put number onto the stack" << std::endl;
+  std::cout << " D    Pop number from the stack" << std::endl; 
+  std::cout << " P    Peek at number on the top of the stack" << std::endl;
+  std::cout << " L    List all numbers in the stack" << std::endl;
   std::cout << " Q    Quit this program" << std::endl;
 }// print_menu
 
 char get_command()
 {
   char choice;
-  std::cout << "Enter choice: ";
+  std::cout << "\nEnter choice: ";
   std::cin >> choice;
 
   assert(std::cin.good() && !std::cin.eof());
@@ -61,13 +59,13 @@ main(int argc, char* argv[])
     print_menu();
     choice = std::toupper(get_command());
     switch (choice) {
-    case '+': stack.push(get_number());
+    case 'A': stack.push(get_number());
       break;
-    case '-': if (!stack.empty()) stack.pop();
+    case 'S': if (!stack.empty()) stack.pop();
       break;
     case 'P': if (!stack.empty()) std::cout << "Top of the stack: " << stack.peek() << std::endl;
       break;
-    case 'S': stack.dump();
+    case 'L': stack.dump();
       break;
     case 'Q': std::cout << "I'm still not sure I understand ambiguity." << std::endl;
       break;
