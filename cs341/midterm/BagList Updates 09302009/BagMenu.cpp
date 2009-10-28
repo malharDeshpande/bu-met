@@ -45,17 +45,17 @@ int main () {
 			break;
 			}
   	        case 'N': case 'n': {
-		        cout << "Please Enter User Data value to find: ";
+		        cout << "Please Enter User Data (double-precision) value to find: ";
                         cin >> udata;
                         if (!cin.eof() && cin.good()) {
-			  cout << "Please enter occurrence of User Data to find: ";
+			  cout << "Please Enter Occurrence (#) find: ";
 			  cin >> nth;
 			  if (!cin.eof() && cin.good()) {
 			    nodePtr = A.FindNth(nth, udata);
 			    if (nodePtr == NULL) 
 			      cout << "Data not found for occurrence." << endl;
 			    else
-			      cout << "Your data (" << nodePtr->getOneNode() << ") was found at position " << nth << "!" << endl;
+			      cout << "The " << nth << " occurrence of your data (" << nodePtr->getOneNode() << ") was found!" << endl;
 			  }
 			}
 		        break;
