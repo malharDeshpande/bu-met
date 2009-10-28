@@ -12,6 +12,7 @@ public:
 	void getList ();
 	Node* findNode (double);
 	void  deleteNode (Node*);
+	Node* FindNth(int n, double userValue);
 private:
 	Node* ListPointer;
 	Node* previous;

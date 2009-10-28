@@ -48,3 +48,28 @@ void BagList::deleteNode (Node* delPtr) {
 		}
 	}
 }
+
+Node* BagList::FindNth(int n, double userValue)
+{
+  Node* temp = ListPointer; 
+  previous = ListPointer;
+  int count = 0;
+  while (temp != NULL) {
+    if (temp->getOneNode() == userValue) {
+      count++;
+    }
+
+    if (count == n) {
+      break;
+    }
+     
+    previous = temp;
+    temp = temp->getNextPointer();
+  }
+
+  if (count = n) {
+    temp = NULL;
+  }
+
+  return temp;
+}

@@ -12,11 +12,12 @@ using namespace std;
 int main () {
     BagList A;
     double nr, udata;
+    int nth;
     bool cont = true;
     char sel;
     Node* nodePtr = NULL;
     while (!cin.eof()&&cin.good()&&cont) {
-	cout << "Enter your function: Add, Delete, Exit, Find, List: ";
+	cout << "Enter your function: Add, Delete, Exit, Find, FindNth(N), List: ";
 	cin >> sel;
 	if (!cin.eof()) {
 	    switch (sel) {		
@@ -43,6 +44,22 @@ int main () {
 			cont = false;
 			break;
 			}
+  	        case 'N': case 'n': {
+		        cout << "Please Enter User Data value to find: ";
+                        cin >> udata;
+                        if (!cin.eof() && cin.good()) {
+			  cout << "Please enter occurrence of User Data to find: ";
+			  cin >> nth;
+			  if (!cin.eof() && cin.good()) {
+			    nodePtr = A.FindNth(nth, udata);
+			    if (nodePtr == NULL) 
+			      cout << "Data not found for occurrence." << endl;
+			    else
+			      cout << "Your data (" << nodePtr->getOneNode() << ") was found at position " << nth << "!" << endl;
+			  }
+			}
+		        break;
+		        }
 		case 'F': case 'f': {
 			cout << "Please Enter User Data value to find: ";
 			cin >> udata;
