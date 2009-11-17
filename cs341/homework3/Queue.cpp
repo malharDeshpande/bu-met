@@ -14,7 +14,7 @@
 #include <cassert>
 #include <iostream>
 
-Queue::Queue() : _front_ptr(0), _rear_ptr(0) {}
+Queue::Queue() : _front_ptr(0), _rear_ptr(0), _count(0) {}
 
 Queue::~Queue()
 {
