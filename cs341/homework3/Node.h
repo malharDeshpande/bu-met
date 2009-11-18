@@ -11,22 +11,26 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "Customer.h"
 
 /// Node class to hold user data and link reference
 class Node {
  public:
   
   /// Constructor
-  Node(const double& data, Node* link);
+  Node(Customer* data, Node* link);
   
   /// Set user data
-  void set_data(const double& data);
+  void set_data(Customer* data);
   
   /// Set reference link
   void set_link(Node* link);
 
   /// Get user data
-  double data() const;
+  Customer* data();
+
+  /// Get user data
+  const Customer* data() const;
   
   /// Get link reference
   Node* link();
@@ -36,7 +40,7 @@ class Node {
 
  protected:
  private:
-  double _user_data;
+  Customer* _user_data;
   Node* _link;
 
 };

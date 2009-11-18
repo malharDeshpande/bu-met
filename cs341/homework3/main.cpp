@@ -9,48 +9,45 @@
 // Homework #3
 
 #include "Queue.h"
+#include "CheckoutLine.h"
 
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
 
-static void
-self_test()
-{
-  Queue queue;
-
-  queue.push(5.);
-  queue.push(3.);
-  queue.push(2.);
-
-  assert(!queue.empty());
-  assert(3 == queue.size());
-
-  assert(5. == queue.front());
-
-  queue.pop();
-
-  assert(!queue.empty());
-  assert(2 == queue.size());
-
-  assert(3. == queue.front());
-
-  queue.pop();
-
-  assert(!queue.empty());
-  assert(1 == queue.size());
-
-  assert(2. == queue.front());
-
-  queue.pop();
-
-  assert(queue.empty());
-}// self_test
+using namespace std;
 
 int
 main(int argc, char* argv[])
 {
-  self_test();
+  int run_time;
+  cout <<  "Enter length of time (in minutes) to run simulation: ";
+  if (cin.good() && !cin.eof()) {
+    cin >> run_time;
+  }
 
+  int join_interval;
+  cout <<  "Enter max. interval for a person to join the queue (in minutes): ";
+  if (cin.good() && !cin.eof()) {
+    cin >> join_interval;
+  }
+
+  int serve_interval;
+  cout <<  "Enter max. interval for a person to be served (in minutes): ";
+  if (cin.good() && !cin.eof()) {
+    cin >> serve_interval;
+  }
+
+  cout << "\nThe simulation will run for " << run_time << " minutes.\n"
+       << "Customers will join the queue every 1 to " << join_interval << " minutes.\n"
+       << "Time to serve a customer will vary between 1 and " << serve_interval << " minutes." << endl << endl;
+
+  CheckoutLine checkout(join_interval, serve_interval);
+
+  while (run_time--) {
+    checkout.run_one_minute();
+    checkout.report();
+  }
+  
   return EXIT_SUCCESS;
 }// main

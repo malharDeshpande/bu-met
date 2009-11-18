@@ -11,7 +11,8 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-class Node;
+#include "Customer.h";
+#include "Node.h";
 
 /// A Queue class
 class Queue {
@@ -28,7 +29,7 @@ class Queue {
    *
    * @param data the user data
    */
-  void push(const double& data);
+  void push(Customer *data);
   
   /**
    * Remove the first user data from the queue.
@@ -46,7 +47,16 @@ class Queue {
    * @precondition empty() is not true
    * @throws exception if the queue is empty
    */
-  double front() const;
+  Customer* front();
+
+  /**
+   * View the front user data from the queue.
+   *
+   * @returns the user data from the top of the queue
+   * @precondition empty() is not true
+   * @throws exception if the queue is empty
+   */
+  const Customer* front() const;
   
   /// Returns true if the queue is empty
   bool empty() const;

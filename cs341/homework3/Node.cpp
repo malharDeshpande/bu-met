@@ -10,13 +10,13 @@
 
 #include "Node.h" // class implemented
 
-Node::Node(const double& data, Node* link) :
+Node::Node(Customer* data, Node* link) :
   _user_data(data),
   _link(link)
 {
 }// Node
 
-void Node::set_data(const double& data)
+void Node::set_data(Customer* data)
 {
   _user_data = data;
 }// set_data
@@ -25,8 +25,10 @@ void Node::set_link(Node* link)
 {
   _link = link;
 }// set_link
+
+Customer* Node::data() { return _user_data; };
   
-double Node::data() const { return _user_data; };
+const Customer* Node::data() const { return _user_data; };
 
 Node* Node::link() { return _link; };
 

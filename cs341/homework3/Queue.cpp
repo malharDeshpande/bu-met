@@ -25,7 +25,7 @@ Queue::~Queue()
   }
 }// ~Queue
 
-void Queue::push(const double& data)
+void Queue::push(Customer *data)
 {
   if (this->empty()) {
     _front_ptr = _rear_ptr = new Node(data, 0);
@@ -46,7 +46,13 @@ void Queue::pop()
   --_count;
 }// pop
 
-double Queue::front() const
+Customer* Queue::front()
+{
+  assert(!this->empty());
+  return _front_ptr->data();
+}// front
+
+const Customer* Queue::front() const
 {
   assert(!this->empty());
   return _front_ptr->data();
