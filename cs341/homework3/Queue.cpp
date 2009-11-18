@@ -18,9 +18,9 @@ Queue::Queue() : _front_ptr(0), _rear_ptr(0), _count(0) {}
 
 Queue::~Queue()
 {
-  while (_rear_ptr != 0) {
-    Node* remove_ptr = _rear_ptr;
-    _rear_ptr = _front_ptr->link();
+  while (_front_ptr != 0) {
+    Node* remove_ptr = _front_ptr;
+    _front_ptr = _front_ptr->link();
     delete remove_ptr;
   }
 }// ~Queue
