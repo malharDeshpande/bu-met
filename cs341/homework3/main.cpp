@@ -48,6 +48,10 @@ main(int argc, char* argv[])
     checkout.run_one_minute();
     checkout.report();
   }
-  
+
+  cout << endl << endl;
+
+  checkout.tally();
+
   return EXIT_SUCCESS;
 }// main

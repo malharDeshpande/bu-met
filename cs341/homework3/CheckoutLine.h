@@ -27,10 +27,14 @@ class CheckoutLine {
   /// Writes to standard out the current state of the simulation.
   void report();
 
+  /// Writes to standard out a tally of the checkout line
+  void tally();
+
  protected:
  private:
 
   Queue *_queue;
+  Queue *_served;
 
   int _join_interval;
   int _serve_interval;

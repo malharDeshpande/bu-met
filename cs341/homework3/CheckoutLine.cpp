@@ -20,6 +20,7 @@ using namespace std;
 CheckoutLine::CheckoutLine(int join_interval,
                            int serve_interval) :
   _queue(new Queue),
+  _served(new Queue),
   _join_interval(join_interval),
   _serve_interval(serve_interval),
   _current_time(0),
@@ -34,6 +35,7 @@ CheckoutLine::CheckoutLine(int join_interval,
 CheckoutLine::~CheckoutLine()
 {
   delete _queue;
+  delete _served;
 }// ~CheckoutLine
 
 void
@@ -42,14 +44,15 @@ CheckoutLine::run_one_minute()
   --_join_countdown;
   ++_current_time;
 
- if (!_queue->empty()) {
+  if (!_queue->empty()) {
+    _queue->front()->increment_time_being_served();
+   
     if (0 == _serve_countdown) {
+      _served->push(_queue->front());
       _queue->pop();
       _serve_countdown = rand() % _serve_interval + 1;
-    } else {
-      Customer *served = _queue->front();
-      served->increment_time_being_served();
     }
+
     --_serve_countdown;
   }
 
@@ -60,9 +63,15 @@ CheckoutLine::run_one_minute()
 
   Queue *temp = new Queue;
   Customer *curr;
+  bool first = true;
   while (!_queue->empty()) {
     curr = _queue->front();
-    curr->increment_time_in_queue();
+    if (first) {
+      first = false;
+    } else {
+      curr->increment_time_in_queue();
+    }
+
     temp->push(curr);
     _queue->pop();
   }
@@ -117,4 +126,34 @@ CheckoutLine::report()
   }
 }// report
 
+void
+CheckoutLine::tally()
+{
+  int sum_wait_times = 0;
+  int sum_served_times = 0;
+  int size = _served->size();
 
+  Queue *temp = new Queue;
+  while (!_served->empty()) {
+    sum_wait_times += _served->front()->time_in_queue();
+    sum_served_times += _served->front()->time_being_served();
+    temp->push(_served->front());
+    _served->pop();
+  }
+
+  delete temp;
+
+  cout << "-------------------------------------------------------------------------------" << endl;
+  cout << "-------------------------------------------------------------------------------" << endl;
+  cout << "Total customers served: " << size << endl;
+  cout << "Average wait time: " << (double) sum_wait_times / size << endl;
+  cout << "Average serving time: " << (double) sum_served_times / size << endl;
+  if (0 == _queue->size()) {
+    cout << "Zero (0) customers in queue." << endl;
+  } else {
+    cout << "One (1) customer being served." << endl;
+    cout << "Total customers still waiting: " << _queue->size() - 1 << endl;
+  }
+  cout << "-------------------------------------------------------------------------------" << endl;
+  cout << "-------------------------------------------------------------------------------" << endl;
+}// tally
