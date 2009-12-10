@@ -43,7 +43,13 @@ BinaryTree::operator=(const BinaryTree& source)
 int
 BinaryTree::erase(const double& target)
 {
+  int many = 0;
   
+  while (erase_one(target)) {
+    ++many;
+  }
+
+  return many;
 }// erase
 
 bool
@@ -129,6 +135,16 @@ BinaryTree::display() const
 {
   print(_root_ptr, 0);
 }// display
+
+void
+BinaryTree::insert_all(Node* ptr)
+{
+  if (ptr != 0) {
+    insert(ptr->data());
+    insert_all(ptr->left_ptr());
+    insert_all(ptr->right_ptr());
+  }
+}// insert_all
 
 bool bt_remove(Node*& ptr, const double& target)
 {

@@ -35,11 +35,17 @@ void Node::set_right_ptr(Node* link)
   _right_ptr = link;
 }// set_right_ptr
 
-double Node::data() const { return _user_data; };
+double& Node::data() { return _user_data; };
 
-Node* Node::left_ptr() { return _left_ptr; };
+const double& Node::data() const { return _user_data; };
 
-Node* Node::right_ptr() { return _right_ptr; };
+Node*& Node::left_ptr() { return _left_ptr; };
+
+Node*& Node::right_ptr() { return _right_ptr; };
+
+const Node* Node::left_ptr() const { return _left_ptr; };
+
+const Node* Node::right_ptr() const { return _right_ptr; };
 
 bool Node::is_leaf() const
 {

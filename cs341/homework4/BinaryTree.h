@@ -51,6 +51,8 @@ class BinaryTree {
  protected:
  private:
   Node* _root_ptr;
+
+  void insert_all(Node* ptr);
 };
 
 bool bt_remove(Node*& ptr, const double& target);

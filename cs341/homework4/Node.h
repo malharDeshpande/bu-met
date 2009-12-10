@@ -26,15 +26,25 @@ class Node {
 
   /// Set reference ptr
   void set_right_ptr(Node* ptr);
-
-  /// Get user data
-  double data() const;
+  
+  /// Reference to the data.
+  double& data();
 
   /// Get left ptr
-  Node* left_ptr();
+  Node*& left_ptr();
 
   /// Get right ptr
-  Node* right_ptr();
+  Node*& right_ptr();
+
+
+  /// Const reference.
+  const double& data() const;
+
+  /// Get left ptr, const reference
+  const Node* left_ptr() const;
+
+  /// Get right ptr, const reference
+  const Node* right_ptr() const;
   
   /// Is this the end?
   bool is_leaf() const;

@@ -17,12 +17,12 @@ using namespace std;
 
 void print_menu()
 {
-  std::cout << "Make a selection: " << std::endl;
-  std::cout << " A    Add a node to the tree" << std::endl;
-  std::cout << " D    Delete a node from the tree" << std::endl; 
-  std::cout << " T    Tree traversal" << std::endl;
-  std::cout << " P    Pretty print the tree" << std::endl;
-  std::cout << " Q    Quit this program" << std::endl;
+  std::cout << "\nMake a selection: \n"
+	    << " A    Add a node to the tree\n"
+	    << " D    Delete a node from the tree\n"
+	    << " T    Tree traversal\n"
+	    << " P    Pretty print the tree\n"
+	    << " Q    Quit this program" << std::endl;
 }// print_menu
 
 char get_command()
@@ -83,11 +83,11 @@ main(int argc, char* argv[])
     case 'T': {
       char p = std::toupper(get_character());
       switch (p) {
-      case 'P': bt.preorder_print();
+      case 'P': std::cout << "Preorder: "; bt.preorder_print(); std::cout << std::endl;
 	break;
-      case 'I': bt.inorder_print();
+      case 'I': std::cout << "Inorder: "; bt.inorder_print(); std::cout << std::endl;
 	break;
-      case 'R': bt.postorder_print();
+      case 'R': std::cout << "Postorder: "; bt.postorder_print(); std::cout << std::endl;
 	break;
       default:
 	std::cout << "\nInvalid traversal command." << std::endl;
@@ -95,7 +95,7 @@ main(int argc, char* argv[])
 
       break;
     }
-    case 'Q': std::cout << "\n\n" << std::endl;
+    case 'Q': std::cout << "\n\nI think that I shall never see\nA poem lovely as a tree.\nJoyce Kilmer" << std::endl;
       break;
     default: std::cout << "\n" << choice << " is invalid.\n" << std::endl;
     }
