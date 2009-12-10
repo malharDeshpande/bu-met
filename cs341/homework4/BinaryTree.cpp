@@ -10,6 +10,8 @@
 
 #include "BinaryTree.h" // class implemented
 
+#include <iostream>
+
 BinaryTree::BinaryTree() :
   _root_ptr(0)
 {
@@ -165,9 +167,7 @@ bool bt_remove(Node*& ptr, const double& target)
       delete tmp;
       deleted = true;
     } else {
-      double removed;
-      bt_remove_max(ptr->left_ptr(), removed);
-      ptr->set_data(removed);
+      bt_remove_max(ptr->left_ptr(), ptr->data());
       deleted = true;
     }
   }

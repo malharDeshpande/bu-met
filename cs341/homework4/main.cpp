@@ -19,8 +19,10 @@ void print_menu()
 {
   std::cout << "\nMake a selection: \n"
 	    << " A    Add a node to the tree\n"
+            << " C    Count nodes matching given value\n"
 	    << " D    Delete a node from the tree\n"
-	    << " T    Tree traversal\n"
+            << " S    Total number of nodes\n"
+	    << " T    Tree traversal (preorder, inorder, postorder)\n"
 	    << " P    Pretty print the tree\n"
 	    << " Q    Quit this program" << std::endl;
 }// print_menu
@@ -40,7 +42,7 @@ double get_number()
 {
   double number;
   
-  std::cout << "Please enter a real number for the tree: ";
+  std::cout << "Please enter a real number: ";
   std::cin >> number;
 
   assert(std::cin.good() && !std::cin.eof());
@@ -50,7 +52,7 @@ double get_number()
   return number;
 }// get_number
 
-char get_character()
+char get_traversal_type()
 {
   char character;
   
@@ -62,7 +64,7 @@ char get_character()
   std::cout << character << " has been read." << std::endl;
 
   return character;
-}// get_character
+}// get_traversal_type
 
 int
 main(int argc, char* argv[])
@@ -76,12 +78,16 @@ main(int argc, char* argv[])
     switch (choice) {
     case 'A': bt.insert(get_number());
       break;
-    case 'D': if (!bt.erase_one(get_number())) std::cout << "\nCould not find value to delete." << std::endl;
+    case 'C': std::cout << bt.count(get_number()) << " found." << std::endl;
+      break;
+    case 'S': std::cout << bt.size() << " nodes in this tree." << std::endl;
+      break;
+    case 'D': if (!bt.erase_one(get_number())) std::cout << "Could not find value to delete." << std::endl;
       break;
     case 'P': bt.display();
       break;
     case 'T': {
-      char p = std::toupper(get_character());
+      char p = std::toupper(get_traversal_type());
       switch (p) {
       case 'P': std::cout << "Preorder: "; bt.preorder_print(); std::cout << std::endl;
 	break;
