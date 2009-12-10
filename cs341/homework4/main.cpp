@@ -6,52 +6,101 @@
 // Fall 2009
 // Maslanka
 
-// Homework #3
+// Homework #4
 
-#include "Queue.h"
-#include "CheckoutLine.h"
+#include "BinaryTree.h"
 
-#include <cassert>
 #include <cstdlib>
 #include <iostream>
 
 using namespace std;
 
+void print_menu()
+{
+  std::cout << "Make a selection: " << std::endl;
+  std::cout << " A    Add a node to the tree" << std::endl;
+  std::cout << " D    Delete a node from the tree" << std::endl; 
+  std::cout << " T    Tree traversal" << std::endl;
+  std::cout << " P    Pretty print the tree" << std::endl;
+  std::cout << " Q    Quit this program" << std::endl;
+}// print_menu
+
+char get_command()
+{
+  char choice;
+  std::cout << "\nEnter choice: ";
+  std::cin >> choice;
+
+  assert(std::cin.good() && !std::cin.eof());
+
+  return choice;
+}// get_command
+
+double get_number()
+{
+  double number;
+  
+  std::cout << "Please enter a real number for the tree: ";
+  std::cin >> number;
+
+  assert(std::cin.good() && !std::cin.eof());
+
+  std::cout << number << " has been read." << std::endl;
+
+  return number;
+}// get_number
+
+char get_character()
+{
+  char character;
+  
+  std::cout << "Please enter a (P)reorder, (I)norder, Postorde(R) traversal: ";
+  std::cin >> character;
+
+  assert(std::cin.good() && !std::cin.eof());
+
+  std::cout << character << " has been read." << std::endl;
+
+  return character;
+}// get_character
+
 int
 main(int argc, char* argv[])
 {
-  int run_time;
-  cout <<  "Enter length of time (in minutes) to run simulation: ";
-  if (cin.good() && !cin.eof()) {
-    cin >> run_time;
-  }
+  BinaryTree bt;
+  char choice;
 
-  int join_interval;
-  cout <<  "Enter max. interval for a person to join the queue (in minutes): ";
-  if (cin.good() && !cin.eof()) {
-    cin >> join_interval;
-  }
+  do {
+    print_menu();
+    choice = std::toupper(get_command());
+    switch (choice) {
+    case 'A': bt.insert(get_number());
+      break;
+    case 'D': if (!bt.erase_one(get_number())) std::cout << "\nCould not find value to delete." << std::endl;
+      break;
+    case 'P': bt.display();
+      break;
+    case 'T': {
+      char p = std::toupper(get_character());
+      switch (p) {
+      case 'P': bt.preorder_print();
+	break;
+      case 'I': bt.inorder_print();
+	break;
+      case 'R': bt.postorder_print();
+	break;
+      default:
+	std::cout << "\nInvalid traversal command." << std::endl;
+      }
 
-  int serve_interval;
-  cout <<  "Enter max. interval for a person to be served (in minutes): ";
-  if (cin.good() && !cin.eof()) {
-    cin >> serve_interval;
-  }
+      break;
+    }
+    case 'Q': std::cout << "\n\n" << std::endl;
+      break;
+    default: std::cout << "\n" << choice << " is invalid.\n" << std::endl;
+    }
+  } while ('Q' != choice);
 
-  cout << "\nThe simulation will run for " << run_time << " minutes.\n"
-       << "Customers will join the queue every 1 to " << join_interval << " minutes.\n"
-       << "Time to serve a customer will vary between 1 and " << serve_interval << " minutes." << endl << endl;
-
-  CheckoutLine checkout(join_interval, serve_interval);
-
-  while (run_time--) {
-    checkout.run_one_minute();
-    checkout.report();
-  }
-
-  cout << endl << endl;
-
-  checkout.tally();
-
+  
   return EXIT_SUCCESS;
 }// main
