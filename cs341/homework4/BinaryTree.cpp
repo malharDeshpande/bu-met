@@ -148,6 +148,11 @@ BinaryTree::insert_all(Node* ptr)
   }
 }// insert_all
 
+void
+BinaryTree::trim()
+{
+}// trim
+
 bool bt_remove(Node*& ptr, const double& target)
 {
   bool deleted = false;
@@ -165,6 +170,7 @@ bool bt_remove(Node*& ptr, const double& target)
       Node*& tmp = ptr;
       ptr = ptr->right_ptr();
       delete tmp;
+      tmp = 0;
       deleted = true;
     } else {
       bt_remove_max(ptr->left_ptr(), ptr->data());
@@ -182,6 +188,7 @@ void bt_remove_max(Node*& ptr, double& removed)
     Node*& tmp = ptr;
     ptr = ptr->left_ptr();
     delete tmp;
+    tmp = 0;
   } else {
     bt_remove_max(ptr->right_ptr(), removed);
   }

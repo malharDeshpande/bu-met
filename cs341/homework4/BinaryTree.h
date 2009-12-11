@@ -48,6 +48,8 @@ class BinaryTree {
 
   void display() const;
 
+  void trim();
+
  protected:
  private:
   Node* _root_ptr;
