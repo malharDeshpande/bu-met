@@ -52,6 +52,112 @@ bool Node::is_leaf() const
   return (_left_ptr == 0) && (_right_ptr == 0);
 }// is_leaf
 
+bool Node::is_leg_left() const
+{
+  bool result = false;
+  if ((_left_ptr != 0) && (_right_ptr == 0)) {
+    if ((_left_ptr->left_ptr() != 0) && (_left_ptr->right_ptr() == 0)) {
+      if (_left_ptr->left_ptr()->is_leaf()) {
+	result = true;
+      }
+    }
+  }
+
+  return result;
+}// is_leg_left
+
+bool Node::is_leg_right() const
+{
+  bool result = false;
+  if ((_right_ptr != 0) && (_left_ptr == 0)) {
+    if ((_right_ptr->right_ptr() != 0) && (_right_ptr->left_ptr() == 0)) {
+      if (_right_ptr->right_ptr()->is_leaf()) {
+	result = true;
+      }
+    }
+  }
+
+  return result;
+}// is_leg_right
+
+bool Node::is_dog_leg_left() const
+{
+  bool result = false;
+  if ((_left_ptr == 0) && (_right_ptr != 0)) {
+    if ((_right_ptr->right_ptr() == 0) && (_right_ptr->left_ptr() != 0)) {
+      if (_right_ptr->left_ptr()->is_leaf()) {
+	result = true;
+      }
+    }
+  }
+
+  return result;
+}// is_dog_leg_left
+
+bool Node::is_dog_leg_right() const
+{
+  bool result = false;
+  if ((_right_ptr == 0) && (_left_ptr != 0)) {
+    if ((_left_ptr->right_ptr() != 0) && (_left_ptr->left_ptr() == 0)) {
+      if (_left_ptr->right_ptr()->is_leaf()) {
+	result = true;
+      }
+    }
+  }
+
+  return result;
+}// is_leg_right
+
+void compress_nodes(Node*& ptr)
+{
+  if (ptr == 0) {
+    return;
+  }
+
+  if (ptr->is_leg_left()) {
+    double tmp = ptr->data();
+    ptr->set_data(ptr->left_ptr()->data());    
+    ptr->left_ptr()->set_data(ptr->left_ptr()->left_ptr()->data());
+
+    delete ptr->left_ptr()->left_ptr();
+    ptr->left_ptr()->set_left_ptr(0);
+
+    ptr->set_right_ptr(new Node(tmp, 0, 0));
+
+  } else if (ptr->is_leg_right()) {
+    double tmp = ptr->data();
+    ptr->set_data(ptr->right_ptr()->data());    
+    ptr->right_ptr()->set_data(ptr->right_ptr()->right_ptr()->data());
+
+    delete ptr->right_ptr()->right_ptr();
+    ptr->right_ptr()->set_right_ptr(0);
+
+    ptr->set_left_ptr(new Node(tmp, 0, 0));
+
+  } else if (ptr->is_dog_leg_left()) {
+    double tmp = ptr->data();
+    ptr->set_data(ptr->right_ptr()->left_ptr()->data());    
+    
+    delete ptr->right_ptr()->left_ptr();
+    ptr->right_ptr()->set_left_ptr(0);
+
+    ptr->set_left_ptr(new Node(tmp, 0, 0));
+
+  } else if (ptr->is_dog_leg_right()) {
+    double tmp = ptr->data();
+    ptr->set_data(ptr->left_ptr()->right_ptr()->data());    
+    
+    delete ptr->left_ptr()->right_ptr();
+    ptr->left_ptr()->set_right_ptr(0);
+
+    ptr->set_right_ptr(new Node(tmp, 0, 0));
+
+  }
+
+  compress_nodes(ptr->left_ptr());
+  compress_nodes(ptr->right_ptr());
+}// compress_nodes
+
 void preorder(void f(double&), Node* ptr)
 {
   if (0 != ptr) {
@@ -128,3 +234,4 @@ void print(double& data)
 {
   std::cout << " " << data;
 }// print
+

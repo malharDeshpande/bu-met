@@ -49,6 +49,18 @@ class Node {
   /// Is this the end?
   bool is_leaf() const;
 
+  /// true if a r-> b r-> c
+  bool is_leg_right() const;
+
+  /// true if a l-> b l-> c
+  bool is_leg_left() const;
+
+  /// true if a l-> b r-> c
+  bool is_dog_leg_right() const;
+
+  /// true if a r-> b l-> c
+  bool is_dog_leg_left() const;
+
  protected:
  private:
   double _user_data;
@@ -57,6 +69,8 @@ class Node {
 };
 
 /// Functions to work on nodes
+
+void compress_nodes(Node*& ptr);
 
 void preorder(void f(double&), Node* ptr);
 

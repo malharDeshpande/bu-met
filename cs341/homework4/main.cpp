@@ -19,11 +19,13 @@ void print_menu()
 {
   std::cout << "\nMake a selection: \n"
 	    << " A    Add a node to the tree\n"
+	    << " B    Balance the tree\n"
             << " C    Count nodes matching given value\n"
 	    << " D    Delete a node from the tree\n"
             << " S    Total number of nodes\n"
 	    << " T    Tree traversal (preorder, inorder, postorder)\n"
 	    << " P    Pretty print the tree\n"
+            << " X    Compress the tree\n"
 	    << " Q    Quit this program" << std::endl;
 }// print_menu
 
@@ -86,6 +88,11 @@ main(int argc, char* argv[])
       break;
     case 'P': bt.display();
       break;
+    case 'B':
+      bt.balance();
+      std::cout << "Tree balanced, resulting:" << std::endl;
+      bt.display();
+      break;
     case 'T': {
       char p = std::toupper(get_traversal_type());
       switch (p) {
@@ -102,6 +109,11 @@ main(int argc, char* argv[])
       break;
     }
     case 'Q': std::cout << "\n\nI think that I shall never see\nA poem lovely as a tree.\nJoyce Kilmer" << std::endl;
+      break;
+    case 'X':
+      bt.compress();
+      std::cout << "Tree has been compressed:" << std::endl;
+      bt.display();
       break;
     default: std::cout << "\n" << choice << " is invalid.\n" << std::endl;
     }

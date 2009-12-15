@@ -48,7 +48,9 @@ class BinaryTree {
 
   void display() const;
 
-  void trim();
+  void balance();
+
+  void compress();
 
  protected:
  private:

@@ -11,6 +11,17 @@
 #include "BinaryTree.h" // class implemented
 
 #include <iostream>
+#include <iomanip>
+
+static double *QUEUE = 0;
+static int QUEUE_COUNT = 0;
+
+static void
+set_queue(double& val)
+{
+  QUEUE[QUEUE_COUNT] = val;
+  ++QUEUE_COUNT;
+}// set_queue
 
 BinaryTree::BinaryTree() :
   _root_ptr(0)
@@ -148,10 +159,52 @@ BinaryTree::insert_all(Node* ptr)
   }
 }// insert_all
 
-void
-BinaryTree::trim()
+/// credit: john maslanka
+static int
+find_middle(int index, int total)
 {
-}// trim
+  if (index == 0) {
+    if (total%2) {
+      return (total + 1) / 2;
+    } else {
+      return total / 2;
+    }
+  }
+
+  return index;
+}// find_middle
+
+void
+BinaryTree::balance()
+{
+  QUEUE = new double[this->size()];
+
+  inorder(set_queue, _root_ptr);
+  
+  for (int loop = 0; loop < QUEUE_COUNT; ++loop) {
+    this->erase_one(QUEUE[loop]);
+  }
+  
+  int indices[QUEUE_COUNT];
+  int index = 0;
+  find_middle(1,QUEUE_COUNT+1);
+
+  for (int loop = 0; loop < QUEUE_COUNT; ++loop) {
+    std::cout << indices[loop] << " " << QUEUE[indices[loop]] << std::endl;
+
+    this->insert(QUEUE[indices[loop]]);
+  }  
+
+  delete QUEUE;
+  QUEUE = 0;
+  QUEUE_COUNT = 0;
+}// balance
+
+void
+BinaryTree::compress()
+{
+  compress_nodes(_root_ptr);
+}// compress
 
 bool bt_remove(Node*& ptr, const double& target)
 {
