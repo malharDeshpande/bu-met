@@ -10,8 +10,7 @@
 
 #include "BinaryTree.h" // class implemented
 
-#include <iostream>
-#include <iomanip>
+#include <cstdlib>
 
 static double *QUEUE = 0;
 static int QUEUE_COUNT = 0;
@@ -159,19 +158,48 @@ BinaryTree::insert_all(Node* ptr)
   }
 }// insert_all
 
-/// credit: john maslanka
-static int
-find_middle(int index, int total)
+/// credit: john maslanka w/ ryan butler
+static void
+find_middle(int start, int end, int level, int total, int round, int& index, int* indices)
 {
-  if (index == 0) {
-    if (total%2) {
-      return (total + 1) / 2;
-    } else {
-      return total / 2;
+  if (abs(start - end) < 2) {
+    if (start == 1) {
+      int loop = level - 1;
+      while (0 != indices[loop]) {
+	++loop;
+      }
+      indices[loop] = start;
     }
+    if (end == total) {
+      int loop = level - 1;
+      while (0 != indices[loop]) {
+	++loop;
+      }
+      indices[loop] = end;
+    }
+    return;
   }
 
-  return index;
+  int middle;
+  if ((start + end) % 2) {
+    middle = (start+end+round)/2;
+    int loop = level - 1;
+    while (0 != indices[loop]) {
+      ++loop;
+    }
+    indices[loop] = middle;
+   } else {
+    middle = (start+end)/2;
+    int loop = level - 1;
+    while (0 != indices[loop]) {
+      ++loop;
+    }
+    indices[loop] = middle;
+  }
+ 
+  find_middle(start,middle,level+1,total,-1,index,indices);
+  find_middle(middle,end,level+1,total,1,index,indices);
+  return;
 }// find_middle
 
 void
@@ -184,15 +212,18 @@ BinaryTree::balance()
   for (int loop = 0; loop < QUEUE_COUNT; ++loop) {
     this->erase_one(QUEUE[loop]);
   }
-  
+
   int indices[QUEUE_COUNT];
-  int index = 0;
-  find_middle(1,QUEUE_COUNT+1);
+  for (int loop = 0; loop < QUEUE_COUNT; ++loop) {
+    indices[loop] = 0;
+  }
+
+  int indexer = 0;
+
+  find_middle(1,QUEUE_COUNT,1,QUEUE_COUNT,1,indexer,indices);
 
   for (int loop = 0; loop < QUEUE_COUNT; ++loop) {
-    std::cout << indices[loop] << " " << QUEUE[indices[loop]] << std::endl;
-
-    this->insert(QUEUE[indices[loop]]);
+    this->insert(QUEUE[indices[loop] - 1]);
   }  
 
   delete QUEUE;
