@@ -1,0 +1,102 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	01-25-;0    
+
+
+ 	 	 	 	;Below is a complete mASM source program.....  
+	 	 	 	 Mini.Asm
+ 	 	 	 	;
+ 	 	 	 	;- Characters to the right of a ";" on any line
+	 	 	 	 are Ignored by mASM!
+ 	 	 	 	;
+ 	 	 	 	;- In DOS, you can use EDIT to create/edit the 
+	 	 	 	lines below to create Mini.Asm
+ 	 	 	 	;
+ 	 	 	 	;- To Assemble, Link and Run this program: [ AS
+	 	 	 	M = ArrowSoftware PC Assembler]
+ 	 	 	 	;
+ 	 	 	 	;  C:> ASM Mini<CR>         <---<CR> is Carriag
+	 	 	 	e Return/Enter key
+ 	 	 	 	;                           Input  to   ASM is 
+	 	 	 	  Mini.Asm
+ 	 	 	 	;                           Output from ASM is 
+	 	 	 	  Mini.Obj
+ 	 	 	 	;
+ 	 	 	 	;  C:> LINK Mini<CR>        Input  to   LINK is
+	 	 	 	   Mini.Obj
+ 	 	 	 	;      <CR><CR><CR>         Output from LINK is
+	 	 	 	   Mini.Exe
+ 	 	 	 	;                           Carriage Return you
+	 	 	 	 way through all the LINK defaults
+ 	 	 	 	;
+ 	 	 	 	;  C:> Mini<CR>             This tells DOS to r
+	 	 	 	un Mini.Exe
+ 	 	 	 	;      ARe You Sure?
+ 	 	 	 	;  C:>
+ 	 	 	 	;
+ 	 	 	 	;
+ 	 	 	 	;==============================================
+	 	 	 	=================================
+ 	 	 	 	;Mini.Asm    HW1                06-Sept-2001
+ 	 	 	 	;CS272       Your Name Here             
+ 	 	 	 	
+ 0000	 	 	 	Data Segment  
+ 0000  07 48 65 6C 6C 6F	Welcome_Message DB  07,"Hello, World! TGL", 0DH
+	 	 	 	, 0AH, '$'
+       2C 20 57 6F 72 6C	
+       64 21 20 54 47 4C	
+       0D 0A 24	 	 	
+ 0015	 	 	 	Data EndS
+ 	 	 	 	
+ 0000	 	 	 	Code Segment
+ 	 	 	 	Assume CS:Code,DS:Data
+ 	 	 	 	
+ 0000  B8 ---- R	 	Prog_Start: Mov  AX,Data                  ;make
+	 	 	 	 DS register point to
+ 0003  8E D8	 	 	            Mov  DS,AX                    ;Data
+	 	 	 	 in this program
+ 	 	 	 	
+ 0005  BA 0000 R	 	            Mov  DX,OffSet Welcome_Message  ;mo
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	01-25-;0    
+
+
+	 	 	 	ve address of Welcome_Message
+ 0008  B4 09	 	 	            Mov  AH,9H                    ;func
+	 	 	 	tion code 9 to AH
+ 000A  CD 21	 	 	            Int  21H                      ;DOS 
+	 	 	 	Int 21H* [(33D)(041O)(00100001B)]
+ 	 	 	 	
+ 000C  B8 4C00	 	 	            Mov  AX,4C00H                 ;Retu
+	 	 	 	rn to DOS
+ 000F  CD 21	 	 	            Int  21H                      ;via 
+	 	 	 	Int 21H function 4C
+ 0011	 	 	 	Code EndS
+ 	 	 	 	End  Prog_Start
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	01-25-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	0011	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	0015	PARA  	NONE	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+PROG_START . . . . . . . . . . .	L NEAR 	0000	CODE
+WELCOME_MESSAGE. . . . . . . . .	L BYTE 	0000	DATA
+
+49698 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0
