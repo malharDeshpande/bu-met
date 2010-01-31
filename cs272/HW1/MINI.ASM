@@ -24,7 +24,7 @@
 ;CS272       Your Name Here             
 
 Data Segment  
-Welcome_Message DB  07,"Hello, World! TGL", 0DH, 0AH, '$'
+Welcome_Message DB  07,"Hello, World! TGL can compute!", 0DH, 0AH, '$'
 Data EndS
 
 Code Segment

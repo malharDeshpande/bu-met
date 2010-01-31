@@ -1,6 +1,6 @@
  Arrowsoft Assembler
 Public Domain v1.00d (64K Model) 	Page	1-1
-	 	 	 	 	 	 	 	01-25-;0    
+	 	 	 	 	 	 	 	01-31-;0    
 
 
  	 	 	 	;Below is a complete mASM source program.....  
@@ -41,12 +41,14 @@ Public Domain v1.00d (64K Model) 	Page	1-1
  	 	 	 	;CS272       Your Name Here             
  	 	 	 	
  0000	 	 	 	Data Segment  
- 0000  07 48 65 6C 6C 6F	Welcome_Message DB  07,"Hello, World! TGL", 0DH
-	 	 	 	, 0AH, '$'
+ 0000  07 48 65 6C 6C 6F	Welcome_Message DB  07,"Hello, World! TGL can c
+	 	 	 	ompute!", 0DH, 0AH, '$'
        2C 20 57 6F 72 6C	
        64 21 20 54 47 4C	
-       0D 0A 24	 	 	
- 0015	 	 	 	Data EndS
+       20 63 61 6E 20 63	
+       6F 6D 70 75 74 65	
+       21 0D 0A 24	 	
+ 0022	 	 	 	Data EndS
  	 	 	 	
  0000	 	 	 	Code Segment
  	 	 	 	Assume CS:Code,DS:Data
@@ -55,13 +57,13 @@ Public Domain v1.00d (64K Model) 	Page	1-1
 	 	 	 	 DS register point to
  0003  8E D8	 	 	            Mov  DS,AX                    ;Data
 	 	 	 	 in this program
- 	 	 	 	
- 0005  BA 0000 R	 	            Mov  DX,OffSet Welcome_Message  ;mo
  Arrowsoft Assembler
 Public Domain v1.00d (64K Model) 	Page	1-2
-	 	 	 	 	 	 	 	01-25-;0    
+	 	 	 	 	 	 	 	01-31-;0    
 
 
+ 	 	 	 	
+ 0005  BA 0000 R	 	            Mov  DX,OffSet Welcome_Message  ;mo
 	 	 	 	ve address of Welcome_Message
  0008  B4 09	 	 	            Mov  AH,9H                    ;func
 	 	 	 	tion code 9 to AH
@@ -78,7 +80,7 @@ Public Domain v1.00d (64K Model) 	Page	1-2
  Arrowsoft Assembler
 Public Domain v1.00d (64K Model) 	Page	Symbols
 	 	 	 	-1
-	 	 	 	 	 	 	 	01-25-;0    
+	 	 	 	 	 	 	 	01-31-;0    
 
 
 Segments and Groups:
@@ -86,7 +88,7 @@ Segments and Groups:
 	 	N a m e	 	 	Size	Align	Combine	Class
 
 CODE . . . . . . . . . . . . . .	0011	PARA  	NONE	
-DATA . . . . . . . . . . . . . .	0015	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	0022	PARA  	NONE	
 
 Symbols:            
 
