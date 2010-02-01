@@ -21,7 +21,7 @@
 ;
 ;===============================================================================
 ;Mini.Asm    HW1                06-Sept-2001
-;CS272       Your Name Here             
+;CS272       Terry Lorber U61244526 01-Feb-2010
 
 Data Segment  
 Welcome_Message DB  07,"Hello, World! TGL can compute!", 0DH, 0AH, '$'

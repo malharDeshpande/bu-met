@@ -38,7 +38,7 @@ Public Domain v1.00d (64K Model) 	Page	1-1
  	 	 	 	;==============================================
 	 	 	 	=================================
  	 	 	 	;Mini.Asm    HW1                06-Sept-2001
- 	 	 	 	;CS272       Your Name Here             
+ 	 	 	 	;CS272       Terry Lorber U61244526 01-Feb-2010
  	 	 	 	
  0000	 	 	 	Data Segment  
  0000  07 48 65 6C 6C 6F	Welcome_Message DB  07,"Hello, World! TGL can c
