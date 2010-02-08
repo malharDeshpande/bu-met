@@ -1,0 +1,288 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	02-07-;0    
+
+
+ 	 	 	 	;George Newton  CS272   HW2 F03 
+ 	 	 	 	
+ 	 	 	 	;Your homework, due next week, is to modify the
+	 	 	 	 program below to
+ 	 	 	 	;             handle BOTH UPPER-Case and lower-
+	 	 	 	Case Alphabetic Characters.
+ 	 	 	 	
+ 	 	 	 	;             Please create, print and turn in 
+	 	 	 	BtyeSum.Lst
+ 	 	 	 	
+ 	 	 	 	;Program: Input a group of characters (a word) 
+	 	 	 	from the terminal.
+ 	 	 	 	;         - The program converts each character
+	 	 	 	 to a binary nunber, 
+ 	 	 	 	;            (where A=1, B=2, C=3....Z=26)
+ 	 	 	 	;         - The binary number is then added to 
+	 	 	 	an accumulator.  
+ 	 	 	 	;         - When the Accumulator = 100, you WIN
+	 	 	 	!! 
+ 	 	 	 	;            (the 'Bell' rings and the program 
+	 	 	 	exits to DOS)  
+ 	 	 	 	;         - When the Accumulator goes over 100,
+	 	 	 	 you are prompted to try again.
+ 	 	 	 	
+ 	 	 	 	
+ 0000	 	 	 	Data Segment
+ 0000  0D 0A 54 65 72 72	Welcome_Message DB 0DH, 0AH, 'Terry Lorber C272
+	 	 	 	 - Spring 2010', 0DH, 0AH, 0AH 
+       79 20 4C 6F 72 62	
+       65 72 20 43 32 37	
+       32 20 2D 20 53 70	
+       72 69 6E 67 20 32	
+       30 31 30 0D 0A 0A	
+ 0024  57 65 6C 63 6F 6D	                DB 'Welcome to "Add-the-Bytes"'
+	 	 	 	, 0DH, 0AH, 0AH, '$'  
+       65 20 74 6F 20 22	
+       41 64 64 2D 74 68	
+       65 2D 42 79 74 65	
+       73 22 0D 0A 0A 24	
+ 	 	 	 	
+ 0042  0D 0A 45 6E 74 65	Intro_Message   DB 0DH, 0AH, 'Enter a string of
+	 	 	 	 digits that sum 100'
+       72 20 61 20 73 74	
+       72 69 6E 67 20 6F	
+       66 20 64 69 67 69	
+       74 73 20 74 68 61	
+       74 20 73 75 6D 20	
+       31 30 30	 	 	
+ 0069  0D 0A 30 3D 30 2C	                DB 0DH, 0AH, '0=0, 1=1, 2=2...9
+	 	 	 	=9' 
+       20 31 3D 31 2C 20	
+       32 3D 32 2E 2E 2E	
+       39 3D 39	 	 	
+ 007E  0D 0A 0A 24	 	                DB 0DH, 0AH, 0AH, '$'    ;Note:
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	02-07-;0    
+
+
+	 	 	 	 Message on 3 lines
+ 	 	 	 	
+ 0082  07 20 3C 2D 2D 2D	Error_Message   DB 007, ' <--- ?Error...Sum Exc
+	 	 	 	eeds 100, try again!...'
+       20 3F 45 72 72 6F	
+       72 2E 2E 2E 53 75	
+       6D 20 45 78 63 65	
+       65 64 73 20 31 30	
+       30 2C 20 74 72 79	
+       20 61 67 61 69 6E	
+       21 2E 2E 2E	 	
+ 00B0  0D 0A 0A 24	 	                DB 0DH, 0AH, 0AH, '$'    ;Error
+	 	 	 	-Message
+ 	 	 	 	
+ 00B4  0D 0A 07 20 20 5E	Error_Message2  DB 0DH, 0AH, 007, '  ^--- ?Erro
+	 	 	 	r...Sum is Below 100, try again!'
+       2D 2D 2D 20 3F 45	
+       72 72 6F 72 2E 2E	
+       2E 53 75 6D 20 69	
+       73 20 42 65 6C 6F	
+       77 20 31 30 30 2C	
+       20 74 72 79 20 61	
+       67 61 69 6E 21	 	
+ 00E3  0D 0A 0A 24	 	                DB 0DH, 0AH, 0AH, '$'    ;Error
+	 	 	 	-Message
+ 	 	 	 	
+ 00E7  07 20 3C 2D 2D 2D	Bad_Character   DB 007, ' <--- ?Char.Entered NO
+	 	 	 	T 0<>9 ?', 0DH, 0AH, '$'
+       20 3F 43 68 61 72	
+       2E 45 6E 74 65 72	
+       65 64 20 4E 4F 54	
+       20 30 3C 3E 39 20	
+       3F 0D 0A 24	 	
+ 	 	 	 	
+ 0109  0D 0A 2B 20 24	 	Plus_String     DB 0DH, 0AH, '+ $'
+ 	 	 	 	
+ 010E  07 20 3C 2D 2D 2D	Exit_Message    DB 007, ' <--- "A WINNER!" {Sum
+	 	 	 	 100 = Exit to Dos}', 007 
+       20 22 41 20 57 49	
+       4E 4E 45 52 21 22	
+       20 7B 53 75 6D 20	
+       31 30 30 20 3D 20	
+       45 78 69 74 20 74	
+       6F 20 44 6F 73 7D	
+       07	 	 	
+ 0139  0D 0A 07 24	 	                DB 0DH, 0AH, 007, '$'   ;Note: 
+	 	 	 	007 = Bell
+ 	 	 	 	
+ 013D  0D 0A 54 68 61 6E	Bye_Message DB 0DH, 0AH, 'Thanks for using "Add
+	 	 	 	-the-Bytes"...have a nice day!'
+       6B 73 20 66 6F 72	
+       20 75 73 69 6E 67	
+       20 22 41 64 64 2D	
+       74 68 65 2D 42 79	
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-3
+	 	 	 	 	 	 	 	02-07-;0    
+
+
+       74 65 73 22 2E 2E	
+       2E 68 61 76 65 20	
+       61 20 6E 69 63 65	
+       20 64 61 79 21	 	
+ 0172  0D 0A 24	 	 	            DB 0DH, 0AH, '$'
+ 0175	 	 	 	Data EndS
+ 	 	 	 	;------------------------------
+ 0000	 	 	 	Working_Storage Segment Stack
+ 0000  0100 [	 	 	  DW 100H    DUP (?)
+                ????	 	
+                      ]	 	
+ 	 	 	 	
+ 0200	 	 	 	Working_Storage EndS
+ 	 	 	 	;------------------------------
+ 0000	 	 	 	Code Segment
+ 	 	 	 	     Assume CS:Code, DS:Data, SS:Working_Storag
+	 	 	 	e
+ 	 	 	 	
+ 0000  B8 ---- R	 	Prog_Start: Mov AX,Data             ;Init
+ 0003  8E D8	 	 	            Mov DS,AX               ;Data Segme
+	 	 	 	nt Pointer
+ 	 	 	 	
+ 0005  BA 0000 R	 	            Mov  DX, Offset Welcome_Message
+ 0008  B4 09	 	 	            Mov  AH,9               ;String wri
+	 	 	 	te to DOS
+ 000A  CD 21	 	 	            Int  21H                ;Write it
+ 	 	 	 	
+ 000C  B4 09	 	 	P_Loop:     Mov  AH,9               ;String wri
+	 	 	 	te to DOS
+ 000E  BA 0042 R	 	            Mov  DX, OffSet Intro_Message
+ 0011  CD 21	 	 	            Int  21H                ;Write it
+ 0013  B5 00	 	 	            Mov  CH, 0              ;Clear CH..
+	 	 	 	our Byte Sum Accumulator
+ 	 	 	 	
+ 0015  BA 0109 R	 	Get_Chr:    MOV DX,OFFSET PLUS_STRING
+ 0018  B4 09	 	 	            MOV AH,9
+ 001A  CD 21	 	 	            INT 21H
+ 001C  B4 01	 	 	            Mov  AH,1               ;Read a sin
+	 	 	 	gle char.from keyboard
+ 001E  CD 21	 	 	            Int  21H                ;Get char. 
+	 	 	 	from DOS....Int = Interrupt 
+ 	 	 	 	            
+ 	 	 	 	   ;Make sure character is =>0 & =<9
+ 0020  3C 30	 	 	            Cmp  AL,"0"             ;Check it a
+	 	 	 	gainst '0'
+ 0022  72 2B	 	 	            JB   NG                 ; Less than
+	 	 	 	 (Below) '0', Jump to NG:
+ 0024  3C 39	 	 	            Cmp  AL,"9"             ;Check it a
+	 	 	 	gainst '9'
+ 0026  77 27	 	 	            JA   NG                 ; Greater t
+	 	 	 	han (Above) '9', Jump to NG:
+ 	 	 	 	
+ 	 	 	 	   ;Ok, the character entered is between 0<->9
+ 0028  2C 30	 	 	OK:         Sub  AL, 48             ; 48 == "0"
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-4
+	 	 	 	 	 	 	 	02-07-;0    
+
+
+	 	 	 	' 
+ 002A  02 E8	 	 	            Add  CH,AL              ;Add binary
+	 	 	 	 result to CH
+ 002C  80 FD 64	 	 	            CMP  CH, 100            ;Check inte
+	 	 	 	rim result against 100
+ 002F  74 0D	 	 	            JZ   Winner             ; Yes, word
+	 	 	 	 = 100
+ 0031  77 02	 	 	            JA   Oops               ; No...and 
+	 	 	 	you went over 100!
+ 0033  EB E0	 	 	            Jmp  Get_Chr            ;go get ano
+	 	 	 	ther character...
+ 	 	 	 	
+ 0035  BA 0082 R	 	Oops:       Mov  DX, OffSet Error_Message
+ 0038  B4 09	 	 	            Mov  AH,9               ;Sorry...Su
+	 	 	 	m > 100
+ 003A  CD 21	 	 	            Int  21H
+ 003C  EB CE	 	 	            Jmp  P_Loop             ;go try ano
+	 	 	 	ther word....
+ 	 	 	 	
+ 003E  BA 010E R	 	Winner:     Mov  DX, OffSet Exit_Message
+ 0041  B4 09	 	 	            Mov  AH,9
+ 0043  CD 21	 	 	            Int  33                 ; 33Decimal
+	 	 	 	 = 21Hex
+ 0045  BA 013D R	 	            Mov  DX, OffSet Bye_Message
+ 0048  CD 21	 	 	            Int  33
+ 004A  B8 4C00	 	 	            Mov  AX,4C00H           ;setup for 
+	 	 	 	return to DOS
+ 004D  CD 21	 	 	            Int  21H                ;...do it!
+ 	 	 	 	;You have gone back to DOS with the above Inter
+	 	 	 	rupt!
+ 	 	 	 	
+ 	 	 	 	            
+ 004F  EB 0D 90	 	 	NG:         JMP SNG
+ 0052  3C 61	 	 	            Cmp  AL, 'a'
+ 0054  7C 08	 	 	            JL   SNG
+ 0056  3C 7A	 	 	            Cmp  AL, 'z'
+ 0058  77 04	 	 	            JA   SNG
+ 005A  2C 20	 	 	            Sub  AL, 32
+ 005C  EB CA	 	 	            Jmp  OK
+ 005E  3C 0D	 	 	SNG:        Cmp  AL, 0DH            ;See if cha
+	 	 	 	r.entered is <CR = 0D Hex = 0000 1101 Binary>
+ 0060  74 09	 	 	            JE   Word_End           ;Yes...go t
+	 	 	 	ell them error...
+ 	 	 	 	
+ 0062  BA 00E7 R	 	            Mov  DX, OffSet Bad_Character
+ 0065  B4 09	 	 	            Mov  AH,9
+ 0067  CD 21	 	 	            Int  33                 ;type out e
+	 	 	 	rror message [ 33 Decimal = 21 Hex ]
+ 0069  EB A1	 	 	            Jmp  P_Loop             ;Go try ano
+	 	 	 	ther word!
+ 	 	 	 	
+ 006B  BA 00B4 R	 	Word_End:   Mov  DX, OffSet Error_Message2
+ 006E  B4 09	 	 	            Mov  AH,9
+ 0070  CD 21	 	 	            Int  33                 ;Tell user 
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-5
+	 	 	 	 	 	 	 	02-07-;0    
+
+
+	 	 	 	sum is too low
+ 0072  EB 98	 	 	            Jmp  P_Loop             ;Go try ano
+	 	 	 	ther word!
+ 0074	 	 	 	Code EndS
+ 	 	 	 	End Prog_Start
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	02-07-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	0074	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	0175	PARA  	NONE	
+WORKING_STORAGE. . . . . . . . .	0200	PARA  	STACK 	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+BAD_CHARACTER. . . . . . . . . .	L BYTE 	00E7	DATA
+BYE_MESSAGE. . . . . . . . . . .	L BYTE 	013D	DATA
+ERROR_MESSAGE. . . . . . . . . .	L BYTE 	0082	DATA
+ERROR_MESSAGE2 . . . . . . . . .	L BYTE 	00B4	DATA
+EXIT_MESSAGE . . . . . . . . . .	L BYTE 	010E	DATA
+GET_CHR. . . . . . . . . . . . .	L NEAR 	0015	CODE
+INTRO_MESSAGE. . . . . . . . . .	L BYTE 	0042	DATA
+NG . . . . . . . . . . . . . . .	L NEAR 	004F	CODE
+OK . . . . . . . . . . . . . . .	L NEAR 	0028	CODE
+OOPS . . . . . . . . . . . . . .	L NEAR 	0035	CODE
+PLUS_STRING. . . . . . . . . . .	L BYTE 	0109	DATA
+PROG_START . . . . . . . . . . .	L NEAR 	0000	CODE
+P_LOOP . . . . . . . . . . . . .	L NEAR 	000C	CODE
+SNG. . . . . . . . . . . . . . .	L NEAR 	005E	CODE
+WELCOME_MESSAGE. . . . . . . . .	L BYTE 	0000	DATA
+WINNER . . . . . . . . . . . . .	L NEAR 	003E	CODE
+WORD_END . . . . . . . . . . . .	L NEAR 	006B	CODE
+
+49604 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0
