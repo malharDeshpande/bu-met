@@ -1,0 +1,175 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	02-15-;0    
+
+
+ 	 	 	 	;CS272 - Hearts.ASM - The Feb.14th Program....
+ 	 	 	 	;
+ 	 	 	 	;        The Dos CGA screen information is stor
+	 	 	 	ed starting at Memory Location B8000 Hex
+ 	 	 	 	;        This program places characters and cha
+	 	 	 	racter attributes in this area, and
+ 	 	 	 	;         the "video card" extracts it to the s
+	 	 	 	creen via Direct Memory Access (DMA).
+ 	 	 	 	; 
+ 	 	 	 	;  NOTE: If this program leaves your Screen so
+ 	 	 	 	;        you can't see characters, then you
+ 	 	 	 	;        need to reset it to the "default"
+ 	 	 	 	;        black background with white
+ 	 	 	 	;        characters. To do that, at the DOS
+ 	 	 	 	;        prompt, (which you will not be able
+ 	 	 	 	;        to see) type:   CLS<Enter>            
+	 	 	 	     
+ 	 	 	 	;                                           
+ 	 	 	 	;        Your homework is to modify the SC
+ 	 	 	 	;        character...curently set to Smiley
+ 	 	 	 	;        Faces...to another of your choice..
+ 	 	 	 	;        then (see below)..
+ 	 	 	 	;        Change the Add inside the LOOP to a
+ 	 	 	 	;        power-of-two...2,4,8,16 etc.
+ 	 	 	 	;                                              
+	 	 	 	                         
+ 	 	 	 	;        Create, Print, and turn in Hearts.LST
+ 	 	 	 	;        listings!   
+ 	 	 	 	;                                  
+ 	 	 	 	;  Good luck....George                         
+	 	 	 	                         
+ 	 	 	 	
+ 	 	 	 	; Terry Lorber U61244526  15-Feb-2010
+ 	 	 	 	
+ 0000	 	 	 	Data Segment
+ 	 	 	 	
+ 0000  03	 	 	SChar      DB 03   ; Fill the screen with this
+ 	 	 	 	                   ; character (02 = "")
+ 	 	 	 	                   ; [Note: 04 = "", 01 = ""
+ 	 	 	 	                   ;        & 03 = ""]
+ 	 	 	 	
+ 0001  00	 	 	SA         DB 00   ;Screen Character Attribute
+ 	 	 	 	                   ; [See: Thorne P.565]
+ 	 	 	 	                   ;  00 = Black Character
+ 	 	 	 	                   ;       on Black Background
+ 0002	 	 	 	Data Ends
+ 	 	 	 	
+ 0000	 	 	 	Code Segment
+ 	 	 	 	Assume DS:Data, CS:Code
+ 	 	 	 	
+ 0000  B8 ---- R	 	ProgSt: Mov  AX,Data   ;
+ 0003  8E D8	 	 	        Mov  DS,AX     ;
+ 	 	 	 	
+ 0005  B8 B800	 	 	A1:     Mov  AX,0B800H ;<- memory address
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	02-15-;0    
+
+
+ 0008  8E C0	 	 	        Mov  ES,AX     ;   of CGA Screen
+ 	 	 	 	                       ;   (top left corner)
+ 	 	 	 	                       ;to Extra Segment ES
+ 	 	 	 	                       ;   Register...
+ 	 	 	 	                             
+ 000A  FC	 	 	        CLD            ;Set STRING MOVE
+ 	 	 	 	                       ;   direction   Forward
+ 	 	 	 	
+ 000B  BF 0000	 	 	        Mov  DI, 0     ;Set DI offset to ES
+ 	 	 	 	                       ;DI = Destination Index
+ 	 	 	 	                       ;ES = Extra Segment
+ 	 	 	 	
+ 000E  A0 0000 R	 	        Mov  AL, SChar ;Set Screen Character
+ 	 	 	 	                       ;to ""   00000010B
+ 	 	 	 	
+ 0011  8A 26 0001 R	 	        Mov  AH, SA    ;Set Screen Attribute
+ 	 	 	 	                       ;to  Black Char.
+ 	 	 	 	                       ;    Black Backgrnd
+ 	 	 	 	                       ;     00000000B
+ 	 	 	 	
+ 	 	 	 	                       ;The CGA Screen uses
+ 	 	 	 	                       ; 2000 Words of memory
+ 	 	 	 	                       ; 80 Char. X 25 Lines
+ 	 	 	 	                       ; = 2000 Words
+ 	 	 	 	
+ 0015  B9 07D0	 	 	        Mov  CX,2000D  ;each Word =
+ 	 	 	 	                       ;    1 Char.Byte
+ 	 	 	 	                       ;  & 1 Attribute Byte
+ 	 	 	 	      
+ 0018  AB	 	 	AA:     StoSW          ;Modify all 25 Lines
+ 	 	 	 	                       ;        of 80 bytes
+ 	 	 	 	                       ; [ in this AA: Loop! ]
+ 	 	 	 	                       ;
+ 0019  80 C4 04	 	 	        Add AH,4       ;Note:  By changing the
+ 	 	 	 	                       ;=====      Add AH, 1
+ 	 	 	 	                       ;       to  Add AH, 2
+ 	 	 	 	                       ;
+ 	 	 	 	                       ; you will change the
+ 	 	 	 	                       ; pattern on the screen
+ 	 	 	 	                       ; Also try 4, 8, 16,
+ 	 	 	 	                       ;          32, 64 etc.
+ 	 	 	 	                       ; and try and predict
+ 	 	 	 	                       ; the results!
+ 	 	 	 	
+ 001C  04 01	 	 	        ADD AL, 01
+ 001E  3C 07	 	 	        CMP AL, 07
+ 0020  7C 02	 	 	        JL OK
+ 0022  B0 03	 	 	        MOV AL, 03
+ 	 	 	 	
+ 0024	 	 	 	OK:
+ 0024  E2 F2	 	 	        Loop AA        ;Note: Loop instruction
+ 	 	 	 	                       ;===== uses CX as
+ 	 	 	 	                       ; count-down counter...
+ 	 	 	 	                       ; and when CX = Zero,
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-3
+	 	 	 	 	 	 	 	02-15-;0    
+
+
+ 	 	 	 	                       ; the instruction does
+ 	 	 	 	                       ; loop back to AA:, it
+ 	 	 	 	                       ; FALLS-Through to the
+ 	 	 	 	                       ; Next Sequentional
+ 	 	 	 	                       ; Instruction !!!
+ 	 	 	 	
+ 0026  B4 01	 	 	        Mov  AH,1      ;Hit AnyKey to Continue
+ 0028  CD 21	 	 	        Int  21H       ;
+ 	 	 	 	                       ;Note: This leaves the
+ 	 	 	 	                       ; entire screen full of
+ 	 	 	 	                       ; Hearts...by typing
+ 	 	 	 	                       ; anything, top line of
+ 	 	 	 	                       ; Hearts screen is
+ 	 	 	 	                       ;"scrolled off the top"
+ 	 	 	 	                       ; to make room for the
+ 	 	 	 	                       ; Dos prompt on bottom!
+ 	 	 	 	
+ 002A  B8 4C00	 	 	        Mov  AX,4C00H  ;Return to
+ 002D  CD 21	 	 	        Int  21H       ;       DOS
+ 	 	 	 	
+ 002F	 	 	 	Code Ends
+ 	 	 	 	End ProgSt
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	02-15-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	002F	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	0002	PARA  	NONE	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+A1 . . . . . . . . . . . . . . .	L NEAR 	0005	CODE
+AA . . . . . . . . . . . . . . .	L NEAR 	0018	CODE
+OK . . . . . . . . . . . . . . .	L NEAR 	0024	CODE
+PROGST . . . . . . . . . . . . .	L NEAR 	0000	CODE
+SA . . . . . . . . . . . . . . .	L BYTE 	0001	DATA
+SCHAR. . . . . . . . . . . . . .	L BYTE 	0000	DATA
+
+49690 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0
