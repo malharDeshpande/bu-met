@@ -1,0 +1,147 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	02-22-;0    
+
+
+ 	 	 	 	;b2d-tgl.asm
+ 	 	 	 	
+ 	 	 	 	; Terry Lorber U61244526  21-Feb-2010
+ 	 	 	 	; Spring 2010 CS272     
+ 	 	 	 	
+ 	 	 	 	; HW4
+ 	 	 	 	
+ 	 	 	 	; http://www.csgnetwork.com/asciiset.html
+ 	 	 	 	; a null character is ^@
+ 	 	 	 	; should be enterable as Ctrl-Shift-2 or Ctrl-2
+ 	 	 	 	
+ 	 	 	 	; The following values can be achieved by enter
+	 	 	 	ing the
+ 	 	 	 	; keystrokes on the right:
+ 	 	 	 	        
+ 	 	 	 	; 1D    ^@ ^A  
+ 	 	 	 	; 2D    ^@ ^B
+ 	 	 	 	; 3D    ^@ ^C
+ 	 	 	 	; 128D  -- don't believe this is possible, ther
+	 	 	 	e is no character associated with 128D in LATIN
+	 	 	 	-1
+ 	 	 	 	; 256D  ^A ^@
+ 	 	 	 	; 1024D ^D ^@
+ 	 	 	 	
+ 0000	 	 	 	Data Segment
+ 0000  54 79 70 65 20 61	 A_Word_M   DB "Type any 2 characters (16-bits)
+	 	 	 	, "
+       6E 79 20 32 20 63	
+       68 61 72 61 63 74	
+       65 72 73 20 28 31	
+       36 2D 62 69 74 73	
+       29 2C 20	 	 	
+ 0021  70 72 6F 67 72 61	            DB "program will display in Decimal
+	 	 	 	:"
+       6D 20 77 69 6C 6C	
+       20 64 69 73 70 6C	
+       61 79 20 69 6E 20	
+       44 65 63 69 6D 61	
+       6C 3A	 	 	
+ 0041  0A 0D 24	 	 	            DB 0AH, 0DH, "$"
+ 	 	 	 	
+ 0044  0A 0D 24	 	 	 Carriage_Return DB 0AH, 0DH, "$"        
+ 0047	 	 	 	Data EndS
+ 	 	 	 	
+ 0000	 	 	 	Working_Storage Segment
+ 0000     64 [	 	 	      DW 100  DUP ($)
+                0000 R	 	
+                        ]	
+ 	 	 	 	
+ 00C8	 	 	 	Working_Storage EndS
+ 	 	 	 	
+ 0000	 	 	 	Code Segment
+ 	 	 	 	
+ 	 	 	 	    Assume CS:CODE, SS:Working_Storage, DS:DATA
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	02-22-;0    
+
+
+ 	 	 	 	
+ 0000  B8 ---- R	 	Prog_S: Mov  AX, DATA    
+ 0003  8E D8	 	 	        Mov  DS, AX
+ 	 	 	 	
+ 0005  BA 0000 R	 	        MOV  DX, OFFSET A_Word_M
+ 0008  B4 09	 	 	        MOV  AH,9H
+ 000A  CD 21	 	 	        INT  21H
+ 	 	 	 	
+ 000C  B4 01	 	 	        MOV  AH, 1
+ 000E  CD 21	 	 	        INT  21H
+ 0010  8A F8	 	 	        MOV  BH, AL      ;first byte to BH
+ 	 	 	 	
+ 0012  B4 01	 	 	        Mov  AH, 1
+ 0014  CD 21	 	 	        Int  21H
+ 0016  8A D8	 	 	        Mov  BL, AL      ;second byte to BL
+ 	 	 	 	
+ 0018  BA 0044 R	 	        Mov  DX, OFFSET Carriage_Return
+ 001B  B4 09	 	 	        MOV  AH, 9H
+ 001D  CD 21	 	 	        INT  21H
+ 	 	 	 	        
+ 001F  8B C3	 	 	        Mov  AX, BX      ;Move the 16-bits to A
+	 	 	 	X for Conversion
+ 0021  B9 0005	 	 	        Mov  CX, 5       ;Loop counter
+ 	 	 	 	
+ 0024  B3 0A	 	 	DLOOP:  Mov  BL, 10      ;Divide by 10D for dec
+	 	 	 	imal conversion
+ 0026  32 FF	 	 	        Xor  BH, BH
+ 0028  33 D2	 	 	        Xor  DX, DX
+ 002A  F7 F3	 	 	        Div  BX         ;Divide AX by 10  Answe
+	 	 	 	r in AX, Remainder in DX
+ 	 	 	 	
+ 002C  52	 	 	        Push DX         ;Push Remainder on Stac
+	 	 	 	k
+ 002D  E2 F5	 	 	        Loop DLoop
+ 	 	 	 	
+ 	 	 	 	; Display the "Remainders" you placed on the st
+	 	 	 	ack
+ 	 	 	 	
+ 002F  B9 0005	 	 	        Mov  CX,5        ;Display 5 Remainders
+ 	 	 	 	
+ 0032  5A	 	 	Ploop:  POP  DX
+ 0033  80 C2 30	 	 	        Add  DL, 30H
+ 0036  B4 02	 	 	        Mov  AH, 2
+ 0038  CD 21	 	 	        Int  21H
+ 	 	 	 	   
+ 003A  E2 F6	 	 	        Loop Ploop       ;Print (Display) Loop 
+	 	 	 	5 times
+ 	 	 	 	
+ 003C  B8 4C00	 	 	        MOV AX,4C00H
+ 003F  CD 21	 	 	        INT 21H
+ 	 	 	 	
+ 0041	 	 	 	CODE ENDS
+ 	 	 	 	END PROG_S
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	02-22-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	0041	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	0047	PARA  	NONE	
+WORKING_STORAGE. . . . . . . . .	00C8	PARA  	NONE	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+A_WORD_M . . . . . . . . . . . .	L BYTE 	0000	DATA
+CARRIAGE_RETURN. . . . . . . . .	L BYTE 	0044	DATA
+DLOOP. . . . . . . . . . . . . .	L NEAR 	0024	CODE
+PLOOP. . . . . . . . . . . . . .	L NEAR 	0032	CODE
+PROG_S . . . . . . . . . . . . .	L NEAR 	0000	CODE
+
+49694 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0
