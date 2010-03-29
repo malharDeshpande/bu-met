@@ -8,8 +8,9 @@ Data Segment
                   DB 0DH, 0AH, '- <Enter><Enter> = Last record from keyboard'
                   DB 0DH, 0AH, '$'
 
-  In_Done_Msg     DB 0DH, 0AH, 0AH, '!Input complete...now I will type the'
-                  DB 0DH, 0AH,      '  records back on your terminal....'
+  In_Done_Msg     DB 0DH, 0AH, 0AH, 'Input complete...now I will print the'
+                  DB 0DH, 0AH,      '  records to the terminal, LIFO order.'
+
                   DB 0DH, 0AH, 0AH, '$'
 
   Table           DB 420D DUP ('$')  ;Empty 'Table' with 20 records of 21 
@@ -62,15 +63,16 @@ In_Done:
 ; Note: Sort will go here!!!  (A Subroutine call might be nice!)
 ; ===== --------------------
 ; Write All Records in TABLE on the users Screen 
-;   [ First In, First Out (FIFO) sequence ]
+;   [ Last In, First Out (LIFO) sequence ]
 
-            Mov  DX,OffSet Table    ;Set DX to point to Table
+            Mov  DX,BX               ;Set DX to point to last entered record
 
-            Mov  AH,9               ;Set AH for DOS String Output
-            Mov CX, record_cntr     ;Set Loop counter to #Recs input
-P_Loop:              
+            Mov  AH, 9D             ;Set AH for DOS String Output
+            Mov  CX, record_cntr    ;Set Loop counter to #Recs input
+            Add  CX, 1D
+P_Loop:
             Int  21H                ;Write the record to the screen
-            Add  DX, 21D            ;Set DX to point to next record
+            Sub  DX, 21D            ;Set DX to point to next record
             
             Push DX                 ;save DX on the stack
             Mov  DX, OffSet Cr_Lf   ;set up write
@@ -116,7 +118,7 @@ Dollar_S:   Mov  AL,Dollar_Char     ;Dollar to AL
 
 Rec_Pad:    Cmp  M_CX, 20D          ;Check to see if this is first character
             JE   All_Done           ;YES - First Character = <Enter>
-            Mov  AL, '!'            ;'?' to AL...
+            Mov  AL, '?'            ;'?' to AL...
             Mov  [BX],AL            ;put in Pad...
             Add  BX,1               ;byte pointer
             Dec  M_CX               ; and again...{Note: Same Loop counter}

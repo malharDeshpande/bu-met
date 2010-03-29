@@ -1,0 +1,325 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	03-28-;0    
+
+
+ 	 	 	 	;George Newton  CS272   Sort Input/Output
+ 	 	 	 	
+ 0000	 	 	 	Data Segment
+ 0000  0D 0A 57 65 6C 63	  Welcome_Message DB 0DH, 0AH, 'Welcome to SORT
+	 	 	 	 V1.0', 0DH, 0AH
+       6F 6D 65 20 74 6F	
+       20 53 4F 52 54 20	
+       56 31 2E 30 0D 0A	
+ 0018  0A 2D 20 45 6E 74	                  DB      0AH, '- Enter "Record
+	 	 	 	s" of up to 20 Bytes Each'
+       65 72 20 22 52 65	
+       63 6F 72 64 73 22	
+       20 6F 66 20 75 70	
+       20 74 6F 20 32 30	
+       20 42 79 74 65 73	
+       20 45 61 63 68	 	
+ 0041  0D 0A 2D 20 45 6E	                  DB 0DH, 0AH, '- End each reco
+	 	 	 	rd with <Enter> key'
+       64 20 65 61 63 68	
+       20 72 65 63 6F 72	
+       64 20 77 69 74 68	
+       20 3C 45 6E 74 65	
+       72 3E 20 6B 65 79	
+ 0065  0D 0A 2D 20 45 6E	                  DB 0DH, 0AH, '- Enter up to 2
+	 	 	 	0 records'
+       74 65 72 20 75 70	
+       20 74 6F 20 32 30	
+       20 72 65 63 6F 72	
+       64 73	 	 	
+ 007F  0D 0A 2D 20 3C 45	                  DB 0DH, 0AH, '- <Enter><Enter
+	 	 	 	> = Last record from keyboard'
+       6E 74 65 72 3E 3C	
+       45 6E 74 65 72 3E	
+       20 3D 20 4C 61 73	
+       74 20 72 65 63 6F	
+       72 64 20 66 72 6F	
+       6D 20 6B 65 79 62	
+       6F 61 72 64	 	
+ 00AD  0D 0A 24	 	 	                  DB 0DH, 0AH, '$'
+ 	 	 	 	
+ 00B0  0D 0A 0A 49 6E 70	  In_Done_Msg     DB 0DH, 0AH, 0AH, 'Input comp
+	 	 	 	lete...now I will print the'
+       75 74 20 63 6F 6D	
+       70 6C 65 74 65 2E	
+       2E 2E 6E 6F 77 20	
+       49 20 77 69 6C 6C	
+       20 70 72 69 6E 74	
+       20 74 68 65	 	
+ 00D8  0D 0A 20 20 72 65	                  DB 0DH, 0AH,      '  records 
+	 	 	 	to the terminal, LIFO order.'
+       63 6F 72 64 73 20	
+       74 6F 20 74 68 65	
+       20 74 65 72 6D 69	
+       6E 61 6C 2C 20 4C	
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	03-28-;0    
+
+
+       49 46 4F 20 6F 72	
+       64 65 72 2E	 	
+ 	 	 	 	
+ 0100  0D 0A 0A 24	 	                  DB 0DH, 0AH, 0AH, '$'
+ 	 	 	 	
+ 0104  01A4 [	 	 	  Table           DB 420D DUP ('$')  ;Empty 'Ta
+	 	 	 	ble' with 20 records of 21 
+                24	 	
+                    ]	 	
+ 	 	 	 	
+ 	 	 	 	                                     ;bytes eac
+	 	 	 	h...initalized to Asterisks...
+ 	 	 	 	                                     ;20 bytes 
+	 	 	 	for data, and the 21st for '$'
+ 	 	 	 	                                     ;which is 
+	 	 	 	the DOS String Terminator
+ 02A8  24	 	 	                  DB '$'             ;Stop thos
+	 	 	 	e runaway outputs!!!
+ 	 	 	 	
+ 02A9  0000	 	 	  Record_Cntr     DW 00D             ;Count rec
+	 	 	 	ords entered (Max.20)
+ 02AB  00	 	 	  Done_Flag       DB 00D             ;Set to 1 
+	 	 	 	when no more records
+ 	 	 	 	                                     ; from use
+	 	 	 	r {<Enter><Enter>}
+ 02AC  24	 	 	  Dollar_Char     DB '$'
+ 02AD  20	 	 	  Space_Char      DB ' '
+ 02AE  0D 0A 24	 	 	  Cr_Lf           DB 0DH, 0AH, '$'
+ 02B1  07 08 20 08 24	 	  Rej_Char        DB 07H, 08H, 020H,08H,'$' ;<B
+	 	 	 	ell><BS><Space><BS><$>
+ 02B6  0000	 	 	  M_BX            DW 0000H           ;Store cop
+	 	 	 	y of BX here!
+ 02B8  0000	 	 	  M_CX            DW 0000H           ;16bit mem
+	 	 	 	ory storage
+ 	 	 	 	
+ 02BA	 	 	 	Data Ends
+ 	 	 	 	
+ 0000	 	 	 	Working_Storage Segment Stack
+ 0000  0100 [	 	 	  DW 100H DUP(?)
+                ????	 	
+                      ]	 	
+ 	 	 	 	
+ 0200	 	 	 	Working_Storage Ends
+ 	 	 	 	
+ 0000	 	 	 	Code Segment
+ 	 	 	 	Assume DS:Data, SS:Working_Storage, CS:Code
+ 	 	 	 	
+ 0000  B8 ---- R	 	Prog_Start: Mov  AX,Data            ;Establish 
+	 	 	 	Data Segment register  DS
+ 0003  8E D8	 	 	            Mov  DS,AX              ;
+ 	 	 	 	
+ 0005  BA 0000 R	 	            Mov  DX,Offset Welcome_Message 
+ 0008  B4 09	 	 	            Mov  AH,9               ;Greet the 
+	 	 	 	program user with instructions
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-3
+	 	 	 	 	 	 	 	03-28-;0    
+
+
+ 000A  CD 21	 	 	            Int  21H
+ 	 	 	 	            
+ 000C  BB 0104 R	 	            Mov  BX, Offset Table   ;Place addr
+	 	 	 	ess of Table in BX register
+ 000F	 	 	 	Again:
+ 000F  E8 004B R	 	            Call Get_Record         ;Go get a r
+	 	 	 	ecord
+ 0012  80 3E 02AB R 01	 	            Cmp  Done_Flag,1        ;Check for 
+	 	 	 	last record
+ 0017  74 0B	 	 	            JE   In_Done            ; All done 
+	 	 	 	input...(JE = JZ)
+ 0019  FF 06 02A9 R	 	            INC  Record_Cntr        ;Count the 
+	 	 	 	records
+ 001D  83 3E 02A9 R 14	 	            Cmp  Record_Cntr,20D    ;go get ano
+	 	 	 	ther
+ 0022  75 EB	 	 	            Jnz  Again              ; if we don
+	 	 	 	't have 20 yet...
+ 0024	 	 	 	In_Done:
+ 0024  BA 00B0 R	 	            Mov  DX,Offset In_Done_Msg
+ 0027  B4 09	 	 	            Mov  AH,9               ;Tell user 
+	 	 	 	input complete
+ 0029  CD 21	 	 	            Int  21H
+ 	 	 	 	
+ 	 	 	 	; Input from keyboard complete
+ 	 	 	 	; 
+ 	 	 	 	; Note: Sort will go here!!!  (A Subroutine cal
+	 	 	 	l might be nice!)
+ 	 	 	 	; ===== --------------------
+ 	 	 	 	; Write All Records in TABLE on the users Scree
+	 	 	 	n 
+ 	 	 	 	;   [ Last In, First Out (LIFO) sequence ]
+ 	 	 	 	
+ 002B  8B D3	 	 	            Mov  DX,BX               ;Set DX to
+	 	 	 	 point to last entered record
+ 	 	 	 	
+ 002D  B4 09	 	 	            Mov  AH, 9D             ;Set AH for
+	 	 	 	 DOS String Output
+ 002F  8B 0E 02A9 R	 	            Mov  CX, record_cntr    ;Set Loop c
+	 	 	 	ounter to #Recs input
+ 0033  83 C1 01	 	 	            Add  CX, 1D
+ 0036	 	 	 	P_Loop:
+ 0036  CD 21	 	 	            Int  21H                ;Write the 
+	 	 	 	record to the screen
+ 0038  83 EA 15	 	 	            Sub  DX, 21D            ;Set DX to 
+	 	 	 	point to next record
+ 	 	 	 	            
+ 003B  52	 	 	            Push DX                 ;save DX on
+	 	 	 	 the stack
+ 003C  BA 02AE R	 	            Mov  DX, OffSet Cr_Lf   ;set up wri
+	 	 	 	te
+ 003F  B4 09	 	 	            Mov  AH, 9              ;DOS write 
+	 	 	 	<CR><LF> to screen
+ 0041  CD 21	 	 	            Int  21H                ;
+ 0043  5A	 	 	            Pop  DX                 ;restore DX
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-4
+	 	 	 	 	 	 	 	03-28-;0    
+
+
+	 	 	 	  (from the stack)
+ 	 	 	 	
+ 0044  E2 F0	 	 	         Loop P_Loop                ;go write a
+	 	 	 	nother one until done...
+ 	 	 	 	            
+ 	 	 	 	; Output of Table to Screen complete...
+ 	 	 	 	
+ 0046  B8 4C00	 	 	            Mov  AX,4C00H           ;setup for 
+	 	 	 	return to DOS
+ 0049  CD 21	 	 	            Int  21H                ;...do it!
+ 	 	 	 	;===================================           
+	 	 	 	 
+ 	 	 	 	; Get Record Subroutine            |
+ 	 	 	 	;===================================
+ 004B	 	 	 	Get_Record:                            
+ 004B  C7 06 02B8 R 0014	         Mov  M_CX, 20D             ;Move Recor
+	 	 	 	d length to CX (loop counter)
+ 0051	 	 	 	Get_Char:
+ 0051  B4 01	 	 	            Mov  AH,1               ;Read a sin
+	 	 	 	gle char.from keyboard
+ 0053  CD 21	 	 	            Int  21H                ;Get char. 
+	 	 	 	from DOS....Int = Interrupt 
+ 0055  3C 0D	 	 	            Cmp  AL,0DH             ;Check for 
+	 	 	 	<Enter>
+ 0057  74 29	 	 	            JE   Rec_Pad            ;..Yes..go 
+	 	 	 	'Pad' record
+ 0059  88 07	 	 	            Mov  [BX],AL            ;Move typed
+	 	 	 	 character to Table
+ 005B  83 C3 01	 	 	            Add  BX,1               ;Increment 
+	 	 	 	byte pointer
+ 005E  FF 0E 02B8 R	 	            Dec  M_CX                 ;go get a
+	 	 	 	nother character
+ 0062  74 02	 	 	            JZ   EOLine             ; unless yo
+	 	 	 	u are done
+ 0064  EB EB	 	 	            Jmp  Get_Char
+ 0066	 	 	 	EOLine:
+ 0066  B4 01	 	 	            Mov  AH,1               ;Look for <
+	 	 	 	Enter>...'Beep' until you get it
+ 0068  CD 21	 	 	            Int  21H                ;Next Char
+ 006A  3C 0D	 	 	            Cmp  AL, 0DH            ;Is this <E
+	 	 	 	nter>
+ 006C  74 09	 	 	            JE   Dollar_S           ;Yes - Go p
+	 	 	 	ut $ at end of record
+ 006E  B4 09	 	 	            Mov  AH,9               ;No  - Beep
+	 	 	 	 at user
+ 0070  BA 02B1 R	 	            Mov  DX, OffSet Rej_Char   ;and cle
+	 	 	 	anup screen
+ 0073  CD 21	 	 	            Int  21H                ;
+ 0075  EB EF	 	 	            Jmp  EOLine             ;      and 
+	 	 	 	go try again
+ 	 	 	 	
+ 0077  A0 02AC R	 	Dollar_S:   Mov  AL,Dollar_Char     ;Dollar to 
+	 	 	 	AL
+ 007A  88 07	 	 	            Mov  [BX],AL            ;Place '$' 
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-5
+	 	 	 	 	 	 	 	03-28-;0    
+
+
+	 	 	 	at end of string
+ 007C  83 C3 01	 	 	            Add  BX,1               ;byte point
+	 	 	 	er
+ 007F  EB 1C 90	 	 	            Jmp  Done          
+ 	 	 	 	
+ 0082  83 3E 02B8 R 14	 	Rec_Pad:    Cmp  M_CX, 20D          ;Check to s
+	 	 	 	ee if this is first character
+ 0087  74 0F	 	 	            JE   All_Done           ;YES - Firs
+	 	 	 	t Character = <Enter>
+ 0089  B0 3F	 	 	            Mov  AL, '?'            ;'?' to AL.
+	 	 	 	..
+ 008B  88 07	 	 	            Mov  [BX],AL            ;put in Pad
+	 	 	 	...
+ 008D  83 C3 01	 	 	            Add  BX,1               ;byte point
+	 	 	 	er
+ 0090  FF 0E 02B8 R	 	            Dec  M_CX               ; and again
+	 	 	 	...{Note: Same Loop counter}
+ 0094  75 EC	 	 	            Jnz  Rec_Pad            ; unless yo
+	 	 	 	u are at the end..then '$'
+ 0096  EB DF	 	 	            Jmp  Dollar_S           ;go end wit
+	 	 	 	h '$' and return to caller
+ 	 	 	 	
+ 0098  C6 06 02AB R 01	 	All_Done:   Mov  Done_Flag, 1       ;Set all do
+	 	 	 	ne input flag to 'Yes' = 1
+ 009D  BA 02AE R	 	Done:       Mov  DX, OffSet Cr_Lf   ;set up wri
+	 	 	 	te
+ 00A0  B4 09	 	 	            Mov  AH, 9              ;DOS write 
+	 	 	 	<CR><LF> to screen
+ 00A2  CD 21	 	 	            Int  21H                ;
+ 00A4  C3	 	 	            Ret                     ;Return to 
+	 	 	 	caller....
+ 	 	 	 	;===================================
+ 	 	 	 	; End Get Record Subroutine        |
+ 	 	 	 	;===================================
+ 	 	 	 	
+ 00A5	 	 	 	Code Ends
+ 	 	 	 	End Prog_Start
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	03-28-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	00A5	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	02BA	PARA  	NONE	
+WORKING_STORAGE. . . . . . . . .	0200	PARA  	STACK 	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+AGAIN. . . . . . . . . . . . . .	L NEAR 	000F	CODE
+ALL_DONE . . . . . . . . . . . .	L NEAR 	0098	CODE
+CR_LF. . . . . . . . . . . . . .	L BYTE 	02AE	DATA
+DOLLAR_CHAR. . . . . . . . . . .	L BYTE 	02AC	DATA
+DOLLAR_S . . . . . . . . . . . .	L NEAR 	0077	CODE
+DONE . . . . . . . . . . . . . .	L NEAR 	009D	CODE
+DONE_FLAG. . . . . . . . . . . .	L BYTE 	02AB	DATA
+EOLINE . . . . . . . . . . . . .	L NEAR 	0066	CODE
+GET_CHAR . . . . . . . . . . . .	L NEAR 	0051	CODE
+GET_RECORD . . . . . . . . . . .	L NEAR 	004B	CODE
+IN_DONE. . . . . . . . . . . . .	L NEAR 	0024	CODE
+IN_DONE_MSG. . . . . . . . . . .	L BYTE 	00B0	DATA
+M_BX . . . . . . . . . . . . . .	L WORD 	02B6	DATA
+M_CX . . . . . . . . . . . . . .	L WORD 	02B8	DATA
+PROG_START . . . . . . . . . . .	L NEAR 	0000	CODE
+P_LOOP . . . . . . . . . . . . .	L NEAR 	0036	CODE
+RECORD_CNTR. . . . . . . . . . .	L WORD 	02A9	DATA
+REC_PAD. . . . . . . . . . . . .	L NEAR 	0082	CODE
+REJ_CHAR . . . . . . . . . . . .	L BYTE 	02B1	DATA
+SPACE_CHAR . . . . . . . . . . .	L BYTE 	02AD	DATA
+TABLE. . . . . . . . . . . . . .	L BYTE 	0104	DATA	Length =01A4
+WELCOME_MESSAGE. . . . . . . . .	L BYTE 	0000	DATA
+
+49372 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0
