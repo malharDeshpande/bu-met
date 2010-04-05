@@ -1,0 +1,402 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	04-04-;0    
+
+
+ 	 	 	 	;----------------------------------------------
+	 	 	 	------------------------------
+ 	 	 	 	; CS272 - ADCOCT.ASM    Add With Carry - Octal
+ 	 	 	 	;
+ 	 	 	 	; - Input two 'Max_Nibbles' digit Octal numbers
+	 	 	 	 from the Keyboard
+ 	 	 	 	;   (Validate Nibbles as Octal)
+ 	 	 	 	; - Add them together
+ 	 	 	 	; - Output the Sum to the Screen  (include carr
+	 	 	 	y bit in Sum)
+ 	 	 	 	;
+ 	 	 	 	;  Terry Lorber Spring '10
+ 	 	 	 	;
+ 	 	 	 	;----------------------------------------------
+	 	 	 	------------------------------
+ 0000	 	 	 	Data Segment  
+ 	 	 	 	
+ = 000A	 	 	 	Max_Nibbles = 10D        ;Maximum Number of nib
+	 	 	 	bles allowed
+ 	 	 	 	
+ 0000  45 6E 74 65 72 20	Welcome_Message DB 'Enter 10 Octal digit String
+	 	 	 	   ', 0AH
+       31 30 20 4F 63 74	
+       61 6C 20 64 69 67	
+       69 74 20 53 74 72	
+       69 6E 67 20 20 20	
+       0A	 	 	
+ 001F  0D 0A 20 24	 	CR_LF_SP        DB 0DH, 0AH, ' $'
+ 0023  0D 0A 24	 	 	CR_LF           DB 0DH, 0AH, '$'
+ 0026  0D 0A 2B 24	 	CR_LF_Plus      DB 0DH, 0AH, '+$'
+ 002A  3F 20 42 61 64 20	Bad_Octal       DB '? Bad OCTAL Nibble entered.
+	 	 	 	...sorry...BYE!..', '$'
+       4F 43 54 41 4C 20	
+       4E 69 62 62 6C 65	
+       20 65 6E 74 65 72	
+       65 64 2E 2E 2E 2E	
+       73 6F 72 72 79 2E	
+       2E 2E 42 59 45 21	
+       2E 2E 24	 	 	
+ 	 	 	 	
+ 0057     0A [	 	 	Number_1        DB Max_Nibbles DUP(00H)        
+	 	 	 	  ;1st Octal Number
+                00	 	
+                    ]	 	
+ 	 	 	 	
+ 0061     0A [	 	 	Number_2        DB Max_Nibbles DUP(00H)        
+	 	 	 	  ;2nd Octal Number (& Sum)
+                00	 	
+                    ]	 	
+ 	 	 	 	
+ 	 	 	 	; DO NOT Place any code between the above two "
+	 	 	 	Number_1/2"
+ 	 	 	 	
+ 	 	 	 	
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	04-04-;0    
+
+
+ 006B  4E	 	 	My_Carry        DB 'N'                   ;Copy 
+	 	 	 	carry flag here!
+ 	 	 	 	                                         ; Y = 
+	 	 	 	Carry
+ 	 	 	 	                                         ; N = 
+	 	 	 	No Carry
+ 	 	 	 	
+ 006C  31	 	 	HString         DB '1'                   ;HexSt
+	 	 	 	ring 1 or 2
+ 	 	 	 	
+ 006D	 	 	 	Data EndS
+ 	 	 	 	;----------------------------------------------
+	 	 	 	------------------------------
+ 0000	 	 	 	Code Segment
+ 	 	 	 	Assume CS:Code,DS:Data
+ 	 	 	 	
+ 0000  B8 ---- R	 	Prog_Start: Mov  AX,Data                    ; I
+	 	 	 	nit 
+ 0003  8E D8	 	 	            Mov  DS,AX                      ;  
+	 	 	 	 DS
+ 0005  8E C0	 	 	            Mov  ES,AX                      ;  
+	 	 	 	 and ES
+ 	 	 	 	            
+ 0007  BA 0000 R	 	            Mov  DX,OffSet Welcome_Message  ; W
+	 	 	 	elcome user...ask for
+ 000A  B4 09	 	 	            Mov  AH,9H                      ;  
+	 	 	 	       first Octal string
+ 000C  CD 21	 	 	            Int  21H                        ;  
+	 	 	 	          
+ 	 	 	 	            
+ 000E  E8 0038 R	 	            Call Get_Octal_S                  ;
+	 	 	 	 Get & check both octal strings
+ 	 	 	 	
+ 0011  BA 0023 R	 	            Mov  DX,OffSet CR_LF            ; N
+	 	 	 	ew Line
+ 0014  B4 09	 	 	            Mov  AH,9H                      ; 
+ 0016  CD 21	 	 	            Int  21H                        ;  
+	 	 	 	          
+ 	 	 	 	            
+ 0018  E8 0087 R	 	            Call Add_nn_Nibbles             ; A
+	 	 	 	dd Number_1 to Number_2 
+ 	 	 	 	                                            ; (
+	 	 	 	Sum to Number_2)
+ 	 	 	 	            
+ 001B  80 3E 006B R 59	 	            Cmp  My_Carry, "Y"            ; Che
+	 	 	 	ck for carry on last ADC
+ 0020  74 05	 	 	            JE   Type_1                   ; Yes
+	 	 	 	..
+ 	 	 	 	              
+ 0022  B2 20	 	 	            Mov  DL, " "                  ; No.
+	 	 	 	..
+ 0024  EB 03 90	 	 	            Jmp  Nxt_1                    ;
+ 0027  B2 31	 	 	Type_1:     Mov  DL, "1"                  ;
+ 	 	 	 	
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-3
+	 	 	 	 	 	 	 	04-04-;0    
+
+
+ 0029  B4 02	 	 	Nxt_1:      Mov  AH, 2                    ; Typ
+	 	 	 	e Sign Bit (space or 1)
+ 002B  CD 21	 	 	            Int  21H                      ;
+ 	 	 	 	
+ 002D  BB 0061 R	 	            Mov  BX, Offset Number_2      ; Set
+	 	 	 	up BX to print Number_2
+ 0030  E8 00C7 R	 	            Call Print_Octal                ; P
+	 	 	 	rint the Sum on screen
+ 	 	 	 	
+ 0033  B8 4C00	 	 	Done:       Mov  AX,4C00H                   ; R
+	 	 	 	eturn to DOS
+ 0036  CD 21	 	 	            Int  21H                        ;
+ 	 	 	 	;----------------------------------------------
+	 	 	 	-----------------------------            
+ 	 	 	 	; - Get characters from keyboard one at a time 
+	 	 	 	(end after both numbers entered)
+ 	 	 	 	; - Validate each character as OCTAL (0-9, A-F)
+ 	 	 	 	; - Place in In_Buff string
+ 	 	 	 	;
+ 0038	 	 	 	Get_Octal_S:
+ 0038  BB 0057 R	 	            Mov  BX, Offset Number_1        ; M
+	 	 	 	ake [BX] point to 1st number
+ 003B  B9 0000	 	 	            Mov  CX, 0                      ; C
+	 	 	 	lear Char.Counter
+ 003E	 	 	 	Next_Byte:
+ 003E  B4 01	 	 	            Mov  AH, 1H                     ; G
+	 	 	 	et Character
+ 0040  CD 21	 	 	            Int  21H                        ;  
+	 	 	 	from keyboard
+ 	 	 	 	
+ 	 	 	 	     ; Make sure Character is Octal....        
+	 	 	 	    
+ 0042  3C 30	 	 	            Cmp  AL, 48D                    ; C
+	 	 	 	ompare it to "0"
+ 0044  72 1F	 	 	            JB   Not_Octal                    ;
+	 	 	 	  Less than "0" is Invalid
+ 	 	 	 	            
+ 0046  3C 39	 	 	            Cmp  AL, 57D                    ; C
+	 	 	 	ompare it to "9"
+ 0048  7E 0A	 	 	            JLE  Good_Octal                   ;
+	 	 	 	  Less or Equal to "9" is Octal
+ 	 	 	 	
+ 004A  3C 41	 	 	            Cmp  AL, "A"                    ; C
+	 	 	 	ompare it to "A"
+ 004C  7C 17	 	 	            JL   Not_Octal                    ;
+	 	 	 	  Less than "A" is Invalid
+ 	 	 	 	
+ 004E  3C 46	 	 	            Cmp  AL, "F"                    ; C
+	 	 	 	ompare it to "F"
+ 0050  7F 13	 	 	            JG   Not_Octal                    ;
+	 	 	 	  Greater than "F" is Invalid   
+ 	 	 	 	            
+ 0052  2C 07	 	 	            Sub  AL, 7D                     ; S
+	 	 	 	ince it is A->F Sub 7
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-4
+	 	 	 	 	 	 	 	04-04-;0    
+
+
+ 	 	 	 	                                            ;  
+	 	 	 	so it will be just above "9"
+ 0054	 	 	 	Good_Octal:   
+ 0054  2C 30	 	 	            Sub  AL, 48D                    ; N
+	 	 	 	ow convert the byte to a
+ 	 	 	 	                                            ;  
+	 	 	 	Octal nibble (0000 -> 1111)
+ 	 	 	 	
+ 0056  88 07	 	 	            Mov  [BX], AL                   ; S
+	 	 	 	tore the full byte as part
+ 	 	 	 	                                            ;  
+	 	 	 	of string...however we will 
+ 	 	 	 	                                            ;  
+	 	 	 	only use right 4 bits (nibble) 
+ 	 	 	 	            
+ 0058  83 C3 01	 	 	            Add  BX, 1                      ; P
+	 	 	 	oint to next byte
+ 	 	 	 	                                            
+ 005B  83 C1 01	 	 	            Add  CX, 1                      ; I
+	 	 	 	ncrement Byte counter          
+ 005E  83 F9 0A	 	 	            Cmp  CX, Max_Nibbles            ; C
+	 	 	 	heck if we have filled num
+ 0061  74 0B	 	 	            JE   GHN_Done                   ; Y
+	 	 	 	ES 
+ 0063  EB D9	 	 	            Jmp  Next_Byte                  ; G
+	 	 	 	o get next Char.from Terminal
+ 0065	 	 	 	Not_Octal:
+ 0065  BA 002A R	 	            Mov  DX, OffSet Bad_Octal         ;
+	 	 	 	 Place Octal error message 
+ 0068  B4 09	 	 	            Mov  AH, 9H                     ;  
+	 	 	 	on screen
+ 006A  CD 21	 	 	            Int  21H                        ;
+ 006C  EB C5	 	 	            Jmp  Done                       ; a
+	 	 	 	nd return to DOS            
+ 006E	 	 	 	GHN_Done:
+ 006E  80 3E 006C R 31	 	            Cmp  HString, '1'               ;Ha
+	 	 	 	ve we entered both strings
+ 0073  75 11	 	 	            JNE  All_Done                   ;Ye
+	 	 	 	s
+ 0075  C6 06 006C R 32	 	            Mov  HString, '2'               ;No
+ 007A  B9 0000	 	 	            Mov  CX, 0                      ;Re
+	 	 	 	set Nibble Counter
+ 007D  BA 0026 R	 	            Mov  DX,OffSet CR_LF_Plus       ; N
+	 	 	 	ew Line
+ 0080  B4 09	 	 	            Mov  AH,9H                      ; 
+ 0082  CD 21	 	 	            Int  21H                        ;  
+	 	 	 	          
+ 0084  EB B8	 	 	            Jmp  Next_Byte                  ;Ge
+	 	 	 	t next string
+ 0086	 	 	 	All_Done:
+ 0086  C3	 	 	            Ret
+ 	 	 	 	
+ 	 	 	 	;----------------------------------------------
+	 	 	 	-----------------------------            
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-5
+	 	 	 	 	 	 	 	04-04-;0    
+
+
+ 0087	 	 	 	Add_nn_Nibbles:
+ 0087  B2 00	 	 	           Mov DL, 0                        ; I
+	 	 	 	nit Byte counter
+ 0089  BB 0057 R	 	           Mov BX, Offset Number_1          ; L
+	 	 	 	eft end of Number_1
+ 008C  83 C3 09	 	 	           Add BX, Max_Nibbles - 1          ; R
+	 	 	 	ight end byte of Number_1
+ 008F	 	 	 	A32N:
+ 008F  8A 07	 	 	           Mov AL, [BX]                     ; B
+	 	 	 	yte to AL
+ 0091  83 C3 0A	 	 	           Add BX, Max_Nibbles              ; P
+	 	 	 	oint to Number_2 String
+ 0094  8A 27	 	 	           Mov AH, [BX]                     ; B
+	 	 	 	yte to AH
+ 0096  80 3E 006B R 4E	 	           Cmp My_Carry, "N"                ; T
+	 	 	 	est my carry
+ 009B  74 04	 	 	           JE  No_Carry                     ;
+ 009D  F9	 	 	           STC                              ; S
+	 	 	 	et Carry Flag
+ 009E  EB 02 90	 	 	           Jmp AN1                          ;
+ 00A1	 	 	 	No_Carry:  
+ 00A1  F8	 	 	           CLC                              ; C
+	 	 	 	lear Carry Flag
+ 00A2	 	 	 	AN1:      
+ 00A2  12 E0	 	 	           ADC AH, AL                       ; A
+	 	 	 	DC AL --> AH
+ 	 	 	 	
+ 00A4  80 FC 07	 	 	           Cmp AH, 7D                      ; Ch
+	 	 	 	eck for Carry in Nibble
+ 00A7  7E 0B	 	 	           JLE NCRY                         ;  
+	 	 	 	  None
+ 00A9  80 EC 08	 	 	           Sub AH, 8D                      ;   
+	 	 	 	 Yes, subtract 8D
+ 00AC  C6 06 006B R 59	 	           Mov My_Carry, "Y"                ; S
+	 	 	 	et My_Carry to "Y"
+ 00B1  EB 06 90	 	 	           Jmp Carry_OK                     ;
+ 00B4	 	 	 	NCRY:        
+ 00B4  C6 06 006B R 4E	 	           Mov My_Carry, "N"                ; S
+	 	 	 	et My_Carry to "N"
+ 00B9	 	 	 	Carry_OK:
+ 00B9  88 27	 	 	           Mov [BX], AH                     ; P
+	 	 	 	lace Sum in Number_2 String
+ 00BB  83 EB 0B	 	 	           Sub BX, Max_Nibbles + 1          ; P
+	 	 	 	oint to previous byte in
+ 	 	 	 	                                            ;  
+	 	 	 	  Number_1....
+ 00BE  80 C2 01	 	 	           Add DL, 1                        ; C
+	 	 	 	ount another byte
+ 00C1  80 FA 0A	 	 	           Cmp DL, Max_Nibbles              ; A
+	 	 	 	re we done?
+ 00C4  7C C9	 	 	           JL  A32N                         ; N
+	 	 	 	o....loop
+ 00C6  C3	 	 	           Ret                              ; Y
+	 	 	 	es...return....
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-6
+	 	 	 	 	 	 	 	04-04-;0    
+
+
+ 	 	 	 	
+ 	 	 	 	;----------------------------------------------
+	 	 	 	-----------------------------            
+ 00C7	 	 	 	Print_Octal:
+ 00C7  BB 0061 R	 	           Mov  BX, Offset Number_2     ; Answe
+	 	 	 	r
+ 00CA  B5 00	 	 	           Mov  CH, 0                   ; Init 
+	 	 	 	byte counter
+ 00CC	 	 	 	PHS2_Loop:
+ 00CC  80 FD 0A	 	 	           Cmp  CH, Max_Nibbles         ; Check
+	 	 	 	 for all done
+ 00CF  7D 1A	 	 	           JGE  PHS2_Exit               ;  Yes.
+	 	 	 	..get out of here!
+ 00D1  8B 07	 	 	           Mov  AX, [BX]                ; Get a
+	 	 	 	 byte
+ 00D3  83 C3 01	 	 	           Add  BX,1                    ; Have 
+	 	 	 	BX point to next Byte
+ 00D6  80 C5 01	 	 	           Add  CH,1                    ; Count
+	 	 	 	 them bytes
+ 	 	 	 	
+ 00D9	 	 	 	Print_One_Octal_Digit:                    ; Pri
+	 	 	 	nt right 4 bits in OCTAL
+ 00D9  24 0F	 	 	           And  AL,0FH                  ;This  
+	 	 	 	(not nec.but good idea)
+ 00DB  04 30	 	 	           Add  AL,30H                  ; makes
+	 	 	 	 Binary
+ 00DD  3C 3A	 	 	           Cmp  AL,3AH                  ;  into
+	 	 	 	  Octal
+ 00DF  72 02	 	 	           JB   Display_It              ;      
+	 	 	 	      ASCII
+ 00E1  04 07	 	 	           Add  AL,7H                   ; (Jump
+	 	 	 	s between 9 -> A)
+ 00E3	 	 	 	Display_It:
+ 00E3  8A D0	 	 	           Mov  DL,AL                   ;Print 
+	 	 	 	the
+ 00E5  B4 02	 	 	           Mov  AH,2H                   ; Octal
+	 	 	 	 nibble that has been
+ 00E7  CD 21	 	 	           Int  21H                     ;  conv
+	 	 	 	erted to ASCII
+ 00E9  EB E1	 	 	           Jmp  PHS2_Loop               ;Again.
+	 	 	 	..
+ 00EB	 	 	 	PHS2_Exit:
+ 00EB  C3	 	 	           Ret
+ 	 	 	 	;----------------------------------------------
+	 	 	 	------------------------------
+ 00EC	 	 	 	Code EndS
+ 	 	 	 	End  Prog_Start
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	04-04-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	00EC	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	006D	PARA  	NONE	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+A32N . . . . . . . . . . . . . .	L NEAR 	008F	CODE
+ADD_NN_NIBBLES . . . . . . . . .	L NEAR 	0087	CODE
+ALL_DONE . . . . . . . . . . . .	L NEAR 	0086	CODE
+AN1. . . . . . . . . . . . . . .	L NEAR 	00A2	CODE
+BAD_OCTAL. . . . . . . . . . . .	L BYTE 	002A	DATA
+CARRY_OK . . . . . . . . . . . .	L NEAR 	00B9	CODE
+CR_LF. . . . . . . . . . . . . .	L BYTE 	0023	DATA
+CR_LF_PLUS . . . . . . . . . . .	L BYTE 	0026	DATA
+CR_LF_SP . . . . . . . . . . . .	L BYTE 	001F	DATA
+DISPLAY_IT . . . . . . . . . . .	L NEAR 	00E3	CODE
+DONE . . . . . . . . . . . . . .	L NEAR 	0033	CODE
+GET_OCTAL_S. . . . . . . . . . .	L NEAR 	0038	CODE
+GHN_DONE . . . . . . . . . . . .	L NEAR 	006E	CODE
+GOOD_OCTAL . . . . . . . . . . .	L NEAR 	0054	CODE
+HSTRING. . . . . . . . . . . . .	L BYTE 	006C	DATA
+MAX_NIBBLES. . . . . . . . . . .	Number	000A	
+MY_CARRY . . . . . . . . . . . .	L BYTE 	006B	DATA
+NCRY . . . . . . . . . . . . . .	L NEAR 	00B4	CODE
+NEXT_BYTE. . . . . . . . . . . .	L NEAR 	003E	CODE
+NOT_OCTAL. . . . . . . . . . . .	L NEAR 	0065	CODE
+NO_CARRY . . . . . . . . . . . .	L NEAR 	00A1	CODE
+NUMBER_1 . . . . . . . . . . . .	L BYTE 	0057	DATA	Length =000A
+NUMBER_2 . . . . . . . . . . . .	L BYTE 	0061	DATA	Length =000A
+NXT_1. . . . . . . . . . . . . .	L NEAR 	0029	CODE
+PHS2_EXIT. . . . . . . . . . . .	L NEAR 	00EB	CODE
+PHS2_LOOP. . . . . . . . . . . .	L NEAR 	00CC	CODE
+PRINT_OCTAL. . . . . . . . . . .	L NEAR 	00C7	CODE
+PRINT_ONE_OCTAL_DIGIT. . . . . .	L NEAR 	00D9	CODE
+PROG_START . . . . . . . . . . .	L NEAR 	0000	CODE
+TYPE_1 . . . . . . . . . . . . .	L NEAR 	0027	CODE
+WELCOME_MESSAGE. . . . . . . . .	L BYTE 	0000	DATA
+
+49118 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0
