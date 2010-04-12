@@ -1,0 +1,308 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	04-11-;0    
+
+
+ 	 	 	 	Name SortSub
+ 	 	 	 	
+ 	 	 	 	;----------------------------------------------
+	 	 	 	-------------------
+ 	 	 	 	; This Subroutine will sort the records in Tabl
+	 	 	 	e
+ 	 	 	 	; Table is defined in  SortMain.Asm
+ 	 	 	 	;  and its' address is resolved by Link....a pl
+	 	 	 	ace for its address
+ 	 	 	 	;  is defined here by the Extrn statement
+ 	 	 	 	;----------------------------------------------
+	 	 	 	-------------------
+ 	 	 	 	
+ 	 	 	 	Extrn  Table: Far
+ 	 	 	 	
+ 	 	 	 	;----------------------------------------------
+	 	 	 	-------------------
+ 0000	 	 	 	Data Segment Public
+ 	 	 	 	
+ 0000  0000	 	 	Num_Recs            DW  0
+ 0002  0000	 	 	Flip_Cntr           DW  0
+ 0004     15 [	 	 	Hold_Rec            DB  21D DUP ('%') 
+                25	 	
+                    ]	 	
+ 	 	 	 	
+ 0019  0000	 	 	H_Num_Recs          DW  0
+ 	 	 	 	
+ 001B  0000	 	 	M_SI                DW  0
+ 001D  0000	 	 	M_DI                DW  0
+ 	 	 	 	
+ 001F  0D 0A 53 6F 72 74	Mess_Sort_Beg       DB  0DH, 0AH, "Sort beginni
+	 	 	 	ng", 0DH, 0AH, "$"
+       20 62 65 67 69 6E	
+       6E 69 6E 67 0D 0A	
+       24	 	 	
+ 0032  0D 0A 53 6F 72 74	Mess_Sort_End       DB  0DH, 0AH, "Sort finishe
+	 	 	 	d ", 0DH, 0AH, 0AH, "$" 
+       20 66 69 6E 69 73	
+       68 65 64 20 0D 0A	
+       0A 24	 	 	
+ 0046  2A 46 6C 69 70 2A	Mess_Flip           DB  "*Flip*", 0DH, 0AH, "$"
+       0D 0A 24	 	 	
+ 004F  2A 2A 50 61 73 73	Mess_Pass           DB  "**Pass Complete**", 0D
+	 	 	 	H, 0AH, "$"
+       20 43 6F 6D 70 6C	
+       65 74 65 2A 2A 0D	
+       0A 24	 	 	
+ 	 	 	 	
+ 0063	 	 	 	Data EndS
+ 	 	 	 	;----------------------------------------------
+	 	 	 	-------------------
+ 0000	 	 	 	Code Segment
+ 	 	 	 	
+ 0000	 	 	 	SortSub Proc Far
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	04-11-;0    
+
+
+ 	 	 	 	Public SortSub
+ 	 	 	 	
+ 	 	 	 	Assume CS:Code,DS:Data                 ; We nee
+	 	 	 	d to tell MASM about the
+ 	 	 	 	                                       ; the CS
+	 	 	 	 & DS Segment Registers, BUT
+ 	 	 	 	                                       ; we DO 
+	 	 	 	NOT give DS a value...
+ 	 	 	 	
+ 0000  50	 	 	       Push AX                         ; Save t
+	 	 	 	he registers on the Stack
+ 0001  53	 	 	       Push BX                         ; ...so 
+	 	 	 	we can use them here...
+ 0002  51	 	 	       Push CX                         ; ..
+ 0003  52	 	 	       Push DX                         ; .
+ 	 	 	 	 
+ 0004  89 16 0000 R	 	       Mov  Num_Recs, DX               ;Save Nu
+	 	 	 	m Recs input (passed via DX)
+ 	 	 	 	 
+ 0008  BA 001F R	 	       Mov  DX, OffSet Mess_Sort_Beg   ;Type So
+	 	 	 	rt Beginning Message
+ 000B  B0 09	 	 	       Mov  AL, 9
+ 000D  CD 21	 	 	       Int  21H
+ 	 	 	 	
+ 000F	 	 	 	S_Loop:
+ 000F  83 2E 0000 R 01	 	       Sub  Num_Recs, 1                ;Num_Rec
+	 	 	 	s - 1 = Number of Compares
+ 0014  83 3E 0000 R 00	 	       Cmp  Num_Recs, 0                ;Did we 
+	 	 	 	have only 1 record input?
+ 0019  7E 03	 	 	       JLE  S_Donez                    ; yes...
+	 	 	 	can't sort 1 record
+ 001B  EB 04 90	 	 	       JMP  SL_0
+ 001E	 	 	 	S_Donez:
+ 001E  E9 00BD R	 	       JMP  S_Done               ;Long-Jump...2
+	 	 	 	0 bits...
+ 0021	 	 	 	SL_0:
+ 0021  BE 0000 E	 	       Mov  SI, offset Table           ;Address
+	 	 	 	 of First  record to SI
+ 0024  8B FE	 	 	       Mov  DI, SI                     ;Address
+	 	 	 	 of Second record to DI
+ 0026  83 C7 15	 	 	       Add  DI, 21D                    ;       
+	 	 	 	    which is 21D bytes away
+ 0029  89 36 001B R	 	       Mov  M_SI, SI                   ;Hold SI
+ 002D  89 3E 001D R	 	       Mov  M_DI, DI                   ;Hold DI
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ 	 	 	 	       
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-3
+	 	 	 	 	 	 	 	04-11-;0    
+
+
+ 	 	 	 	
+ 	 	 	 	
+ 0031  8B 16 001B R	 	       Mov  DX, M_SI                   ;Type 1s
+	 	 	 	t record
+ 0035  B0 09	 	 	       Mov  AL, 9
+ 0037  CD 21	 	 	       Int  21H
+ 	 	 	 	       
+ 0039  8B 16 001D R	 	       Mov  DX, M_DI                   ;Type 2n
+	 	 	 	d record
+ 003D  B0 09	 	 	       Mov  AL, 9
+ 003F  CD 21	 	 	       Int  21H
+ 	 	 	 	       
+ 0041  8B 16 0000 R	 	       Mov  DX, Num_Recs               ;Hold Nu
+	 	 	 	m_recs
+ 0045  89 16 0019 R	 	       Mov  H_Num_Recs, DX             ; for wo
+	 	 	 	rking with....
+ 0049  C7 06 0002 R 0000	       Mov  Flip_Cntr, 0               ;Zero th
+	 	 	 	e Flip Counter
+ 004F	 	 	 	SL_1:
+ 004F  8B 36 001B R	 	       Mov  SI, M_SI                   ;setup S
+	 	 	 	I
+ 0053  8B 3E 001D R	 	       Mov  DI, M_DI                   ;setup D
+	 	 	 	I
+ 0057  B9 000A	 	 	       Mov  CX, 10D                    ;String 
+	 	 	 	Length to CX  (10 byte compare)
+ 005A  FC	 	 	       CLD                             ; go for
+	 	 	 	ward...
+ 005B  F3/ A6	 	 	       REPZ  CMPSB                     ; Compar
+	 	 	 	e the string until NotEqual
+ 005D  7F 28	 	 	       JG   Flip_em                    ;String 
+	 	 	 	1st > 2nd  ...go Flip them..
+ 005F	 	 	 	SL_2:       
+ 005F  83 2E 0019 R 01	 	       Sub  H_Num_Recs, 1              ;Another
+	 	 	 	 compare done...
+ 0064  83 3E 0019 R 00	 	       Cmp  H_Num_Recs, 0              ;are we 
+	 	 	 	done comparing record pairs?
+ 0069  74 0C	 	 	       JZ   Pass_Done                  ;yes...g
+	 	 	 	o do some more checking
+ 006B  83 06 001B R 15	 	       Add  M_SI, 21D                  ;Point t
+	 	 	 	o next record
+ 0070  83 06 001D R 15	 	       Add  M_DI, 21D                  ;Point t
+	 	 	 	o next record
+ 0075  EB D8	 	 	       Jmp  SL_1                       ;go do a
+	 	 	 	nother compare
+ 0077	 	 	 	Pass_Done:
+ 0077  BA 004F R	 	       Mov  DX, OffSet Mess_Pass       ;Type Pa
+	 	 	 	ss Message
+ 007A  B0 09	 	 	       Mov  AL, 9
+ 007C  CD 21	 	 	       Int  21H
+ 	 	 	 	
+ 007E  83 3E 0002 R 00	 	       Cmp  Flip_Cntr, 0               ;Did we 
+	 	 	 	flip any record pairs this pass
+ 0083  74 38	 	 	       JE   S_Done                     ;NO - We
+	 	 	 	 are done...
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-4
+	 	 	 	 	 	 	 	04-11-;0    
+
+
+ 0085  EB 9A	 	 	       Jmp  SL_0                       ;do anot
+	 	 	 	her pass....
+ 0087	 	 	 	Flip_em:       
+ 0087  8B 36 001B R	 	       Mov  SI, M_SI                   ;1st to
+ 008B  BF 0004 R	 	       Mov  DI, Offset Hold_Rec        ;       
+	 	 	 	 hold
+ 008E  B9 0015	 	 	       Mov  CX, 21D                    ;
+ 0091  FC	 	 	       CLD                             ;just in
+	 	 	 	 case
+ 0092  F3/ A4	 	 	       REP  MOVSB                      ;move th
+	 	 	 	e string
+ 	 	 	 	
+ 0094  8B 36 001D R	 	       Mov  SI, M_DI                   ;2nd to
+ 0098  8B 3E 001B R	 	       Mov  DI, M_SI                   ;       
+	 	 	 	 1st
+ 009C  B9 0015	 	 	       Mov  CX, 21D                    ;
+ 009F  FC	 	 	       CLD                             ;
+ 00A0  F3/ A4	 	 	       REP  MOVSB                      ;move th
+	 	 	 	e string
+ 	 	 	 	
+ 00A2  BE 0004 R	 	       Mov  SI, Offset Hold_Rec        ;hold to
+ 00A5  8B 3E 001D R	 	       Mov  DI, M_DI                   ;       
+	 	 	 	 2nd
+ 00A9  B9 0015	 	 	       Mov  CX, 21D                    ;
+ 00AC  FC	 	 	       CLD                             ;
+ 00AD  F3/ A4	 	 	       REP  MOVSB                      ;move th
+	 	 	 	e string
+ 	 	 	 	       
+ 00AF  BA 0046 R	 	       Mov  DX, OffSet Mess_Flip       ;Type Fl
+	 	 	 	ip Message
+ 00B2  B0 09	 	 	       Mov  AL, 9
+ 00B4  CD 21	 	 	       Int  21H
+ 	 	 	 	
+ 00B6  83 06 0002 R 01	 	       Add  Flip_Cntr, 1               ;count t
+	 	 	 	he flip...
+ 00BB  EB A2	 	 	       Jmp  SL_2                       ;go cont
+	 	 	 	ine compares..
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 	 	 	 	
+ 00BD	 	 	 	S_Done:
+ 	 	 	 	
+ 00BD  BA 0032 R	 	       Mov  DX, OffSet Mess_Sort_End   ;Type So
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-5
+	 	 	 	 	 	 	 	04-11-;0    
+
+
+	 	 	 	rt Ending Message
+ 00C0  B0 09	 	 	       Mov  AL, 9
+ 00C2  CD 21	 	 	       Int  21H
+ 	 	 	 	
+ 00C4  5A	 	 	       Pop  DX                         ; Restor
+	 	 	 	e the registers from Stack
+ 00C5  59	 	 	       Pop  CX                         ; ...so 
+	 	 	 	Sortmain.Asm does not know
+ 00C6  5B	 	 	       Pop  BX                         ; ..have
+	 	 	 	 used them....Note: Reverse
+ 00C7  58	 	 	       Pop  AX                         ; .seque
+	 	 	 	nce of the Pop's vs Push's
+ 	 	 	 	       
+ 00C8  CB	 	 	       Ret                             ; Return
+	 	 	 	....(to SortMain.Asm)
+ 	 	 	 	
+ 00C9	 	 	 	SortSub EndP
+ 00C9	 	 	 	Code Ends
+ 	 	 	 	;----------------------------------------------
+	 	 	 	---------------------------
+ 	 	 	 	End                       ; Note....no Start Ad
+	 	 	 	dress  (Subroutine Module)
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	04-11-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	00C9	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	0063	PARA  	PUBLIC	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+FLIP_CNTR. . . . . . . . . . . .	L WORD 	0002	DATA
+FLIP_EM. . . . . . . . . . . . .	L NEAR 	0087	CODE
+HOLD_REC . . . . . . . . . . . .	L BYTE 	0004	DATA	Length =0015
+H_NUM_RECS . . . . . . . . . . .	L WORD 	0019	DATA
+MESS_FLIP. . . . . . . . . . . .	L BYTE 	0046	DATA
+MESS_PASS. . . . . . . . . . . .	L BYTE 	004F	DATA
+MESS_SORT_BEG. . . . . . . . . .	L BYTE 	001F	DATA
+MESS_SORT_END. . . . . . . . . .	L BYTE 	0032	DATA
+M_DI . . . . . . . . . . . . . .	L WORD 	001D	DATA
+M_SI . . . . . . . . . . . . . .	L WORD 	001B	DATA
+NUM_RECS . . . . . . . . . . . .	L WORD 	0000	DATA
+PASS_DONE. . . . . . . . . . . .	L NEAR 	0077	CODE
+SL_0 . . . . . . . . . . . . . .	L NEAR 	0021	CODE
+SL_1 . . . . . . . . . . . . . .	L NEAR 	004F	CODE
+SL_2 . . . . . . . . . . . . . .	L NEAR 	005F	CODE
+SORTSUB. . . . . . . . . . . . .	F PROC	0000	CODE	Global	Length 
+	 	 	 	=00C9
+S_DONE . . . . . . . . . . . . .	L NEAR 	00BD	CODE
+S_DONEZ. . . . . . . . . . . . .	L NEAR 	001E	CODE
+S_LOOP . . . . . . . . . . . . .	L NEAR 	000F	CODE
+TABLE. . . . . . . . . . . . . .	L FAR  	0000	 	External
+
+49538 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0

@@ -89,7 +89,7 @@ SL_1:
        Mov  CX, 10D                    ;String Length to CX  (10 byte compare)
        CLD                             ; go forward...
        REPZ  CMPSB                     ; Compare the string until NotEqual
-       JL   Flip_em                    ;String 1st > 2nd  ...go Flip them..
+       JG   Flip_em                    ;String 1st > 2nd  ...go Flip them..
 SL_2:       
        Sub  H_Num_Recs, 1              ;Another compare done...
        Cmp  H_Num_Recs, 0              ;are we done comparing record pairs?
