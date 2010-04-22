@@ -1,6 +1,6 @@
 ;KbdTSR5.Asm   [ NEW HomeWork - Apr.2005]    CS272   G.Newton             
 
-;Homework Assigned April 6, 2005   Due  April 13, 2005
+;Homework #9 2010-04-22 Terry Lorber
 
 Data Segment  
 
@@ -8,7 +8,7 @@ IntNo   Equ  9H   ;Interupt Number we are modifying  (KeyBoard Press)
 
 OldVector    DD 00000000   ;Save Old Vector Address here (32 bits - 4 bytes)
 
-ScrChar      DB 01         ;smiley face
+ScrChar      DB "$"        ;smiley face
 Color        DB 00         ;character attribute
 
 Data EndS
@@ -42,7 +42,8 @@ My_Int_TSR:
             Push DI                    ;that may be needed
             Mov AX, 0B800H             ;Top-Left Corner of Screen
             Mov ES, AX
-            Mov AX, 0098H         ;go to Right end of line #1 (2 pos./Char.)
+            Mov AX, 00
+                       ;go to 12x40 (2 pos./Char.)
             Mov DI, AX
             Mov AL, ScrChar       ;Your Character
             STOSB                 ;Place AL Char. in top-right corner screen

@@ -1,0 +1,196 @@
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-1
+	 	 	 	 	 	 	 	04-21-;0    
+
+
+ 	 	 	 	;KbdTSR5.Asm   [ NEW HomeWork - Apr.2005]    CS
+	 	 	 	272   G.Newton             
+ 	 	 	 	
+ 	 	 	 	;Homework #9 2010-04-22 Terry Lorber
+ 	 	 	 	
+ 0000	 	 	 	Data Segment  
+ 	 	 	 	
+ = 0009	 	 	 	IntNo   Equ  9H   ;Interupt Number we are modif
+	 	 	 	ying  (KeyBoard Press)
+ 	 	 	 	
+ 0000  00 00 00 00	 	OldVector    DD 00000000   ;Save Old Vector Add
+	 	 	 	ress here (32 bits - 4 bytes)
+ 	 	 	 	
+ 0004  24	 	 	ScrChar      DB "$"        ;smiley face
+ 0005  00	 	 	Color        DB 00         ;character attribute
+ 	 	 	 	
+ 0006	 	 	 	Data EndS
+ 	 	 	 	
+ 0000	 	 	 	Code Segment
+ 	 	 	 	Assume CS:Code,DS:Data
+ 	 	 	 	
+ 0000  B8 ---- R	 	Prog_Start: Mov  AX, Data
+ 0003  8E D8	 	 	            Mov  DS, AX
+ 0005  EB 2F 90	 	 	            Jmp  ChgVector
+ 	 	 	 	
+ 	 	 	 	;**********************************************
+	 	 	 	********************************
+ 0008	 	 	 	My_Int_TSR:            
+ 0008  1E	 	 	            Push DS
+ 	 	 	 	
+ 	 	 	 	; - Begin Call Old Vector Routine - Have DOS/BI
+	 	 	 	OS process the Keystroke
+ 	 	 	 	;                                   as they nor
+	 	 	 	mally would...
+ 	 	 	 	
+ 0009  52	 	 	            Push DX                    ; Save D
+	 	 	 	X
+ 000A  BA ---- R	 	            Mov  DX, Data              ; TSR co
+	 	 	 	de needs DS set
+ 000D  8E DA	 	 	            Mov  DS, DX                ;  for a
+	 	 	 	ccessing  OldVect...
+ 000F  5A	 	 	            Pop  DX                    ; Now re
+	 	 	 	store it....
+ 0010  9C	 	 	           PushF             ;Call the    NOTE:
+	 	 	 	 FLAGS get place on STACK for Int
+ 0011  FF 1E 0000 R	 	            Call  OldVector            ; Old In
+	 	 	 	terrupt Routine
+ 	 	 	 	
+ 	 	 	 	; - End Call Old Vector Routine - Now we do out
+	 	 	 	 "Stuff"            
+ 	 	 	 	
+ 0015  56	 	 	            Push SI 
+ 0016  06	 	 	            Push ES
+ 0017  50	 	 	            Push AX                    ;Save th
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-2
+	 	 	 	 	 	 	 	04-21-;0    
+
+
+	 	 	 	e Registers
+ 0018  57	 	 	            Push DI                    ;that ma
+	 	 	 	y be needed
+ 0019  B8 B800	 	 	            Mov AX, 0B800H             ;Top-Lef
+	 	 	 	t Corner of Screen
+ 001C  8E C0	 	 	            Mov ES, AX
+ 001E  B8 0000	 	 	            Mov AX, 00
+ 	 	 	 	                       ;go to 12x40 (2 pos./Cha
+	 	 	 	r.)
+ 0021  8B F8	 	 	            Mov DI, AX
+ 0023  A0 0004 R	 	            Mov AL, ScrChar       ;Your Charact
+	 	 	 	er
+ 0026  AA	 	 	            STOSB                 ;Place AL Cha
+	 	 	 	r. in top-right corner screen
+ 0027  A0 0005 R	 	            Mov AL, Color         ;Now CHANGE t
+	 	 	 	he Color
+ 002A  AA	 	 	            STOSB                 ; now second 
+	 	 	 	char...(attribute byte)
+ 002B  80 06 0005 R 01	 	 	       Add Color, 1          ;Change yo
+	 	 	 	ur Color for next KeyStroke
+ 	 	 	 	
+ 0030  5F	 	 	Done:       Pop  DI
+ 0031  58	 	 	 	       Pop  AX
+ 0032  07	 	 	 	       Pop  ES
+ 0033  5E	 	 	 	       Pop  SI     
+ 0034  1F	 	 	            Pop  DS               ; Restore DS
+ 	 	 	 	
+ 0035  CF	 	 	            IRET                       ;*Return
+	 	 	 	 to the program you were running
+ 	 	 	 	                                       ; when t
+	 	 	 	he Interrupt occured.....
+ 	 	 	 	;**********************************************
+	 	 	 	********************************            
+ 	 	 	 	
+ 	 	 	 	; Set the Keyboard Interrupt Vector Segment & O
+	 	 	 	ffset Addresses to
+ 	 	 	 	; our own routine...
+ 	 	 	 	
+ 0036  B0 09	 	 	ChgVector:  Mov  AL, IntNo             ; Interr
+	 	 	 	upt
+ 0038  B4 35	 	 	            Mov  AH, 35H               ; DOS In
+	 	 	 	t21H function to get Vector
+ 003A  CD 21	 	 	            Int  21H
+ 	 	 	 	
+ 003C  89 1E 0000 R	 	            Mov  Word PTR  OldVector, BX    ; a
+	 	 	 	nd Save OldVector Address Here
+ 0040  8C 06 0002 R	 	            Mov  Word PTR  OldVector+2, ES  ; f
+	 	 	 	or use on keystroke interrupts
+ 	 	 	 	
+ 0044  B8 0000	 	 	            Mov  AX, 0                 ;Set ES 
+	 	 	 	to Memory Segment 0
+ 0047  8E C0	 	 	            Mov  ES, AX                ;  0000H
+ 0049  8E D8	 	 	            Mov  DS, AX
+ 004B  FC	 	 	            CLD                        ;Go forw
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	1-3
+	 	 	 	 	 	 	 	04-21-;0    
+
+
+	 	 	 	ard
+ 	 	 	 	
+ 004C  BF 0024	 	 	            Mov  DI, IntNo*4           ;Set DI 
+	 	 	 	offset to the 0Hth Interrupt
+ 	 	 	 	
+ 004F  FA	 	 	            CLI                        ;Disable
+	 	 	 	 Interrupts
+ 	 	 	 	
+ 0050  B8 0008 R	 	            Mov  AX, OffSet  My_Int_TSR
+ 0053  AB	 	 	            STOSW                      ; Place 
+	 	 	 	our Keyboard interrupt offset
+ 	 	 	 	
+ 0054  8C C8	 	 	            Mov  AX, CS                ;       
+	 	 	 	and CS Segment Address 
+ 0056  AB	 	 	            STOSW                      ;       
+	 	 	 	in the INT 9 Vector Table slot
+ 	 	 	 	
+ 0057  FB	 	 	            STI                        ;Enable 
+	 	 	 	Interrupts
+ 	 	 	 	
+ 	 	 	 	; Now EXIT from this program, leaving 20H Parag
+	 	 	 	raphs of it in memory....
+ 	 	 	 	
+ 0058  BA 0050	 	 	            Mov  DX, 50H               ;*Tell T
+	 	 	 	SR to keep 50H Paragraphs of
+ 	 	 	 	                                       ;  16 by
+	 	 	 	tes each in memory
+ 	 	 	 	            
+ 005B  B4 31	 	 	            Mov  AH, 31H               ;*Termin
+	 	 	 	ate process, Stay Resident in
+ 	 	 	 	                                       ;  memor
+	 	 	 	y    TSR
+ 005D  CD 21	 	 	            Int  21H                   ;*DOS In
+	 	 	 	t .... Exit Prog, Prog.stays
+ 	 	 	 	                                       ;       
+	 	 	 	       in memory
+ 	 	 	 	
+ 	 	 	 	;Return to DOS
+ 	 	 	 	
+ 005F	 	 	 	Code EndS
+ 	 	 	 	End  Prog_Start
+
+ Arrowsoft Assembler
+Public Domain v1.00d (64K Model) 	Page	Symbols
+	 	 	 	-1
+	 	 	 	 	 	 	 	04-21-;0    
+
+
+Segments and Groups:
+
+	 	N a m e	 	 	Size	Align	Combine	Class
+
+CODE . . . . . . . . . . . . . .	005F	PARA  	NONE	
+DATA . . . . . . . . . . . . . .	0006	PARA  	NONE	
+
+Symbols:            
+
+	 	N a m e	 	 	Type	Value	Attr         
+
+CHGVECTOR. . . . . . . . . . . .	L NEAR 	0036	CODE
+COLOR. . . . . . . . . . . . . .	L BYTE 	0005	DATA
+DONE . . . . . . . . . . . . . .	L NEAR 	0030	CODE
+INTNO. . . . . . . . . . . . . .	Number	0009	
+MY_INT_TSR . . . . . . . . . . .	L NEAR 	0008	CODE
+OLDVECTOR. . . . . . . . . . . .	L DWORD	0000	DATA
+PROG_START . . . . . . . . . . .	L NEAR 	0000	CODE
+SCRCHAR. . . . . . . . . . . . .	L BYTE 	0004	DATA
+
+49694 Bytes free   
+
+Warning Severe
+Errors	Errors 
+0	0
