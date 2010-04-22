@@ -68,7 +68,7 @@ Public Domain v1.00d (64K Model) 	Page	1-2
  0019  B8 B800	 	 	            Mov AX, 0B800H             ;Top-Lef
 	 	 	 	t Corner of Screen
  001C  8E C0	 	 	            Mov ES, AX
- 001E  B8 0000	 	 	            Mov AX, 00
+ 001E  B8 BE80	 	 	            Mov AX, 0BE80H
  	 	 	 	                       ;go to 12x40 (2 pos./Cha
 	 	 	 	r.)
  0021  8B F8	 	 	            Mov DI, AX

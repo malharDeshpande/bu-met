@@ -42,7 +42,7 @@ My_Int_TSR:
             Push DI                    ;that may be needed
             Mov AX, 0B800H             ;Top-Left Corner of Screen
             Mov ES, AX
-            Mov AX, 00
+            Mov AX, 0BE80H
                        ;go to 12x40 (2 pos./Char.)
             Mov DI, AX
             Mov AL, ScrChar       ;Your Character
