@@ -154,9 +154,9 @@ public class p1_HuffmanCode {
 			Node z = new Node(null, 0);
 			log("Extract two min nodes...");
 			Node x = extractMin();
-			log("x is " + x.getFrequency() + " with " + x.getLeft() + " " + x.getRight());
+			log("x is " + x.getFrequency());
 			Node y = extractMin();
-			log("y is " + y.getFrequency() + " with " + y.getLeft() + " " + y.getRight());
+			log("y is " + y.getFrequency());
 			z.setLeft(x);
 			z.setRight(y);
 			z.setFrequency(x.getFrequency() + y.getFrequency());
@@ -198,6 +198,14 @@ public class p1_HuffmanCode {
 	
 	private final void writeFileOut() {
 		inorderPrint(_nodes[1]);
+		
+		try {
+		    BufferedWriter out = new BufferedWriter(new FileWriter(_output));
+		    inorderWrite(_nodes[1], out);
+		    out.close();
+		} catch (IOException e) {
+			log("Error: " + e.getMessage());
+		}
 	}
 	
 	private void printNodes() {
@@ -205,6 +213,22 @@ public class p1_HuffmanCode {
 		      log("Symbol is " + quote(_nodes[loop].getSymbol()) + ", and frequency is " + quote(String.valueOf(_nodes[loop].getFrequency())) );			
 		}
 
+	}
+	
+	private void inorderWrite(Node n, BufferedWriter out) {
+		if (n != null) {
+			inorderWrite(n.getLeft(), out);
+			try {
+				if (n.getSymbol() != null) { 
+					out.write(n.getSymbol() + ":" + n.getFrequency() + "\n");
+				} else {
+					out.write(n.getFrequency() + "\n");
+				}
+			} catch (IOException e) {
+				log("Error: " + e.getMessage());
+			}
+			inorderWrite(n.getRight(), out);
+		}
 	}
 	
 	private void inorderPrint(Node n) {
@@ -218,6 +242,7 @@ public class p1_HuffmanCode {
 			inorderPrint(n.getRight());
 		}
 	}
+	
 	private final File _input;
 	private final File _output;
 	private p1_HuffmanCode.Node[] _nodes;
