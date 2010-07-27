@@ -4,38 +4,6 @@ import java.util.Scanner;
 
 public class p1_HuffmanCode {
 
-	public class Node {
-
-		/**
-		 * Constructor
-		 * @param symbol
-		 * @param frequency
-		 */
-		public Node(String symbol, int frequency) {
-			_symbol = symbol;
-			_frequency = frequency;
-			_left = null;
-			_right = null;
-		}
-		
-		public String getSymbol() { return _symbol; }
-		public int getFrequency() { return _frequency; }
-		public Node getLeft() { return _left; }
-		public Node getRight() { return _right; }
-		
-		public void setSymbol(String symbol) { _symbol = symbol; }
-		public void setFrequency(int frequency) { _frequency = frequency; }
-		public void setLeft(Node left) { _left = left; }
-		public void setRight(Node right) { _right = right; }
-		
-		// PRIVATE //
-		
-		private String _symbol;
-		private int _frequency;
-		private Node _left;
-		private Node _right;
-	}
-	
 	public Throwable HeapUnderflowException;
 	
 	/**
@@ -64,8 +32,8 @@ public class p1_HuffmanCode {
 	public p1_HuffmanCode(File aInput, File aOutput) {
 		_input = aInput;
 		_output = aOutput;
-		_nodes = new Node[50];
-		_nodes[0] = new Node(null, 0);
+		_nodes = new p1_Node[50];
+		_nodes[0] = new p1_Node(null, 0);
 		_nodeCounter = 1;
 	}
 
@@ -93,10 +61,10 @@ public class p1_HuffmanCode {
 	      String frequency = scanner.next();
 	      log("Symbol is " + quote(symbol.trim()) + ", and frequency is " + quote(frequency.trim()) );
 
-	      p1_HuffmanCode.Node node = new p1_HuffmanCode.Node(symbol, Integer.parseInt(frequency));
+	      p1_Node node = new p1_Node(symbol, Integer.parseInt(frequency));
 	      if (_nodeCounter > _nodes.length) {
 	    	  int newSize = 2 * _nodes.length;
-	    	  p1_HuffmanCode.Node[] newNodes = new p1_HuffmanCode.Node[newSize];
+	    	  p1_Node[] newNodes = new p1_Node[newSize];
 	    	  System.arraycopy(_nodes, 0, newNodes, 0, _nodes.length);
 	    	  _nodes = newNodes;
 	    	  log("Size of nodes array increased to: " + newSize);
@@ -128,7 +96,7 @@ public class p1_HuffmanCode {
 			smallest = right;
 		}
 		if (smallest != index) {
-			Node temp = _nodes[index];
+			p1_Node temp = _nodes[index];
 			_nodes[index] = _nodes[smallest];
 			_nodes[smallest] = temp;
 			minHeapify(smallest);
@@ -151,11 +119,11 @@ public class p1_HuffmanCode {
 	private final void constructTree() {
 		int n = _nodeCounter - 1;
 		for (int loop = 1; loop < n; loop++) {
-			Node z = new Node(null, 0);
+			p1_Node z = new p1_Node(null, 0);
 			log("Extract two min nodes...");
-			Node x = extractMin();
+			p1_Node x = extractMin();
 			log("x is " + x.getFrequency());
-			Node y = extractMin();
+			p1_Node y = extractMin();
 			log("y is " + y.getFrequency());
 			z.setLeft(x);
 			z.setRight(y);
@@ -167,8 +135,8 @@ public class p1_HuffmanCode {
 		}
 	}
 	
-	private Node extractMin() {
-		Node min = null;
+	private p1_Node extractMin() {
+		p1_Node min = null;
 		if (_nodeCounter > 0) {
 			min = _nodes[1];
 			_nodes[1] = _nodes[--_nodeCounter];
@@ -177,10 +145,10 @@ public class p1_HuffmanCode {
 		return min;
 	}
 	
-	private void insert(Node node) {
+	private void insert(p1_Node node) {
 		if (_nodeCounter > _nodes.length) {
 			int newSize = _nodes.length * 2;
-			Node newNodes[] = new Node[newSize];
+			p1_Node newNodes[] = new p1_Node[newSize];
 			System.arraycopy(_nodes, 0, newNodes, 0, _nodes.length);
 			_nodes = newNodes;
 	    	log("Size of nodes array increased to: " + newSize);
@@ -189,7 +157,7 @@ public class p1_HuffmanCode {
 		int index = _nodeCounter - 1;
 		while (index > 1 && 
 				_nodes[parent(index)].getFrequency() > _nodes[index].getFrequency()) {
-			Node temp = _nodes[index];
+			p1_Node temp = _nodes[index];
 			_nodes[index] = _nodes[parent(index)];
 			_nodes[parent(index)] = temp;
 			index = parent(index);
@@ -215,7 +183,7 @@ public class p1_HuffmanCode {
 
 	}
 	
-	private void inorderWrite(Node n, BufferedWriter out) {
+	private void inorderWrite(p1_Node n, BufferedWriter out) {
 		if (n != null) {
 			inorderWrite(n.getLeft(), out);
 			try {
@@ -231,7 +199,7 @@ public class p1_HuffmanCode {
 		}
 	}
 	
-	private void inorderPrint(Node n) {
+	private void inorderPrint(p1_Node n) {
 		if (n != null) {
 			inorderPrint(n.getLeft());
 			if (n.getSymbol() != null) {
@@ -245,7 +213,7 @@ public class p1_HuffmanCode {
 	
 	private final File _input;
 	private final File _output;
-	private p1_HuffmanCode.Node[] _nodes;
+	private p1_Node[] _nodes;
 	private int _nodeCounter;
 	
 	private static void log(Object aObject) {
