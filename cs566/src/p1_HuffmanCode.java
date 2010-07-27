@@ -1,3 +1,8 @@
+// TERRY LORBER <tgl@bu.edu>
+// CS566 Summer 2010
+// Extra Credit
+
+
 import java.io.*;
 import java.util.Scanner;
 
