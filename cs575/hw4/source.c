@@ -7,7 +7,9 @@
 #define NUM_READER_THREADS 3
 
 int count;
-pthread_mutex_t mutex;
+int reader_count;
+pthread_mutex_t write_mutex;
+pthread_mutex_t read_mutex;
 
 struct thread_data {
   int number;
@@ -23,7 +25,7 @@ writer(void* threadarg)
 
   int loop;
   for (loop = 0; loop < my_data->iterations; loop++) {
-    pthread_mutex_lock(&mutex);
+    pthread_mutex_lock(&write_mutex);
 
     int my_count = count;
     my_count = my_count + 1;
@@ -36,7 +38,7 @@ writer(void* threadarg)
 
     printf("Writer %d update count to %d\n", my_data->number, count);
 
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&write_mutex);
 
     sleep(my_data->sleep);
   }
@@ -53,10 +55,24 @@ reader(void* threadarg)
   int loop;
   for (loop = 0; loop < my_data->iterations; loop++) {
     printf("Reader %d wants to read %d\n", my_data->number, count);
-  
+    
+    pthread_mutex_lock(&read_mutex);
+    reader_count++;
+    if (1 == reader_count) {
+      pthread_mutex_lock(&write_mutex);
+    }
+    pthread_mutex_unlock(&read_mutex);
+
     sleep(my_data->sleep);
 
     printf("Reader %d reads count as %d\n", my_data->number, count);
+
+    pthread_mutex_lock(&read_mutex);
+    reader_count--;
+    if (0 == reader_count) {
+      pthread_mutex_unlock(&write_mutex);
+    }
+    pthread_mutex_unlock(&read_mutex);
 
     sleep(my_data->sleep);
   }
@@ -69,38 +85,47 @@ main(int argc, char* argv[])
 {
   printf("Start...\n");
 
-  struct thread_data data[NUM_WRITER_THREADS + NUM_READER_THREADS];
+  count = 0;
+  reader_count = 0;
+
+  struct thread_data write_data[NUM_WRITER_THREADS];
+  struct thread_data read_data[NUM_READER_THREADS];
 
   pthread_t write_threads[NUM_WRITER_THREADS];
   pthread_t read_threads[NUM_READER_THREADS];
+  pthread_attr_t attr;
 
-  pthread_mutex_init(&mutex, NULL);
+  pthread_attr_init(&attr);
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+
+  pthread_mutex_init(&read_mutex, NULL);
+  pthread_mutex_init(&write_mutex, NULL);
 
   int t;
   for (t = 0; t < NUM_WRITER_THREADS; t++) {
-    data[t].number = t;
-    data[t].iterations = (t + 4);
-    data[t].sleep = ((t % 2 == 0) ? 3 : 1);
+    write_data[t].number = t;
+    write_data[t].iterations = (t + 4);
+    write_data[t].sleep = ((t % 2 == 0) ? 3 : 1);
 
     printf("Writer no. %d will loop for %d times, sleeping %dsec.\n",
-           data[t].number,
-           data[t].iterations,
-           data[t].sleep);
+           write_data[t].number,
+           write_data[t].iterations,
+           write_data[t].sleep);
   
-    pthread_create(&write_threads[t], NULL, writer, (void *) &data[t]);
+    pthread_create(&write_threads[t], &attr, writer, (void *) &write_data[t]);
   }
 
   for (t = 0; t < NUM_READER_THREADS; t++) {
-    data[NUM_WRITER_THREADS + t].number = t;
-    data[NUM_WRITER_THREADS + t].iterations = (t + 10);
-    data[NUM_WRITER_THREADS + t].sleep = ((t % 2 == 0) ? 1 : 2);
+    read_data[t].number = t;
+    read_data[t].iterations = (t + 4);
+    read_data[t].sleep = ((t % 2 == 0) ? 1 : 2);
 
     printf("Reader no. %d will loop for %d times, sleeping %dsec.\n",
-           data[NUM_WRITER_THREADS + t].number,
-           data[NUM_WRITER_THREADS + t].iterations,
-           data[NUM_WRITER_THREADS + t].sleep);
+           read_data[t].number,
+           read_data[t].iterations,
+           read_data[t].sleep);
     
-    pthread_create(&read_threads[t], NULL, reader, (void *) &data[NUM_WRITER_THREADS + t]);
+    pthread_create(&read_threads[t], &attr, reader, (void *) &read_data[t]);
   }
  
   for (t = 0; t < NUM_WRITER_THREADS; t++) {
@@ -111,7 +136,7 @@ main(int argc, char* argv[])
     pthread_join(read_threads[t], NULL);
   }
 
-  printf("Both threads finished, global count is %d\n", count);
+  printf("All threads finished, global count is %d\n", count);
 
   pthread_exit(NULL);
 }// main
