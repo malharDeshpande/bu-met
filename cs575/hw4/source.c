@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
-#define NUM_THREADS 2
+#define NUM_WRITER_THREADS 2
+#define NUM_READER_THREADS 3
 
 int count;
-int flags[NUM_THREADS];
-int turn;
+pthread_mutex_t mutex;
 
 struct thread_data {
   int number;
@@ -16,46 +16,43 @@ struct thread_data {
 };
 
 void*
-runner(void* threadarg)
+writer(void* threadarg)
 {
   struct thread_data* my_data;
   my_data = (struct thread_data*) threadarg;
 
-  int i = my_data->number;
-  int j = (my_data->number == 0) ? 1 : 0;
-
   int loop;
   for (loop = 0; loop < my_data->iterations; loop++) {
-    flags[i] = 1;
-    turn = j;
-    while (flags[j] == 1 && turn == j);
+    pthread_mutex_lock(&mutex);
 
     int my_count = count;
     my_count = my_count + 1;
 
-    printf("Thread no. %d, loop %d, started with count of %d\n", my_data->number, loop, count);
+    printf("Writer %d wants to update count\n", my_data->number);
   
     sleep(my_data->sleep);
 
     count = my_count;
 
-    printf("Thread no. %d, loop %d, finished with count of %d\n", my_data->number, loop, count);
+    printf("Writer %d update count to %d\n", my_data->number, count);
 
-    flags[i] = 0;
+    pthread_mutex_unlock(&mutex);
 
     sleep(my_data->sleep);
   }
 
   pthread_exit(NULL);
-}// runner
+}// writer
 
 int
 main(int argc, char* argv[])
 {
   printf("Start...\n");
 
-  pthread_t threads[NUM_THREADS];
-  struct thread_data data[NUM_THREADS];
+  pthread_t threads[NUM_WRITER_THREADS];
+  struct thread_data data[NUM_WRITER_THREADS];
+
+  pthread_mutex_init(&mutex, NULL);
 
   int t;
   for (t = 0; t < 2; t++) {
@@ -65,7 +62,7 @@ main(int argc, char* argv[])
 
     printf("Thread no. %d will loop for %d times, sleeping %dsec.\n", data[t].number, data[t].iterations, data[t].sleep);
   
-    pthread_create(&threads[t], NULL, runner, (void *) &data[t]);
+    pthread_create(&threads[t], NULL, writer, (void *) &data[t]);
   }
  
   for (t = 0; t < 2; t++) {
