@@ -9,7 +9,7 @@ EuclideanAlgorithm::EuclideanAlgorithm()
 int
 EuclideanAlgorithm::remainder(int m, int n)
 {
-  std::cout << "DEBUG - " << m << " mod " << n << " = " << m % n << std::endl;
+  std::cout << "TRACE - " << m << " mod " << n << " = " << m % n << std::endl;
   return m % n;
 }// remainder
 
