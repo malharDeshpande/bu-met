@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+using namespace tgl;
+
 ExpandedEuclideanAlgorithm::ExpandedEuclideanAlgorithm()
 {
 }// ExpandedEuclideanAlgorithm

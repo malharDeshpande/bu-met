@@ -13,7 +13,7 @@ main(int argc, char* argv[])
   int m = ::atoi(argv[1]);
   int n = ::atoi(argv[2]);
 
-  EuclideanAlgorithm ea;
+  tgl::EuclideanAlgorithm ea;
 
   std::cout << "The GCD is: " << ea.gcd(m, n) << std::endl;
 

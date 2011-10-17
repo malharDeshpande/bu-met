@@ -13,7 +13,7 @@ main(int argc, char* argv[])
   int m = ::atoi(argv[1]);
   int n = ::atoi(argv[2]);
 
-  ExpandedEuclideanAlgorithm eea;
+  tgl::ExpandedEuclideanAlgorithm eea;
 
   int x;
   int y;

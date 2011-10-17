@@ -1,22 +1,24 @@
-#ifndef EUCLIDEANALGORITHM_H
-#define EUCLIDEANALGORITHM_H
+#ifndef TGL_EUCLIDEANALGORITHM_H
+#define TGL_EUCLIDEANALGORITHM_H
 
-/// Method object to find GCD of two integers
-class EuclideanAlgorithm {
- public:
+namespace tgl {
+  /// Method object to find GCD of two integers
+  class EuclideanAlgorithm {
+  public:
   
-  /// Constructor
-  EuclideanAlgorithm();
+    /// Constructor
+    EuclideanAlgorithm();
   
-  /// Returns the remainder (m mod n)
-  int remainder(int m, int n);
+    /// Returns the remainder (m mod n)
+    int remainder(int m, int n);
   
-  /// Returns the GCD.
-  int gcd(int m, int n);
+    /// Returns the GCD.
+    int gcd(int m, int n);
   
- protected:
- private:
+  protected:
+  private:
   
-};
+  };
+}
 
-#endif // #ifndef EUCLIDEANALGORITHM_H
+#endif // #ifndef TGL_EUCLIDEANALGORITHM_H

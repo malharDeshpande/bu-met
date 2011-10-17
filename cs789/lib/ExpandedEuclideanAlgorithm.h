@@ -1,22 +1,24 @@
-#ifndef EXPANDEDEUCLIDEANALGORITHM_H
-#define EXPANDEDEUCLIDEANALGORITHM_H
+#ifndef TGL_EXPANDEDEUCLIDEANALGORITHM_H
+#define TGL_EXPANDEDEUCLIDEANALGORITHM_H
 
-/// Method object to use the Expanded Euclidean Algorithm
-class ExpandedEuclideanAlgorithm {
- public:
+namespace tgl {
+  /// Method object to use the Expanded Euclidean Algorithm
+  class ExpandedEuclideanAlgorithm {
+  public:
   
-  /// Constructor
-  ExpandedEuclideanAlgorithm();
+    /// Constructor
+    ExpandedEuclideanAlgorithm();
   
-  /// Quotient & remainder
-  void divide(int m, int n, int& q, int& r);
+    /// Find x0 and y0
+    void extendedGcd(int m, int n, int& x, int& y);
 
-  /// Find x0 and y0
-  void extendedGcd(int m, int n, int& x, int& y);
-
- protected:
- private:
+  protected:
+  private:
   
-};
+    /// Quotient & remainder
+    void divide(int m, int n, int& q, int& r);
 
-#endif // #ifndef EXPANDEDEUCLIDEANALGORITHM_H
+  };
+}
+
+#endif // #ifndef TGL_EXPANDEDEUCLIDEANALGORITHM_H
