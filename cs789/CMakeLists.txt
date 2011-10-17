@@ -7,3 +7,11 @@ ADD_EXECUTABLE(gcd
 ADD_EXECUTABLE(egcd
   egcd.cpp
   lib/ExpandedEuclideanAlgorithm.cpp)
+
+ADD_EXECUTABLE(pow
+  pow.cpp
+  lib/ExponentiationAlgorithm.cpp)
+
+ADD_EXECUTABLE(pow_mod
+  pow_mod.cpp
+  lib/ExponentiationAlgorithm.cpp)
