@@ -15,3 +15,8 @@ ADD_EXECUTABLE(pow
 ADD_EXECUTABLE(pow_mod
   pow_mod.cpp
   lib/ExponentiationAlgorithm.cpp)
+
+ADD_EXECUTABLE(big_int
+        big_int.cpp
+        lib/BigInteger.cpp
+        lib/BigUnsigned.cpp)
