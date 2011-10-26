@@ -4,6 +4,11 @@ using namespace tgl;
 
 #include <iostream>
 
+BigInteger::BigInteger() :
+  _sign(Zero)
+{
+}// BigInteger
+
 BigInteger::BigInteger(int n) :
   _sign(Zero),
   _mag(static_cast<unsigned long> (abs(n)))

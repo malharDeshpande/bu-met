@@ -12,7 +12,10 @@ namespace tgl {
   public:
   
     enum Sign {Neg = -1, Zero = 0, Pos = 1};
-  
+
+    /// Default constructor
+    BigInteger();
+
     /// Construct from an integer.
     BigInteger(int n);
 
@@ -21,6 +24,14 @@ namespace tgl {
 
     /// Print out
     void write(std::ostream &out);
+
+    void add(BigInteger &a, BigInteger &b) {
+      _mag.add(a._mag, b._mag);
+    };
+
+    void multiply(BigInteger &a, BigInteger &b) {
+      _mag.multiply(a._mag, b._mag);
+    };
 
   protected:
   private:
