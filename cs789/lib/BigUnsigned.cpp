@@ -6,7 +6,7 @@
 
 using namespace tgl;
 
-static const size_t N = sizeof(unsigned long);
+static const size_t N = 8 * sizeof(unsigned long);
 
 
 BigUnsigned::BigUnsigned()
@@ -43,6 +43,7 @@ BigUnsigned::BigUnsigned(const std::string &str)
        --loop) {
     _value.push_back(str[loop - 1] - '0');
   }
+  zapLeadingZeros();
 }// BigUnsigned
 
 void
@@ -211,34 +212,71 @@ BigUnsigned::multiply(BigUnsigned &a, BigUnsigned &b)
 
   _value.resize(a.length() + b.length());
 
+  std::cout << "TRACE - BigUnsigned::multiply" << std::endl;
+  std::cout << "TRACE - " << a.length() << " " << b.length() << " " << _value.size() << std::endl;
+  std::cout << "TRACE - sizeof " << sizeof(unsigned long) << std::endl;
+
   for (size_t loop = 0; loop < _value.size(); ++loop) {
     _value[loop] = 0;
   }
   
+  unsigned long shift_this = 1L;
+
   for (ii = 0; ii < a.length(); ++ii) {
     for (i2 = 0; i2 < N; ++i2) {
+      std::cout << "TRACE - " << i2 << " " << N << std::endl;
       if ((a.value(ii) & ((unsigned long)(1) << i2)) == 0) {
 	continue;
       }
 	
-      for (jj = 0, kk = 1, carry_in = false; jj < b.length(); ++jj, ++kk) {
+      std::cout << "TRACE - ready for loop (" << ii << "," << i2 << ")" << std::endl;
+
+      for (jj = 0, kk = ii, carry_in = false; jj <= b.length(); ++jj, ++kk) {
+	std::cout << "TRACE - first loop " << jj << " " << kk << " " << carry_in << std::endl;
+	std::cout << "TRACE - " << kk << " " << _value[kk] << " " << get_shifted_block(b, jj, i2) << std::endl;
+
 	temp = _value[kk] + get_shifted_block(b, jj, i2);
+
+	std::cout << "TRACE - temp " << temp << std::endl;
+
 	carry_out = (temp < _value[kk]);
+
+	std::cout << "TRACE - carry " << kk << " " << temp << " " << carry_out << std::endl;
+
 	if (carry_in) {
 	  temp++;
-	  carry_out |=  (temp == 0);
+	  carry_out |= (temp == 0);
 	}
 	_value[kk] = temp;
+	std::cout << "TRACE - set _value[kk] " << kk << " " << _value[kk] << std::endl;
 	carry_in = carry_out;
       }
        
       for (; carry_in; ++kk) {
+	std::cout << "TRACE - carry_in loop START " << kk << " " << _value[kk] << " " << carry_in << std::endl;
 	_value[kk]++;
 	carry_in = (_value[kk] == 0);
+	std::cout << "TRACE - carry_in loop END " << kk << " " << _value[kk] << " " << carry_in << std::endl;
       }
     }
   }
-}// multiple
+  
+  std::cout << "TRACE - _value[0] and length " << _value[0] << " " << _value.size() << std::endl;
+  
+  for (size_t loop = 0; loop < _value.size(); ++loop) {
+    std::cout << "TRACE - _value " << loop << " " << _value[loop] << std::endl;
+  }
+
+  if (_value.back() == 0) {
+    _value.pop_back();
+  }
+
+  std::cout << "TRACE - _value[0] and length " << _value[0] << " " << _value.size() << std::endl;
+
+  for (size_t loop = 0; loop < _value.size(); ++loop) {
+    std::cout << "TRACE - _value " << loop << " " << _value[loop] << std::endl;
+  }
+}// multiply
 
 void
 BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
