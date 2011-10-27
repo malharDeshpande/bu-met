@@ -8,14 +8,20 @@ ADD_EXECUTABLE(gcd
 
 ADD_EXECUTABLE(egcd
   egcd.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
   lib/ExpandedEuclideanAlgorithm.cpp)
 
 ADD_EXECUTABLE(pow
   pow.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
   lib/ExponentiationAlgorithm.cpp)
 
 ADD_EXECUTABLE(pow_mod
   pow_mod.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
   lib/ExponentiationAlgorithm.cpp)
 
 ADD_EXECUTABLE(big_int

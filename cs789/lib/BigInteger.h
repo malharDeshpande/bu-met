@@ -31,14 +31,21 @@ namespace tgl {
     /// Greater than operator
     bool operator>(const BigInteger &x) const;
 
-    /// Print out
-    void write(std::ostream &out);
+    bool isZero() const { return _sign == Zero || _mag.isZero(); }
 
-    void add(BigInteger &a, BigInteger &b) {
+    BigInteger operator+(const BigInteger &x) const;
+    BigInteger operator-(const BigInteger &x) const;
+    BigInteger operator*(const BigInteger &x) const;
+    BigInteger operator/(const BigInteger &x) const;
+    BigInteger operator%(const BigInteger &x) const;
+    BigInteger operator-() const;
+
+
+    void add(const BigInteger &a, const BigInteger &b) {
       _mag.add(a._mag, b._mag);
     };
 
-    void multiply(BigInteger &a, BigInteger &b) {
+    void multiply(const BigInteger &a, const BigInteger &b) {
       _mag.multiply(a._mag, b._mag);
     };
 
@@ -62,14 +69,53 @@ namespace tgl {
       out << '-';
     }
     out << x._mag;
-  }
+  };
 
   inline BigInteger operator%(BigInteger &a, BigInteger &b) {
     BigInteger mod(a);
     BigInteger q;
     mod.modWithQuotient(b, q);
     return mod;
-  }
+  };
+
+  inline BigInteger BigInteger::operator+(const BigInteger &x) const {
+    BigInteger r;
+    r.add(*this, x);
+    return r;
+  };
+
+  inline BigInteger BigInteger::operator-(const BigInteger &x) const {
+    BigInteger r;
+    r.add(*this, x);
+    return r;
+  };
+
+  inline BigInteger BigInteger::operator*(const BigInteger &x) const {
+    BigInteger r;
+    r.multiply(*this, x);
+    return r;
+  };
+
+  inline BigInteger BigInteger::operator/(const BigInteger &x) const {
+    if (x.isZero()) throw "BigInteger::operator%: division by zero";
+    BigInteger q, r;
+    r = *this;
+    r.modWithQuotient(x, q);
+    return q;
+  };
+
+  inline BigInteger BigInteger::operator%(const BigInteger &x) const {
+    if (x.isZero()) throw "BigInteger::operator%: division by zero";
+    BigInteger q, r;
+    r = *this;
+    r.modWithQuotient(x, q);
+    return r;
+  };
+
+  inline BigInteger BigInteger::operator-() const {
+    BigInteger r;
+    return r;
+  };
 
 }
 

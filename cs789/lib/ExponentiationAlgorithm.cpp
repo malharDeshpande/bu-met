@@ -8,24 +8,24 @@ ExponentiationAlgorithm::ExponentiationAlgorithm()
 {
 }// ExponentiationAlgorithm
     
-int
-ExponentiationAlgorithm::pow(int x, int e)
+BigInteger
+ExponentiationAlgorithm::pow(BigInteger x, BigInteger e)
 {
-  int y = 1;
+  BigInteger y(1);
   std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
-  while (e != 0) {
+  while (!e.isZero()) {
     compute(x, e, y, 0);
     std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
   }
   return y;
 }// pow
 
-int
-ExponentiationAlgorithm::pow_mod(int x, int e, int m)
+BigInteger
+ExponentiationAlgorithm::pow_mod(BigInteger x, BigInteger e, BigInteger m)
 {
-  int y = 1;
+  BigInteger y(1);
   std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
-  while (e != 0) {
+  while (!e.isZero()) {
     compute(x, e, y, m);
     std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
   }
@@ -33,17 +33,20 @@ ExponentiationAlgorithm::pow_mod(int x, int e, int m)
 }// pow_mod
 
 void
-ExponentiationAlgorithm::compute(int& x, int& e, int& y, int m)
-{
-  if (e % 2 == 1) {
+ExponentiationAlgorithm::compute(BigInteger& x, BigInteger& e, BigInteger& y, BigInteger m)
+{ 
+  BigInteger one(1);
+  BigInteger two(2);
+  
+  if (e % two == one) {
     y = (x * y);
-    e = e - 1;
+    e = e - one;
   } else {
     x = (x * x);
-    e = e / 2;
+    e = e / two;
   }
 
-  if (m != 0) {
+  if (!m.isZero()) {
     y = y % m;
     x = x % m;
   }

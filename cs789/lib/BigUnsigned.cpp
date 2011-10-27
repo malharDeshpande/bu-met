@@ -126,7 +126,7 @@ BigUnsigned::operator==(const BigUnsigned &x) const
   }
 
 void
-BigUnsigned::add(BigUnsigned &a, BigUnsigned &b)
+BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
 {
   ALIASED(this == &a || this == &b, add(a, b));
 
@@ -138,8 +138,8 @@ BigUnsigned::add(BigUnsigned &a, BigUnsigned &b)
     return;
   }
 
-  BigUnsigned *a2;
-  BigUnsigned *b2;
+  const BigUnsigned *a2;
+  const BigUnsigned *b2;
 
   if (a.length() >= b.length()) {
     a2 = &a;
@@ -195,7 +195,7 @@ get_shifted_block(const BigUnsigned &b, size_t x, unsigned int y)
 }// get_shifted_block
 
 void
-BigUnsigned::multiply(BigUnsigned &a, BigUnsigned &b)
+BigUnsigned::multiply(const BigUnsigned &a, const BigUnsigned &b)
 {
   ALIASED(this == &a || this == &b, multiply(a, b));
 
@@ -212,10 +212,6 @@ BigUnsigned::multiply(BigUnsigned &a, BigUnsigned &b)
 
   _value.resize(a.length() + b.length());
 
-  std::cout << "TRACE - BigUnsigned::multiply" << std::endl;
-  std::cout << "TRACE - " << a.length() << " " << b.length() << " " << _value.size() << std::endl;
-  std::cout << "TRACE - sizeof " << sizeof(unsigned long) << std::endl;
-
   for (size_t loop = 0; loop < _value.size(); ++loop) {
     _value[loop] = 0;
   }
@@ -224,57 +220,31 @@ BigUnsigned::multiply(BigUnsigned &a, BigUnsigned &b)
 
   for (ii = 0; ii < a.length(); ++ii) {
     for (i2 = 0; i2 < N; ++i2) {
-      std::cout << "TRACE - " << i2 << " " << N << std::endl;
       if ((a.value(ii) & ((unsigned long)(1) << i2)) == 0) {
 	continue;
       }
 	
-      std::cout << "TRACE - ready for loop (" << ii << "," << i2 << ")" << std::endl;
-
       for (jj = 0, kk = ii, carry_in = false; jj <= b.length(); ++jj, ++kk) {
-	std::cout << "TRACE - first loop " << jj << " " << kk << " " << carry_in << std::endl;
-	std::cout << "TRACE - " << kk << " " << _value[kk] << " " << get_shifted_block(b, jj, i2) << std::endl;
-
 	temp = _value[kk] + get_shifted_block(b, jj, i2);
-
-	std::cout << "TRACE - temp " << temp << std::endl;
-
 	carry_out = (temp < _value[kk]);
-
-	std::cout << "TRACE - carry " << kk << " " << temp << " " << carry_out << std::endl;
 
 	if (carry_in) {
 	  temp++;
 	  carry_out |= (temp == 0);
 	}
 	_value[kk] = temp;
-	std::cout << "TRACE - set _value[kk] " << kk << " " << _value[kk] << std::endl;
 	carry_in = carry_out;
       }
        
       for (; carry_in; ++kk) {
-	std::cout << "TRACE - carry_in loop START " << kk << " " << _value[kk] << " " << carry_in << std::endl;
 	_value[kk]++;
 	carry_in = (_value[kk] == 0);
-	std::cout << "TRACE - carry_in loop END " << kk << " " << _value[kk] << " " << carry_in << std::endl;
       }
     }
   }
   
-  std::cout << "TRACE - _value[0] and length " << _value[0] << " " << _value.size() << std::endl;
-  
-  for (size_t loop = 0; loop < _value.size(); ++loop) {
-    std::cout << "TRACE - _value " << loop << " " << _value[loop] << std::endl;
-  }
-
   if (_value.back() == 0) {
     _value.pop_back();
-  }
-
-  std::cout << "TRACE - _value[0] and length " << _value[0] << " " << _value.size() << std::endl;
-
-  for (size_t loop = 0; loop < _value.size(); ++loop) {
-    std::cout << "TRACE - _value " << loop << " " << _value[loop] << std::endl;
   }
 }// multiply
 
@@ -307,12 +277,11 @@ BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
   bool borrow_in, borrow_out;
 
   size_t origLen = _value.size();
-  _value.resize(origLen + 1);
-  _value[origLen] = 0;
+  _value.push_back(0);
 
   std::vector<unsigned long> buf(_value.size());
 
-  q._value.resize(length() - b.length());
+  q._value.resize(origLen - b.length() + 1);
   for (size_t loop; loop < q.length(); ++loop) {
     q._value[loop] = 0;
   }
@@ -325,34 +294,40 @@ BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
     q._value[ii] = 0;
     i2 = N;
 
-    for (jj = 0, kk = ii, borrow_in = false; jj <= b.length(); jj++, kk++) {
-      temp = _value[kk] - get_shifted_block(b, jj, i2);
-      borrow_out = (temp > _value[kk]);
-      if (borrow_in) {
-	borrow_out |= (temp == 0);
-	temp--;
+    while (i2 > 0) {
+      i2--;
+
+      for (jj = 0, kk = ii, borrow_in = false; jj <= b.length(); jj++, kk++) {
+	temp = _value[kk] - get_shifted_block(b, jj, i2);
+	borrow_out = (temp > _value[kk]);
+	if (borrow_in) {
+	  borrow_out |= (temp == 0);
+	  temp--;
+	}
+	buf[kk] = temp;
+	borrow_in = borrow_out;
       }
-      buf[kk] = temp;
-      borrow_in = borrow_out;
-    }
 
-    for (; kk < origLen && borrow_in; kk++) {
-      borrow_in = (_value[kk] == 0);
-      buf[kk] = _value[jj] - 1;
-    }
+      for (; kk < origLen && borrow_in; kk++) {
+	borrow_in = (_value[kk] == 0);
+	buf[kk] = _value[kk] - 1;
+      }
 
-    if (!borrow_in) {
-      q._value[ii] |= ((unsigned long)(1) << i2);
-      while (kk > ii) {
-	kk--;
-	_value[kk] = buf[kk];
+      if (!borrow_in) {
+	q._value[ii] |= ((unsigned long)(1) << i2);
+	while (kk > ii) {
+	  kk--;
+	  _value[kk] = buf[kk];
+	}
       }
     }
   }
-  
-  if (q.value(q.length() - 1) == 0) {
+
+  if (q._value[q.length() - 1] == 0) {
     q._value.pop_back();
   }
+
+  zapLeadingZeros();
 }// modWithQuotient
 
 std::string
@@ -369,6 +344,10 @@ tgl::convert2str(const BigUnsigned &x)
     result << last.value(0);
   }
 
-  return result.str();
+  std::string to_reverse(result.str());
+
+  std::reverse(to_reverse.begin(), to_reverse.end());
+
+  return to_reverse;
 }// convert2str
 

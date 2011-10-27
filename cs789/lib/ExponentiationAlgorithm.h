@@ -1,6 +1,8 @@
 #ifndef TGL_EXPONENTIATIONALGORITHM_H
 #define TGL_EXPONENTIATIONALGORITHM_H
 
+#include "BigInteger.h"
+
 namespace tgl {
   /// The exponentiation algorithm
   class ExponentiationAlgorithm {
@@ -9,15 +11,15 @@ namespace tgl {
     ExponentiationAlgorithm();
     
     /// Raise an integer to another integer
-    int pow(int x, int e);
+    BigInteger pow(BigInteger x, BigInteger e);
 
     /// Raise an integer to another integer, then modulus
-    int pow_mod(int x, int e, int m);
- 
- protected:
+    BigInteger pow_mod(BigInteger x, BigInteger e, BigInteger m);
+    
+  protected:
   private:
 
-    void compute(int& x, int& e, int& y, int m);
+    void compute(BigInteger& x, BigInteger& e, BigInteger& y, BigInteger m);
 
   };
 }
