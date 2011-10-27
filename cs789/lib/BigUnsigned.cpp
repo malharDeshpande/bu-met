@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace tgl;
 
 static const size_t N = sizeof(unsigned long);
+
 
 BigUnsigned::BigUnsigned()
 {
@@ -18,6 +20,10 @@ BigUnsigned::BigUnsigned(unsigned long n)
 
 BigUnsigned::BigUnsigned(const BigUnsigned &x)
 {
+  if (x.isZero()) {
+    return;
+  }
+
   _value.resize(x.length());
 
   for (size_t loop = 0; loop < x.length(); ++loop) {
@@ -40,6 +46,26 @@ BigUnsigned::BigUnsigned(const std::string &str)
 }// BigUnsigned
 
 void
+BigUnsigned::zapLeadingZeros()
+{
+  while (_value.back() == 0) {
+    _value.pop_back();
+  }
+}// zapLeadingZeros
+
+bool
+BigUnsigned::isZero() const
+{
+  if (_value.empty()) {
+    return true;
+  } else if (_value.size() == 1 && _value[0] == 0) {
+    return true;
+  }
+
+  return false;
+}// isZero
+
+void
 BigUnsigned::operator=(const BigUnsigned &x)
 {
   if (this == &x) {
@@ -53,8 +79,31 @@ BigUnsigned::operator=(const BigUnsigned &x)
   }
 }// operator=
 
+BigUnsigned::Comparison
+BigUnsigned::compareTo(const BigUnsigned &x) const
+{
+  if (this->length() < x.length()) {
+    return less;
+  } else if (this->length() > x.length()) {
+    return greater;
+  } else {
+    size_t index = this->length();
+    while (index > 0) {
+      index--;
+      if (this->value(index) == x.value(index)) {
+	continue;
+      } else if (this->value(index) > x.value(index)) {
+	return greater;
+      } else {
+	return less;
+      }
+      return equal;
+    }
+  }
+}// compareTo
+
 bool
-BigUnsigned::operator==(const BigUnsigned &x)
+BigUnsigned::operator==(const BigUnsigned &x) const
 {
   if (this->length() != x.length()) {
     return false;
@@ -136,7 +185,7 @@ BigUnsigned::add(BigUnsigned &a, BigUnsigned &b)
 }// add
 
 inline unsigned long
-get_shifted_block(BigUnsigned &b, size_t x, unsigned int y)
+get_shifted_block(const BigUnsigned &b, size_t x, unsigned int y)
 {
   unsigned long part1 = (x == 0 || y == 0) ? 0 : (b.value(x -  1) >> (N - y));
   unsigned long part2 = (x == b.length()) ? 0 : (b.value(x) <<  y);
@@ -219,15 +268,69 @@ BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
   unsigned long temp;
   bool borrow_in, borrow_out;
 
-  
-}// modWithQuotient
- 
-void
-BigUnsigned::write(std::ostream &out)
-{
-  for (size_t loop = _value.size();
-       loop > 0;
-       --loop) {
-    out << _value[loop - 1]; 
+  size_t origLen = _value.size();
+  _value.resize(origLen + 1);
+  _value[origLen] = 0;
+
+  std::vector<unsigned long> buf(_value.size());
+
+  q._value.resize(length() - b.length());
+  for (size_t loop; loop < q.length(); ++loop) {
+    q._value[loop] = 0;
   }
-}// write
+
+  ii = q.length();
+
+  while (ii > 0) {
+    ii--;
+
+    q._value[ii] = 0;
+    i2 = N;
+
+    for (jj = 0, kk = ii, borrow_in = false; jj <= b.length(); jj++, kk++) {
+      temp = _value[kk] - get_shifted_block(b, jj, i2);
+      borrow_out = (temp > _value[kk]);
+      if (borrow_in) {
+	borrow_out |= (temp == 0);
+	temp--;
+      }
+      buf[kk] = temp;
+      borrow_in = borrow_out;
+    }
+
+    for (; kk < origLen && borrow_in; kk++) {
+      borrow_in = (_value[kk] == 0);
+      buf[kk] = _value[jj] - 1;
+    }
+
+    if (!borrow_in) {
+      q._value[ii] |= ((unsigned long)(1) << i2);
+      while (kk > ii) {
+	kk--;
+	_value[kk] = buf[kk];
+      }
+    }
+  }
+  
+  if (q.value(q.length() - 1) == 0) {
+    q._value.pop_back();
+  }
+}// modWithQuotient
+
+std::string
+tgl::convert2str(const BigUnsigned &x)
+{
+  std::stringstream result;
+  BigUnsigned ten(10);
+  BigUnsigned r(x);
+
+  while (!r.isZero()) {
+    BigUnsigned last(r);
+    last.modWithQuotient(ten, r);
+
+    result << last.value(0);
+  }
+
+  return result.str();
+}// convert2str
+

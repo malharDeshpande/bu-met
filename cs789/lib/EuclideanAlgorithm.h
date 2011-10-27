@@ -1,6 +1,8 @@
 #ifndef TGL_EUCLIDEANALGORITHM_H
 #define TGL_EUCLIDEANALGORITHM_H
 
+#include "BigInteger.h"
+
 namespace tgl {
   /// Method object to find GCD of two integers
   class EuclideanAlgorithm {
@@ -10,10 +12,10 @@ namespace tgl {
     EuclideanAlgorithm();
   
     /// Returns the remainder (m mod n)
-    int remainder(int m, int n);
+    BigInteger remainder(BigInteger m, BigInteger n);
   
     /// Returns the GCD.
-    int gcd(int m, int n);
+    BigInteger gcd(BigInteger m, BigInteger n);
   
   protected:
   private:

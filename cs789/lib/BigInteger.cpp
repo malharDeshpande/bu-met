@@ -32,12 +32,46 @@ BigInteger::BigInteger(const std::string &str) :
   }
 }// BigInteger
 
-void
-BigInteger::write(std::ostream &out)
+bool
+BigInteger::operator<(const BigInteger &x) const
 {
-  if (_sign == Neg) {
-    out << "-";
+  if (this->_sign < x._sign) {
+    return true;
+  } else if (this->_sign > x._sign) {
+    return false;
+  } else switch (this->_sign) {
+  case Zero:
+    return false;
+  case Pos:
+    
+  case Neg:
+    
+  default:
+    throw "BigInteger internal error";
   }
+}// operator<
 
-  _mag.write(out);
-}// write
+bool
+BigInteger::operator>(const BigInteger &x) const
+{
+  if (this->_sign < x._sign) {
+    return false;
+  } else if (this->_sign > x._sign) {
+    return true;
+  } else switch (this->_sign) {
+  case Zero:
+    return false;
+  case Pos:
+    
+  case Neg:
+    
+  default:
+    throw "BigInteger internal error";
+  }
+}// operator>
+
+bool
+BigInteger::operator==(const BigInteger &x) const
+{
+  return (_sign == x._sign && _mag == x._mag);
+}// operator==

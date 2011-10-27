@@ -10,21 +10,21 @@ main(int argc, char* argv[])
     exit(-1);
   }
 
-  tgl::BigInteger M(argv[1]);
-  tgl::BigInteger N(argv[2]);
+  tgl::BigInteger M(::atoi(argv[1]));
+  tgl::BigInteger N(::atoi(argv[2]));
 
-  std::cout << "M   - "; M.write(std::cout); std::cout << std::endl;
-  std::cout << "N   - "; N.write(std::cout); std::cout << std::endl;
+  std::cout << "M   - " << M << std::endl;
+  std::cout << "N   - " << N << std::endl;
   
   tgl::BigInteger sum;
   sum.add(M, N);
 
-  std::cout << "Sum - "; sum.write(std::cout); std::cout << std::endl;
+  std::cout << "Sum - " << sum << std::endl;
 
   tgl::BigInteger dot;
   dot.multiply(M, N);
 
-  std::cout << "Dot - "; dot.write(std::cout); std::cout << std::endl;
+  std::cout << "Dot - " << dot << std::endl;
 
   return 0;
 }// main

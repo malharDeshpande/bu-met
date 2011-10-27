@@ -8,26 +8,26 @@ EuclideanAlgorithm::EuclideanAlgorithm()
 {
 }// EuclideanAlgorithm
 
-int
-EuclideanAlgorithm::remainder(int m, int n)
+BigInteger
+EuclideanAlgorithm::remainder(BigInteger m, BigInteger n)
 {
   std::cout << "TRACE - " << m << " mod " << n << " = " << m % n << std::endl;
   return m % n;
 }// remainder
 
-int
-EuclideanAlgorithm::gcd(int m, int n)
+BigInteger
+EuclideanAlgorithm::gcd(BigInteger m, BigInteger n)
 {
-  int r = this->remainder(m, n);
-  while (r > 1) {
+  BigInteger r = this->remainder(m, n);
+  while (r > BigInteger(1)) {
     m = n;
     n = r;
     r = this->remainder(m, n);
   }
 
-  if (0 == r) {
+  if (BigInteger(0) == r) {
     return n;
   } else {
-    return 1;
+    return BigInteger(1);
   }
 }// gcd

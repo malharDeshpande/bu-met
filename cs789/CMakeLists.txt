@@ -2,6 +2,8 @@ PROJECT(CS789)
 
 ADD_EXECUTABLE(gcd
   gcd.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
   lib/EuclideanAlgorithm.cpp)
 
 ADD_EXECUTABLE(egcd
