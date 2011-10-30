@@ -9,7 +9,7 @@ ExpandedEuclideanAlgorithm::ExpandedEuclideanAlgorithm()
 }// ExpandedEuclideanAlgorithm
 
 void
-ExpandedEuclideanAlgorithm::divide(int m, int n, int& q, int& r)
+ExpandedEuclideanAlgorithm::divide(BigInteger m, BigInteger n, BigInteger& q, BigInteger& r)
 {
   q = m / n;
   r = m % n;
@@ -17,17 +17,20 @@ ExpandedEuclideanAlgorithm::divide(int m, int n, int& q, int& r)
 }// divide
 
 void
-ExpandedEuclideanAlgorithm::extendedGcd(int m, int n, int& x, int& y)
+ExpandedEuclideanAlgorithm::extendedGcd(BigInteger m, BigInteger n, BigInteger& x, BigInteger& y)
 {
-  if (n == 0) {
-    x = 1;
-    y = 0;
+  BigInteger zero(0);
+  BigInteger one(1);
+
+  if (n == zero) {
+    x = one;
+    y = zero;
   } else {
-    int q;
-    int r;
+    BigInteger q;
+    BigInteger r;
     divide(m, n, q, r);
-    int s;
-    int t;
+    BigInteger s;
+    BigInteger t;
     extendedGcd(n, r, s, t);
     x = t;
     y = s - q * t;

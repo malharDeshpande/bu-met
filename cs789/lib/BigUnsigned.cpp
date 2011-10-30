@@ -441,6 +441,10 @@ BigUnsigned::operator--(int)
 std::string
 tgl::convert2str(const BigUnsigned &x)
 {
+  if (x.isZero()) {
+    return std::string("0");
+  }
+
   std::stringstream result;
   BigUnsigned ten(10);
   BigUnsigned r(x);
@@ -448,7 +452,6 @@ tgl::convert2str(const BigUnsigned &x)
   while (!r.isZero()) {
     BigUnsigned last(r);
     last.modWithQuotient(ten, r);
-
     result << last.value(0);
   }
 

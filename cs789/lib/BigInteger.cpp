@@ -15,14 +15,18 @@ BigInteger::BigInteger(const BigInteger &x) :
 {
 }// BigInteger
 
-BigInteger::BigInteger(int n) :
-  _sign(Zero),
-  _mag(static_cast<unsigned long> (abs(n)))
+BigInteger::BigInteger(int n)
 {
   if (n < 0) {
     _sign = Neg;
   } else if (n > 0) {
     _sign = Pos;
+  } else {
+    _sign = Zero;
+  }
+
+  if (_sign != Zero) {
+    _mag = BigUnsigned(static_cast<unsigned long>(n));
   }
 }// BigInteger
 
@@ -37,50 +41,6 @@ BigInteger::BigInteger(const std::string &str) :
     _sign = Pos;
   }
 }// BigInteger
-
-bool
-BigInteger::operator<(const BigInteger &x) const
-{
-  if (this->_sign < x._sign) {
-    return true;
-  } else if (this->_sign > x._sign) {
-    return false;
-  } else switch (this->_sign) {
-  case Zero:
-    return false;
-  case Pos:
-    
-  case Neg:
-    
-  default:
-    throw "BigInteger internal error";
-  }
-}// operator<
-
-bool
-BigInteger::operator>(const BigInteger &x) const
-{
-  if (this->_sign < x._sign) {
-    return false;
-  } else if (this->_sign > x._sign) {
-    return true;
-  } else switch (this->_sign) {
-  case Zero:
-    return false;
-  case Pos:
-    
-  case Neg:
-    
-  default:
-    throw "BigInteger internal error";
-  }
-}// operator>
-
-bool
-BigInteger::operator==(const BigInteger &x) const
-{
-  return ((_sign == x._sign) && (_mag == x._mag));
-}// operator==
 
 #define ALIASED(cond, op) \
   if (cond) { \
@@ -213,3 +173,62 @@ BigInteger::modWithQuotient(const BigInteger &b, BigInteger &q)
     q._sign = Zero;
   }
 }// modWithQuotient
+
+BigUnsigned::Comparison
+BigInteger::compareTo(const BigInteger &x) const
+{
+  if (_sign < x._sign) {
+    return less;
+  } else if (_sign > x._sign) {
+    return greater;
+  } else switch (_sign) {
+  case Zero:
+    return equal;
+  case Pos:
+    return _mag.compareTo(x._mag);
+  case Neg:
+    return BigUnsigned::Comparison(-_mag.compareTo(x._mag));
+  default:
+    throw "BigInteger internal error";
+  }
+}// compareTo
+
+void
+BigInteger::operator++()
+{
+  if (_sign == Neg) {
+    _mag--;
+    if (_mag == BigUnsigned(0)) {
+      _sign = Zero;
+    }
+  } else {
+    _mag++;
+    _sign = Pos;
+  }
+}// operator++
+
+void
+BigInteger::operator++(int)
+{
+  operator++();
+}// operator++
+
+void
+BigInteger::operator--()
+{
+  if (_sign == Pos) {
+    _mag--;
+    if (_mag == BigUnsigned(0)) {
+      _sign = Zero;
+    }
+  } else {
+    _mag++;
+    _sign = Neg;
+  }
+}// operator--
+
+void
+BigInteger::operator--(int)
+{
+  operator--();
+}// operator--

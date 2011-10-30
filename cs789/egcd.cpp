@@ -1,4 +1,5 @@
 #include "lib/ExpandedEuclideanAlgorithm.h"
+#include "lib/BigInteger.h"
 
 #include <iostream>
 
@@ -10,13 +11,13 @@ main(int argc, char* argv[])
     exit(-1);
   }
 
-  int m = ::atoi(argv[1]);
-  int n = ::atoi(argv[2]);
+  tgl::BigInteger m(::atoi(argv[1]));
+  tgl::BigInteger n(::atoi(argv[2]));
 
   tgl::ExpandedEuclideanAlgorithm eea;
 
-  int x;
-  int y;
+  tgl::BigInteger x;
+  tgl::BigInteger y;
 
   eea.extendedGcd(m, n, x, y);
 

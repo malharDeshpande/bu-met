@@ -28,3 +28,10 @@ ADD_EXECUTABLE(big_int
         big_int.cpp
         lib/BigInteger.cpp
         lib/BigUnsigned.cpp)
+
+ADD_EXECUTABLE(prs
+  prs.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
+  lib/ExponentiationAlgorithm.cpp
+  lib/PrimitiveRootSearchAlgorithm.cpp)

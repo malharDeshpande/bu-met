@@ -35,13 +35,17 @@ namespace tgl {
     unsigned long value(size_t index) const { return _mag.value(index); };
 
     /// Equality operator
-    bool operator==(const BigInteger &x) const;
+    bool operator==(const BigInteger &x) const {
+      return _sign == x._sign && _mag == x._mag;
+    };
 
-    /// Less than operator
-    bool operator<(const BigInteger &x) const;
+    BigUnsigned::Comparison compareTo(const BigInteger &x) const;
 
-    /// Greater than operator
-    bool operator>(const BigInteger &x) const;
+    bool operator!=(const BigInteger &x) const { return !operator==(x); };
+    bool operator<(const BigInteger &x) const { return compareTo(x) == less; };
+    bool operator<=(const BigInteger &x) const { return compareTo(x) != greater; };
+    bool operator>=(const BigInteger &x) const { return compareTo(x) != less; };
+    bool operator>(const BigInteger &x) const { return compareTo(x) == greater; };
 
     bool isZero() const { 
       return (_sign == Zero); 
@@ -54,10 +58,16 @@ namespace tgl {
     BigInteger operator%(const BigInteger &x) const;
     BigInteger operator-() const;
 
+    void operator++();
+    void operator++(int);
+    void operator--();
+    void operator--(int);
+
     void add(const BigInteger &a, const BigInteger &b);
     void subtract(const BigInteger &a, const BigInteger &b);
     void multiply(const BigInteger &a, const BigInteger &b);
     void modWithQuotient(const BigInteger &b, BigInteger &q);
+
 
   protected:
   private:
