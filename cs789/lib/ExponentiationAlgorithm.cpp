@@ -12,11 +12,11 @@ BigInteger
 ExponentiationAlgorithm::pow(BigInteger x, BigInteger e)
 {
   BigInteger y(1);
-  std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
+
   while (!e.isZero()) {
     compute(x, e, y, 0);
-    std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
   }
+  
   return y;
 }// pow
 
@@ -24,10 +24,8 @@ BigInteger
 ExponentiationAlgorithm::pow_mod(BigInteger x, BigInteger e, BigInteger m)
 {
   BigInteger y(1);
-  std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
   while (!e.isZero()) {
     compute(x, e, y, m);
-    std::cout << "TRACE - " << x << " " << e << " " << y << " " << std::endl;
   }
   return y;
 }// pow_mod
@@ -37,13 +35,13 @@ ExponentiationAlgorithm::compute(BigInteger& x, BigInteger& e, BigInteger& y, Bi
 { 
   BigInteger one(1);
   BigInteger two(2);
-  
-  if (e % two == one) {
+
+  if ((e % two) == one) {
     y = (x * y);
     e = e - one;
   } else {
     x = (x * x);
-    e = e / two;
+    e = (e / two);
   }
 
   if (!m.isZero()) {

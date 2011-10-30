@@ -43,7 +43,14 @@ namespace tgl {
     bool operator>=(const BigUnsigned &x) const { return compareTo(x) != less; };
     bool operator>(const BigUnsigned &x) const { return compareTo(x) == greater; };
 
+    void operator++();
+    void operator++(int);
+    void operator--();
+    void operator--(int);
+
     void add(const BigUnsigned &a, const BigUnsigned &b);
+
+    void subtract(const BigUnsigned &a, const BigUnsigned &b);
 
     void multiply(const BigUnsigned &a, const BigUnsigned &b);
     

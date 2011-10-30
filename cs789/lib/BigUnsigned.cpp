@@ -49,7 +49,7 @@ BigUnsigned::BigUnsigned(const std::string &str)
 void
 BigUnsigned::zapLeadingZeros()
 {
-  while (_value.back() == 0) {
+  while (_value.size() > 0 && _value.back() == 0) {
     _value.pop_back();
   }
 }// zapLeadingZeros
@@ -115,6 +115,7 @@ BigUnsigned::operator==(const BigUnsigned &x) const
       }
     }
   }
+  return true;
 }// operator==
 
 #define ALIASED(cond, op) \
@@ -184,6 +185,67 @@ BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
     _value.pop_back();
   }
 }// add
+
+
+void
+BigUnsigned::subtract(const BigUnsigned &a, const BigUnsigned &b)
+{
+  ALIASED(this == &a || this == &b, add(a, b));
+
+  if (a.length() == 0) {
+    operator =(b);
+    return;
+  } else if (b.length() == 0) {
+    operator =(a);
+    return;
+  }
+
+  const BigUnsigned *a2;
+  const BigUnsigned *b2;
+
+  if (a.length() >= b.length()) {
+    a2 = &a;
+    b2 = &b;
+  } else {
+    a2 = &b;
+    b2 = &a;
+  }
+
+  unsigned long temp;
+  bool carry_in;
+  bool carry_out;
+  size_t loop;
+
+  _value.resize(a2->length() + 1);
+
+  for (loop = 0, carry_in = false; loop < b2->length(); ++loop) {
+    temp = a2->value(loop) - b2->value(loop);
+    carry_out = (temp > a2->value(loop));
+    if (carry_in) {
+      temp--;
+      carry_out |= (temp == 0);
+    }
+
+    _value[loop] = temp;
+    carry_in = carry_out;
+  }
+
+  for (; loop < a2->length() && carry_in; ++loop) {
+    temp = a2->value(loop) - 1;
+    carry_in = (temp == 0);
+    _value[loop] = temp;
+  }
+
+  for (; loop < a2->length(); ++loop) {
+    _value[loop] = a2->value(loop);
+  }
+  
+  if (carry_in) {
+    _value[loop] = 1;
+  } else {
+    _value.pop_back();
+  }
+}// subtract
 
 inline unsigned long
 get_shifted_block(const BigUnsigned &b, size_t x, unsigned int y)
@@ -329,6 +391,52 @@ BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
 
   zapLeadingZeros();
 }// modWithQuotient
+
+void
+BigUnsigned::operator++()
+{
+  size_t loop;
+  bool carry = true;
+  for (loop = 0; loop < length() && carry; ++loop) {
+    _value[loop]++;
+    carry = (_value[loop] == 0);
+  }
+
+  if (carry) {
+    _value.push_back(1);
+  }
+}// operator++
+
+void
+BigUnsigned::operator++(int)
+{
+  operator++();
+}// operator++
+
+void
+BigUnsigned::operator--()
+{
+  if (_value.size() == 0) {
+    throw "BigUnsigned::operator--(): Cannot decrement an unsigned zero.";
+  }
+
+  size_t loop;
+  bool borrow = true;
+  for (loop = 0; borrow; ++loop) {
+    borrow = (_value[loop] == 0);
+    _value[loop]--;
+  }
+
+  if (_value.back() == 0) {
+    _value.pop_back();
+  }
+}// operator--
+
+void
+BigUnsigned::operator--(int)
+{
+  operator--();
+}// operator--
 
 std::string
 tgl::convert2str(const BigUnsigned &x)

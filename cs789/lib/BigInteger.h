@@ -10,17 +10,29 @@ namespace tgl {
   /// Describe an integer of many manu digits
   class BigInteger {
   public:
+    static const BigUnsigned::Comparison less = BigUnsigned::less;
+    static const BigUnsigned::Comparison equal = BigUnsigned::equal;
+    static const BigUnsigned::Comparison greater = BigUnsigned::greater;
   
     enum Sign {Neg = -1, Zero = 0, Pos = 1};
 
     /// Default constructor
     BigInteger();
 
+    /// Copy constructor
+    BigInteger(const BigInteger &x);
+
     /// Construct from an integer.
     BigInteger(int n);
 
     /// Construct from a std::string
     BigInteger(const std::string &str);
+
+    size_t length() const { return _mag.length(); };
+    
+    Sign sign() const { return _sign; };
+    
+    unsigned long value(size_t index) const { return _mag.value(index); };
 
     /// Equality operator
     bool operator==(const BigInteger &x) const;
@@ -31,7 +43,9 @@ namespace tgl {
     /// Greater than operator
     bool operator>(const BigInteger &x) const;
 
-    bool isZero() const { return _sign == Zero || _mag.isZero(); }
+    bool isZero() const { 
+      return (_sign == Zero); 
+    }
 
     BigInteger operator+(const BigInteger &x) const;
     BigInteger operator-(const BigInteger &x) const;
@@ -40,18 +54,10 @@ namespace tgl {
     BigInteger operator%(const BigInteger &x) const;
     BigInteger operator-() const;
 
-
-    void add(const BigInteger &a, const BigInteger &b) {
-      _mag.add(a._mag, b._mag);
-    };
-
-    void multiply(const BigInteger &a, const BigInteger &b) {
-      _mag.multiply(a._mag, b._mag);
-    };
-
-    void modWithQuotient(const BigInteger &b, BigInteger &q) {
-      _mag.modWithQuotient(b._mag, q._mag);
-    };
+    void add(const BigInteger &a, const BigInteger &b);
+    void subtract(const BigInteger &a, const BigInteger &b);
+    void multiply(const BigInteger &a, const BigInteger &b);
+    void modWithQuotient(const BigInteger &b, BigInteger &q);
 
   protected:
   private:
@@ -86,7 +92,7 @@ namespace tgl {
 
   inline BigInteger BigInteger::operator-(const BigInteger &x) const {
     BigInteger r;
-    r.add(*this, x);
+    r.subtract(*this, x);
     return r;
   };
 
