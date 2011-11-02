@@ -18,6 +18,13 @@ ADD_EXECUTABLE(pow
   lib/BigUnsigned.cpp
   lib/ExponentiationAlgorithm.cpp)
 
+ADD_EXECUTABLE(sqrt
+  sqrt.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
+  lib/FloorSqrtAlgorithm.cpp
+  lib/ExponentiationAlgorithm.cpp)
+
 ADD_EXECUTABLE(pow_mod
   pow_mod.cpp
   lib/BigInteger.cpp
@@ -35,3 +42,13 @@ ADD_EXECUTABLE(prs
   lib/BigUnsigned.cpp
   lib/ExponentiationAlgorithm.cpp
   lib/PrimitiveRootSearchAlgorithm.cpp)
+
+ADD_EXECUTABLE(bsgs
+  bsgs.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
+  lib/FloorSqrtAlgorithm.cpp
+  lib/PrimitiveRootSearchAlgorithm.cpp
+  lib/BabyStepGiantStepAlgorithm.cpp
+  lib/ExpandedEuclideanAlgorithm.cpp
+  lib/ExponentiationAlgorithm.cpp)

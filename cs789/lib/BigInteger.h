@@ -1,6 +1,7 @@
 #ifndef TGL_BIGINTEGER_H
 #define TGL_BIGINTEGER_H
 
+#include <iostream>
 #include <ostream>
 #include <string>
 
@@ -133,6 +134,11 @@ namespace tgl {
     return r;
   };
 
+  struct BigIntegerComp {
+    bool operator() (const BigInteger &lhs, const BigInteger &rhs)
+    { std::cout << "TRACE - lhs, rhs " << lhs << " " << rhs << " " << (lhs < rhs) << std::endl;
+      return lhs < rhs;}
+  };
 }
 
 #endif // #ifndef TGL_BIGINTEGER_H
