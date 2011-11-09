@@ -52,3 +52,10 @@ ADD_EXECUTABLE(bsgs
   lib/BabyStepGiantStepAlgorithm.cpp
   lib/ExpandedEuclideanAlgorithm.cpp
   lib/ExponentiationAlgorithm.cpp)
+
+ADD_EXECUTABLE(rand rand.cpp)
+
+ADD_EXECUTABLE(dhke
+	lib/BigInteger.cpp
+	lib/BigUnsigned.cpp
+	dhke.cpp)
