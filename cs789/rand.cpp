@@ -1,11 +1,17 @@
 #include <iostream>
+#include <ctime>
 
 int
 main(int argc, char* argv[])
 {
-  ::srand(time(NULL));
+  int max;
+  if (argc > 1) {
+    max = ::atoi(argv[1]);
 
-  std::cout << "RAND - " << ::rand() % 1000 << std::endl;
+    ::srand(static_cast<size_t> (::time(NULL)));
+
+    std::cout << "RAND: " << (::rand() % max) << std::endl;
+  }
 
   return 0;
 }// main

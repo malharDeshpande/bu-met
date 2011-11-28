@@ -86,6 +86,8 @@ namespace tgl {
       out << '-';
     }
     out << x._mag;
+
+    return out;
   };
 
   inline BigInteger operator%(BigInteger &a, BigInteger &b) {

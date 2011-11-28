@@ -32,9 +32,9 @@ ADD_EXECUTABLE(pow_mod
   lib/ExponentiationAlgorithm.cpp)
 
 ADD_EXECUTABLE(big_int
-        big_int.cpp
-        lib/BigInteger.cpp
-        lib/BigUnsigned.cpp)
+  big_int.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp)
 
 ADD_EXECUTABLE(prs
   prs.cpp
@@ -53,9 +53,17 @@ ADD_EXECUTABLE(bsgs
   lib/ExpandedEuclideanAlgorithm.cpp
   lib/ExponentiationAlgorithm.cpp)
 
+ADD_EXECUTABLE(elgamal
+  elgamal.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
+  lib/ExpandedEuclideanAlgorithm.cpp
+  lib/ExponentiationAlgorithm.cpp)
+
 ADD_EXECUTABLE(rand rand.cpp)
 
 ADD_EXECUTABLE(dhke
 	lib/BigInteger.cpp
 	lib/BigUnsigned.cpp
 	dhke.cpp)
+

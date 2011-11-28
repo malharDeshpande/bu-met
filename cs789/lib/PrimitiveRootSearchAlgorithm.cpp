@@ -3,6 +3,7 @@
 #include "BigInteger.h"
 
 #include <iostream>
+#include <ctime>
 
 using namespace tgl;
 
@@ -43,7 +44,7 @@ PrimitiveRootSearchAlgorithm::search(const BigInteger &p, BigInteger &b)
     std::cout << "TRACE - result is " << r << std::endl;
     if (r == one) {
       std::cout << "TRACE - rejecting!" << r << std::endl;
-      reject == true;
+      reject = true;
     }
     iter++;
   }
@@ -54,7 +55,7 @@ PrimitiveRootSearchAlgorithm::search(const BigInteger &p, BigInteger &b)
 BigInteger
 PrimitiveRootSearchAlgorithm::compute(const BigInteger &p)
 {
-  srand( time(NULL) );
+  srand( static_cast<unsigned int> (time(NULL)) );
 
   BigInteger b;
 

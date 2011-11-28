@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 using namespace tgl;
 
@@ -98,8 +99,8 @@ BigUnsigned::compareTo(const BigUnsigned &x) const
       } else {
 	return less;
       }
-      return equal;
     }
+    return equal;
   }
 }// compareTo
 
@@ -344,7 +345,7 @@ BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
   std::vector<unsigned long> buf(_value.size());
 
   q._value.resize(origLen - b.length() + 1);
-  for (size_t loop; loop < q.length(); ++loop) {
+  for (size_t loop = 0; loop < q.length(); ++loop) {
     q._value[loop] = 0;
   }
 
@@ -452,7 +453,11 @@ tgl::convert2str(const BigUnsigned &x)
   while (!r.isZero()) {
     BigUnsigned last(r);
     last.modWithQuotient(ten, r);
-    result << last.value(0);
+    if (last.length() > 0) {
+      result << last.value(0);
+    } else {
+      result << "0";
+    }
   }
 
   std::string to_reverse(result.str());
