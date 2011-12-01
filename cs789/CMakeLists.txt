@@ -75,6 +75,13 @@ ADD_EXECUTABLE(random_prime
   lib/BlumBlumShub.cpp
   random_prime.cpp)
 
+ADD_EXECUTABLE(rand
+  lib/BlumBlumShub.cpp
+  lib/BigInteger.cpp
+  lib/BigUnsigned.cpp
+  rand.cpp
+  lib/ExponentiationAlgorithm.cpp)
+
 ADD_EXECUTABLE(dhke
 	lib/BigInteger.cpp
 	lib/BigUnsigned.cpp

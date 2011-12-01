@@ -22,9 +22,11 @@ BlumBlumShub::generate(const tgl::BigInteger& p,
   tgl::BigInteger zero(0);
   tgl::BigInteger two(2);
   std::vector<bool> b;
+  tgl::ExponentiationAlgorithm ea;
+
   std::cout << "TRACE - ";
   for (size_t loop = 0; loop < n; ++loop) {
-    if (zero == ((s % N) % two)) {
+    if (zero == (s % two)) {
       b.push_back(false);
       std::cout << "0";
     } else {
@@ -32,13 +34,13 @@ BlumBlumShub::generate(const tgl::BigInteger& p,
       std::cout << "1";
     }
 
-    s = s * s;
+    s = ea.pow_mod(s, two, N);
   }
 
   std::cout << std::endl;
 
   tgl::BigInteger result;
-  tgl::ExponentiationAlgorithm ea;
+
   for (size_t loop = 0;
        loop < b.size();
        ++loop) {
