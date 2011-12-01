@@ -10,7 +10,7 @@ namespace tgl {
 
     MillerRabinTest();
 
-    bool witness(const tgl::BigInteger& n);
+    bool witness(const tgl::BigInteger& n, size_t k);
 
   protected:
   private:

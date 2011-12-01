@@ -67,13 +67,13 @@ ADD_EXECUTABLE(elgamal
   lib/ExpandedEuclideanAlgorithm.cpp
   lib/ExponentiationAlgorithm.cpp)
 
-ADD_EXECUTABLE(rand
+ADD_EXECUTABLE(random_prime
   lib/MillerRabinTest.cpp
   lib/BigInteger.cpp
   lib/BigUnsigned.cpp
   lib/ExponentiationAlgorithm.cpp
   lib/BlumBlumShub.cpp
-  rand.cpp)
+  random_prime.cpp)
 
 ADD_EXECUTABLE(dhke
 	lib/BigInteger.cpp
