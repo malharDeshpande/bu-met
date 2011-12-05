@@ -453,11 +453,7 @@ tgl::convert2str(const BigUnsigned &x)
   while (!r.isZero()) {
     BigUnsigned last(r);
     last.modWithQuotient(ten, r);
-    if (last.length() > 0) {
-      result << last.value(0);
-    } else {
-      result << "0";
-    }
+    result << last.value(0);
   }
 
   std::string to_reverse(result.str());
