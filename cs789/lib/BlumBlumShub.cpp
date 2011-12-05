@@ -2,6 +2,8 @@
 #include "ExponentiationAlgorithm.h"
 #include "BigInteger.h"
 
+#include <ctime>
+
 using namespace tgl;
 
 BlumBlumShub::BlumBlumShub()
@@ -15,7 +17,7 @@ BlumBlumShub::generate(const tgl::BigInteger& p,
 {
   tgl::BigInteger N = p * q;
   
-  ::srand(static_cast<size_t> (time(NULL)));
+  ::srand(static_cast<size_t> (::time(NULL)));
 
   tgl::BigInteger s = tgl::BigInteger(::rand()) % N;
 
