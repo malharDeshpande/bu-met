@@ -87,3 +87,13 @@ ADD_EXECUTABLE(dhke
 	lib/BigUnsigned.cpp
 	dhke.cpp)
 
+
+ADD_EXECUTABLE(prho
+        lib/PollardsRho.cpp
+        lib/BigInteger.cpp
+        lib/BigUnsigned.cpp
+        lib/ExponentiationAlgorithm.cpp
+        lib/EuclideanAlgorithm.cpp
+        prho.cpp)
+
+
