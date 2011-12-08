@@ -1,5 +1,74 @@
+Sent to Rob:
+
 ElGamal
 P -> 71, g -> 7
-r -> 28
+r -> 14
 A -> 54
+
+RSA
+p -> 97
+q -> 139
+n -> 13483
+e -> 7
+
+phi(n) -> 96*138 = 13248
+7 * -3785 + 13248 * 2 = 1
+-3785 = 9463mod13248  
+d -> 9463
+
+################################################################################
+
+From Chris:
+
+Tohline, Chris
+Dec 2 (1 day ago)
+
+to Terry, Robert, 
+For the Chris <-> Terry El-Gamal communication, I choose p=82939 and b=65129.
+
+My keys are then (65129, 4126)
+
+Send me your keys and an encrypted secret, I'll reply with my own encrypted secret for you.
+--------------------------------
+
+For the Terry --> Chris RSA message, I have n=413434303 and e=3333333.
+
+--------------------------------
+Please let me know if you have any questions.
+
+Thanks,
+--Chris
+
+
+ElGamal
+l -> 12997
+
+moto:cs789-build tgl$ ./pow_mod 65129 12997 82939
+The result is: 20261
+
+(65129, 20261)
+
+b^r^l -> 37902
+Inverse in 82939: 17355
+
+Message to encode is: 10785
+Encrypted -> x*y mod p = 37902*10785 mod 82939 = 49678
+
+moto:cs789-build tgl$ ./pow_mod 4126 12997 82939
+The result is: 37902
+moto:cs789-build tgl$ ./elgamal 37902 10785 82939
+X*YmodP: 49678
+
+
+RSA
+n = 413434303, e = 3333333
+
+Secret is 41893
+
+moto:cs789-build tgl$ ./pow_mod 41893 3333333 413434303
+The result is: 258945338
+moto:cs789-build tgl$ 
+
+
+
 
