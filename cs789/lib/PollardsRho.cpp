@@ -24,13 +24,15 @@ PollardsRho::factor(const tgl::BigInteger& n)
 
   while (d == one) {
     x = (exa.pow(x, two) + one) % n;
-    y = (exa.pow(x, two) + one) % n;
+    y = (exa.pow(y, two) + one) % n;
+    y = (exa.pow(y, two) + one) % n;
 
     std::cout << "TRACE - x y " << x << " " << y << std::endl;
 
     d = eua.gcd(x - y, n);
 
     std::cout << "TRACE - d " << d << std::endl;
+
   }
 
   return d;
