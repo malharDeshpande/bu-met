@@ -1,5 +1,5 @@
 #include "BabyStepGiantStepAlgorithm.h" // class implemented
-#include "FloorSqrtAlgorithm.h"
+#include "CeilingSqrtAlgorithm.h"
 #include "ExponentiationAlgorithm.h"
 #include "ExpandedEuclideanAlgorithm.h"
 #include <cmath>
@@ -19,9 +19,9 @@ BabyStepGiantStepAlgorithm::compute(const BigInteger &p,
 {
   tgl::BigInteger n(p - 1);
 
-  tgl::FloorSqrtAlgorithm fsa;
+  tgl::CeilingSqrtAlgorithm csa;
 
-  BigInteger m = fsa.compute(n);
+  BigInteger m = csa.compute(n);
   
   ExponentiationAlgorithm ea;
   BigInteger index;
