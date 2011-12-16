@@ -14,13 +14,21 @@ CeilingSqrtAlgorithm::compute(const BigInteger &n)
 {
   BigInteger g(1);
   BigInteger two(2);
+  BigInteger remainder;
 
   BigInteger last;
   BigInteger result = ((n/g) + g)/two;
+
   while (last != result) {
     last = result;
-    result = ((n/last) + last)/two;
+    remainder = ((n/last) + last);
+
+    remainder.modWithQuotient(two, result);
   }
 
+  if (remainder == g) {
+    result = result + g;
+  }
+  
   return result;
 }// compute

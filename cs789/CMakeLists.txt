@@ -54,7 +54,7 @@ ADD_EXECUTABLE(bsgs
   bsgs.cpp
   lib/BigInteger.cpp
   lib/BigUnsigned.cpp
-  lib/FloorSqrtAlgorithm.cpp
+  lib/CeilingSqrtAlgorithm.cpp
   lib/PrimitiveRootSearchAlgorithm.cpp
   lib/BabyStepGiantStepAlgorithm.cpp
   lib/ExpandedEuclideanAlgorithm.cpp
