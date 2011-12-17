@@ -1,0 +1,63 @@
+See my comments below. Trying to figure out how best to map what we've completed.  Maybe this "long form" is the right way. // Terry
+
+On Sun, Dec 11, 2011 at 4:35 PM, Rob Neeb <robertneeb@hotmail.com> wrote:
+>
+> I finally have my program completed and am able to encrypt,decrypt, and
+> break both algorithms.  It doesn't do big integers though, which so far has
+> been fine, just keep that in mind for any future messages to me please.
+>
+> I have for Terry->Chris messages: RSA message broken as 41893, El Gamal
+> broken as 10785.  Let me know if this is right/wrong.
+
+[T] Correct on both fronts.
+
+> My Chris<->Rob El gamal keys are (30893,29251) under prime group 50821.  My
+> encrypted message to Chris is 15162.
+
+
+[T] I determined the l & r secret keys as 39111 & 17:
+
+30893^3911mod50821 = 12171
+30893^17mod50821 = 29251
+
+So, b^l^r = 5388, and it's inverse in Z_50821 is 1141
+
+Which lets me decode the message as 1141*15162mod50821 -> 20702
+
+However, if I encode it using b^l^r, I get 20702*5288mod50821 -> 41102
+
+So, something is off.  Is it me?
+
+> My Rob -> Chris RSA encrypted message is 12107864.
+
+
+From Chris's n = 16743941 I found p -> 7177 & q -> 2333.  Size of the group is then (7176*2332) = 16734432 
+For e = 5003, the inverse in Z_16734432 is d -> 1776131
+
+12107864*1776131mod16734432 -> 9999 !
+Confirming: 9999^5003mod16734432-> 12107864!
+
+
+> My Rob -> Terry RSA encrypted message is 12781
+
+[T] Based on my keys n = 13483 & e = 7, your decrypted message is 5611.  Correct?
+
+> Terry for the El Gamal, how do keys, p=28499, b=283 sound?  If good, Ill
+> have my keys be: (283,2767), if not good let me know.
+
+[T] Sounds good.
+
+My keys are then (283, 24986)
+
+Let me tell you (secretly): 9359
+ 
+> I had to start over with my RSA keys, I have:
+> Chris->Rob n = 6995917, e = 13
+> Terry->Rob n = 4079311, e = 23
+
+[T] I'd like only you to know: 1004755
+
+>  
+> Any questions or corrections please let me know.
+> Thanks,
+> Rob

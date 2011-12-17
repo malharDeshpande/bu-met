@@ -59,6 +59,13 @@ The result is: 37902
 moto:cs789-build tgl$ ./elgamal 37902 10785 82939
 X*YmodP: 49678
 
+Message to decode is: 2977
+2977*17355mod82939
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/elgamal.exe 2977 17355 82939
+X*YmodP: 77777
+
 
 RSA
 n = 413434303, e = 3333333
@@ -72,3 +79,123 @@ moto:cs789-build tgl$
 
 
 
+
+
+==================================================================
+
+For the Chris <-> Rob El-Gamal communication, I choose p=50821 and b=30893.
+
+My keys are then (30893, 12171).
+
+Send me your keys and an encrypted secret, I'll reply with my own encrypted secret for you.
+--------------------------------
+
+For the Rob --> Chris RSA message, I have n=16743941 and e=5003.
+
+--------------------------------
+Please let me know if you have any questions.
+
+Thanks,
+--Chris
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/bsgs.exe 50821 12171 30893
+Using Baby-Step, Giant-Step: 39111
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/pow_mod.exe 30893 39111 50821
+The result is: 12171
+
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/bsgs.exe 50821 29251 30893                                    
+Using Baby-Step, Giant-Step: 17
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/pow_mod.exe 30893 17 50821
+The result is: 29251
+
+p -> 50821
+b -> 30893
+l -> 39111
+r -> 17
+
+b^l^r -> 5388
+
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/egcd.exe 5388 50821
+TRACE - 5388 * 1462 + 50821 * -155
+Using EGCD, x0 is: 1462 and y0 is: -155
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Chris->Rob ElGamal message is 37752
+
+1462*37752mod50821
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/elgamal.exe 1462 37752 50821
+X*YmodP: 1818
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+$ ./debug/prho.exe 16743941
+Found d for n: 7177
+
+2333*7177 = 16743941
+
+(2333 - 1) * (7177 - 1) = 16734432
+
+ustlo@ustecboad-r1419 ~/workspace/cs789/build-trunk
+$ ./debug/egcd.exe 5003 16734432
+Using EGCD, x0 is: 1776131 and y0 is: -531
+
+
+#############################################################################
+
+From Rob:
+
+> Terry for the El Gamal, how do keys, p=28499, b=283 sound?  If good, Ill
+> have my keys be: (283,2767), if not good let me know.
+
+
+p -> 28499
+b -> 283
+
+My r -> 169
+
+283^169mod28499 -> 24986
+
+b^l^r = 24493
+Inv -> -12784 or 15715
+
+Message is 21845
+
+21845*24493mod28499 -> 9359
+
+> I had to start over with my RSA keys, I have:
+> Chris->Rob n = 6995917, e = 13
+> Terry->Rob n = 4079311, e = 23
+
+Message is 43685
+
+43685^23mod407931 -> 56471
+
+
+###############################################################################
+
+
+Chris -> Terry RSA
+n = 804976153, e = 23232323
+
+p = 33199
+q = 24247
+
+(p-1)(q-1) = 33198*24246 = 804918708
+
+TRACE - 23232323 * 283330391 + 804918708 * -8177749
+Using EGCD, x0 is: 283330391 and y0 is: -8177749
+
+d = 283330391

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 using namespace tgl;
 
@@ -41,7 +42,7 @@ MillerRabinTest::witness(const tgl::BigInteger& n, size_t k)
   ::srand(static_cast<size_t> (time(NULL)));
 
   for (size_t tests = 0; tests < k; ++tests) {
-    std::cout << "Miller-Rabin test #" << tests << ", " << 100*(1. - (1. / ::pow(4, tests + 1))) << "%" << std::endl;
+    std::cout << "Miller-Rabin test #" << tests << ", " << 100*(1. - (1. / ::pow(4, (tests + 1)))) << "%" << std::endl;
 
     tgl::BigInteger b = tgl::BigInteger(::rand()) % n;
     std::cout << "TRACE - b m n " << b << " " << m << " " << n << std::endl;
