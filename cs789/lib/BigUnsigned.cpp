@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <cmath>
 
 using namespace tgl;
 
@@ -39,12 +40,28 @@ BigUnsigned::BigUnsigned(const std::string &str)
     stop = 1;
   }
 
+  std::vector<unsigned long> d;
+
   for (size_t loop = str.size();
        loop > stop;
        --loop) {
-    _value.push_back(str[loop - 1] - '0');
+    d.push_back(str[loop - 1] - '0');
   }
-  zapLeadingZeros();
+
+
+  BigUnsigned ans(0);
+  BigUnsigned base(10);
+  BigUnsigned temp;
+
+  size_t len = d.size();
+  for (size_t loop = 0;
+       loop < d.size();
+       ++loop) {
+    temp.multiply(ans, base);
+    ans.add(temp, BigUnsigned(d[len - 1 - loop]));
+  }
+
+  *this = ans;
 }// BigUnsigned
 
 void
