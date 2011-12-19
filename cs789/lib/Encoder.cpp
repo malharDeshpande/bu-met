@@ -124,8 +124,8 @@ Encoder::decode(const tgl::BigInteger& i) const
     std::cout << "TRACE - loop " << loop << std::endl;
     for (size_t index = 0; index < 8; ++index) {
       if (b[loop + index]) {
-        std::cout << "TRACE - accumulating " << index << " " << ::pow(2, index) << std::endl;
-        value = value + ::pow(2, index);
+        std::cout << "TRACE - accumulating " << index << " " << ::pow(2., static_cast<int> (index)) << std::endl;
+        value = value + static_cast<int> (::pow(2., static_cast<int> (index)));
       }
     }
 
