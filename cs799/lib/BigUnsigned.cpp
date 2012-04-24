@@ -208,7 +208,7 @@ BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
 void
 BigUnsigned::subtract(const BigUnsigned &a, const BigUnsigned &b)
 {
-  ALIASED(this == &a || this == &b, add(a, b));
+  ALIASED(this == &a || this == &b, subtract(a, b));
 
   if (a.length() == 0) {
     operator =(b);
@@ -377,7 +377,9 @@ BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
     while (i2 > 0) {
       i2--;
 
-      for (jj = 0, kk = ii, borrow_in = false; jj <= b.length(); jj++, kk++) {
+      for (jj = 0, kk = ii, borrow_in = false;
+           jj <= b.length();
+           jj++, kk++) {
 	temp = _value[kk] - get_shifted_block(b, jj, i2);
 	borrow_out = (temp > _value[kk]);
 	if (borrow_in) {
