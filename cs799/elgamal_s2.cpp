@@ -24,24 +24,14 @@ main(int argc, char* argv[])
   tgl::BigInteger p_minus_1 = p - one;
 
   tgl::ExpandedEuclideanAlgorithm eea;
-  eea.extendedGcd(r, p, x, y);
+  eea.extendedGcd(r, p_minus_1, x, y);
 
 
   if (x < zero) {
-    x = p + x;
+    x = p_minus_1 + x;
   }
 
-  std::cout << "(d * s) = " << (d * s) << std::endl;
-  std::cout << "(m - d * s) = " << (m - d * s) << std::endl;
-  std::cout << "(m - d * s) * r(inv) = " << ((m - d * s) * x) << std::endl;
-  std::cout << "(m - d * s) * r(inv) mod (p - 1) = " << (((m - d * s) * x))%(p_minus_1) << std::endl;
-
-  std::cout << "(" << m << " - " << d << " * " << s << ") * " << x << " mod " << (p_minus_1) << std::endl;
   std::cout << "S2 is " << ((m - (d * s)) * x)  % (p_minus_1) << std::endl;
-  
 
-  tgl::BigInteger num(-571774244);
-
-  std::cout << num << " -- " <<  (num % p_minus_1) << std::endl;
   return 0;
 }// main
