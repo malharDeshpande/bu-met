@@ -6,7 +6,7 @@ int
 main(int argc, char* argv[])
 {
   if (argc != 4) {
-    std::cerr << "Usage: " << argv[0] << " e1 r p" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " e1 M p" << std::endl;
     exit(-1);
   }
 
