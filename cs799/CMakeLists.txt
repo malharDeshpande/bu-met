@@ -9,6 +9,20 @@ ADD_EXECUTABLE(elgamal_key_generation
         lib/ExponentiationAlgorithm.cpp         
         elgamal_key_generation.cpp)
 
+ADD_EXECUTABLE(elgamal_sign    
+        lib/BlumBlumShub.cpp
+        lib/BigUnsigned.cpp
+        lib/BigInteger.cpp
+        lib/ExpandedEuclideanAlgorithm.cpp
+        lib/ExponentiationAlgorithm.cpp         
+        elgamal_sign.cpp)        
+
+ADD_EXECUTABLE(elgamal_verify
+        lib/BigUnsigned.cpp
+        lib/BigInteger.cpp
+        lib/ExponentiationAlgorithm.cpp         
+        elgamal_verify.cpp)        
+
 ADD_EXECUTABLE(elgamal_s1
         elgamal_s1.cpp
         lib/BigUnsigned.cpp
