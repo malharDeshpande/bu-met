@@ -10,6 +10,7 @@ ADD_EXECUTABLE(elgamal_key_generation
         elgamal_key_generation.cpp)
 
 ADD_EXECUTABLE(elgamal_sign    
+        lib/ElGamalSign.cpp
         lib/BlumBlumShub.cpp
         lib/BigUnsigned.cpp
         lib/BigInteger.cpp
