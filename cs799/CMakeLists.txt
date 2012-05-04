@@ -19,6 +19,7 @@ ADD_EXECUTABLE(elgamal_sign
         elgamal_sign.cpp)        
 
 ADD_EXECUTABLE(elgamal_verify
+        lib/ElGamalVerify.cpp
         lib/BigUnsigned.cpp
         lib/BigInteger.cpp
         lib/ExponentiationAlgorithm.cpp         

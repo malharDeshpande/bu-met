@@ -1,5 +1,5 @@
-#ifndef TGL_PRIMITIVEROOTSEARCHALGORITHM_H
-#define TGL_PRIMITIVEROOTSEARCHALGORITHM_H
+#ifndef TGL_ELGAMALSIGN_H
+#define TGL_ELGAMALSIGN_H
 
 #include "BigInteger.h"
 
@@ -9,7 +9,7 @@ namespace tgl {
   public:
 
     /// Constructor
-    ElGamalSign();
+    ElGamalSign(const BigInteger& r = tgl::BigInteger(0));
 
 
     /// Perform the signature
@@ -17,7 +17,6 @@ namespace tgl {
              const BigInteger& p,
              const BigInteger& d,
              const BigInteger& m);
-
 
     /// Get-only!
     BigInteger getR() const { return _r; };
@@ -34,5 +33,5 @@ namespace tgl {
   };
 }
 
-#endif // #ifndef TGL_PRIMITIVEROOTSEARCHALGORITHM_H
+#endif // #ifndef TGL_ELGAMALSIGN_H
 

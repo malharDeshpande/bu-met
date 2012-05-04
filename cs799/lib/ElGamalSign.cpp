@@ -1,4 +1,4 @@
-#include "ElGamalSign.h"
+#include "ElGamalSign.h" // class implemented
 #include "ExponentiationAlgorithm.h"
 #include "BlumBlumShub.h"
 #include "ExpandedEuclideanAlgorithm.h"
@@ -8,7 +8,8 @@
 
 using namespace tgl;
 
-ElGamalSign::ElGamalSign()
+ElGamalSign::ElGamalSign(const tgl::BigInteger& r) :
+  _r(r)
 {
 }// ElGamalSign
 
@@ -20,14 +21,17 @@ ElGamalSign::run(const BigInteger& e1,
 {
 
 
-  tgl::BlumBlumShub bbs;
+  if (_r == tgl::BigInteger(0)) {
+    tgl::BlumBlumShub bbs;
   
-  _r = bbs.generate(26681, 68483, 32);
+    _r = bbs.generate(26681, 68483, 32);
+  }
 
   tgl::ExponentiationAlgorithm ea;
 
+  std::cout << "TRACE - e1 r p " << e1 << " " << _r << " " << p << std::endl;
   _s1 = ea.pow_mod(e1, _r, p);
-
+  std::cout << "TRACE - S1 " << _s1 << std::endl;
   tgl::BigInteger x, y;
 
   tgl::BigInteger zero(0);

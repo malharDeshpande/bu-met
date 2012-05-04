@@ -40,28 +40,28 @@ BigUnsigned::BigUnsigned(const std::string &str)
     stop = 1;
   }
 
-  std::vector<unsigned long> d;
-
-  for (size_t loop = str.size();
-       loop > stop;
-       --loop) {
-    d.push_back(str[loop - 1] - '0');
+  size_t len = str.size();
+  unsigned long value;
+  unsigned long temp;
+  unsigned long curr = 0;
+  for (size_t loop = len, x = 0; loop > stop; --loop, ++x) {
+    value = (str[loop - 1] - '0');
+    std::cout << "TRACE - next " << value*::pow(10,x) << std::endl;
+    temp = curr + value*::pow(10,x);
+    std::cout << "TRACE - temp curr " << loop << " " << temp << " " <<  curr << " " << value << " " << value*::pow(10,loop-1) << std::endl;
+    if (temp < curr) {
+      temp++;
+      std::cout << "TRACE - push_back " << temp << std::endl;
+      _value.push_back(temp);
+      curr = 0;
+    } else {
+      curr = temp;
+    }
   }
 
+  _value.push_back(curr);
 
-  BigUnsigned ans(0);
-  BigUnsigned base(10);
-  BigUnsigned temp;
-
-  size_t len = d.size();
-  for (size_t loop = 0;
-       loop < d.size();
-       ++loop) {
-    temp.multiply(ans, base);
-    ans.add(temp, BigUnsigned(d[len - 1 - loop]));
-  }
-
-  *this = ans;
+  zapLeadingZeros();
 }// BigUnsigned
 
 void
@@ -208,7 +208,7 @@ BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
 void
 BigUnsigned::subtract(const BigUnsigned &a, const BigUnsigned &b)
 {
-  ALIASED(this == &a || this == &b, subtract(a, b));
+  ALIASED(this == &a || this == &b, add(a, b));
 
   if (a.length() == 0) {
     operator =(b);
@@ -377,9 +377,7 @@ BigUnsigned::modWithQuotient(const BigUnsigned& b, BigUnsigned &q)
     while (i2 > 0) {
       i2--;
 
-      for (jj = 0, kk = ii, borrow_in = false;
-           jj <= b.length();
-           jj++, kk++) {
+      for (jj = 0, kk = ii, borrow_in = false; jj <= b.length(); jj++, kk++) {
 	temp = _value[kk] - get_shifted_block(b, jj, i2);
 	borrow_out = (temp > _value[kk]);
 	if (borrow_in) {
@@ -472,11 +470,7 @@ tgl::convert2str(const BigUnsigned &x)
   while (!r.isZero()) {
     BigUnsigned last(r);
     last.modWithQuotient(ten, r);
-    if (last.length() > 0) {
-      result << last.value(0);
-    } else {
-      result << "0";
-    }
+    result << last.value(0);
   }
 
   std::string to_reverse(result.str());

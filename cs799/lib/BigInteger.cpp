@@ -28,6 +28,8 @@ BigInteger::BigInteger(int n)
   if (_sign != Zero) {
     _mag = BigUnsigned(static_cast<unsigned long>(n));
   }
+
+  std::cout << "TRACE - BigInteger n " << n << " " << _sign << std::endl;
 }// BigInteger
 
 BigInteger::BigInteger(const std::string &str) :
@@ -114,6 +116,8 @@ BigInteger::multiply(const BigInteger &a, const BigInteger &b)
 {
   ALIASED(this == &a || this == &b, multiply(a, b));
   if (a.sign() == Zero || b.sign() == Zero) {
+    std::cout << "TRACE - a or b zero? " << a.sign() << " " << b.sign() << std::endl;
+
     _sign = Zero;
     _mag = 0;
     return;

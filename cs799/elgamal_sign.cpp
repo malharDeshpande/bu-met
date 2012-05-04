@@ -6,19 +6,18 @@
 int
 main(int argc, char* argv[])
 {
-  if (argc != 5) {
-    std::cerr << "Usage: " << argv[0] << " e1 p d M" << std::endl;
+  if (argc != 6) {
+    std::cerr << "Usage: " << argv[0] << " e1 p d M r" << std::endl;
     exit(-1);
   }
 
-
-  tgl::BigInteger e1(argv[1]);
+  tgl::BigInteger e1(::atoi(argv[1]));
   tgl::BigInteger p(argv[2]);
   tgl::BigInteger d(argv[3]);
   tgl::BigInteger m(argv[4]);
+  tgl::BigInteger r(argv[5]);
 
-
-  tgl::ElGamalSign sign;
+  tgl::ElGamalSign sign(r);
   sign.run(e1, p, d, m);
 
   std::cout << "Random secret (r)\n"
