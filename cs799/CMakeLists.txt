@@ -1,50 +1,46 @@
+PROJECT(CS799)
+
+FILE(GLOB cs799_SOURCES lib/*.cpp)
+FILE(GLOB cs799_HEADERS lib/*.h)
+
 ADD_EXECUTABLE(ecurve ecurve.cpp)
 
 ADD_EXECUTABLE(elgamal_key_generation
-        lib/BlumBlumShub.cpp
-        lib/MillerRabinTest.cpp
-        lib/BigUnsigned.cpp
-        lib/BigInteger.cpp
-        lib/PrimitiveRootSearchAlgorithm.cpp
-        lib/ExponentiationAlgorithm.cpp         
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
         elgamal_key_generation.cpp)
 
 ADD_EXECUTABLE(elgamal_sign    
-        lib/ElGamalSign.cpp
-        lib/BlumBlumShub.cpp
-        lib/BigUnsigned.cpp
-        lib/BigInteger.cpp
-        lib/ExpandedEuclideanAlgorithm.cpp
-        lib/ExponentiationAlgorithm.cpp         
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
         elgamal_sign.cpp)        
 
 ADD_EXECUTABLE(elgamal_verify
-        lib/ElGamalVerify.cpp
-        lib/BigUnsigned.cpp
-        lib/BigInteger.cpp
-        lib/ExponentiationAlgorithm.cpp         
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
         elgamal_verify.cpp)        
 
 ADD_EXECUTABLE(elgamal_s1
-        elgamal_s1.cpp
-        lib/BigUnsigned.cpp
-        lib/BigInteger.cpp
-        lib/ExponentiationAlgorithm.cpp)
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal_s1.cpp)
 
 ADD_EXECUTABLE(elgamal_s2
-        elgamal_s2.cpp
-        lib/BigUnsigned.cpp
-        lib/BigInteger.cpp
-        lib/ExpandedEuclideanAlgorithm.cpp)
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal_s2.cpp)
 
 ADD_EXECUTABLE(elgamal_v1
-        elgamal_v1.cpp
-        lib/BigUnsigned.cpp
-        lib/BigInteger.cpp
-        lib/ExponentiationAlgorithm.cpp)
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal_v1.cpp)
 
 ADD_EXECUTABLE(elgamal_v2
-        elgamal_v2.cpp
-        lib/BigUnsigned.cpp
-        lib/BigInteger.cpp
-        lib/ExponentiationAlgorithm.cpp)
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal_v2.cpp)
+
+ADD_EXECUTABLE(elgamal_exchange
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal_exchange.cpp)
