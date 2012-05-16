@@ -29,7 +29,7 @@ BigInteger::BigInteger(int n)
     _mag = BigUnsigned(static_cast<unsigned long>(n));
   }
 
-  std::cout << "TRACE - BigInteger n " << n << " " << _sign << std::endl;
+  //  std::cout << "TRACE - BigInteger n " << n << " " << _sign << std::endl;
 }// BigInteger
 
 BigInteger::BigInteger(const std::string &str) :
@@ -116,7 +116,7 @@ BigInteger::multiply(const BigInteger &a, const BigInteger &b)
 {
   ALIASED(this == &a || this == &b, multiply(a, b));
   if (a.sign() == Zero || b.sign() == Zero) {
-    std::cout << "TRACE - a or b zero? " << a.sign() << " " << b.sign() << std::endl;
+    //    std::cout << "TRACE - a or b zero? " << a.sign() << " " << b.sign() << std::endl;
 
     _sign = Zero;
     _mag = 0;
@@ -159,14 +159,15 @@ BigInteger::modWithQuotient(const BigInteger &b, BigInteger &q)
     _mag--;
   }
 
+  //  std::cout << "TRACE - this b q " << _mag << " " << b._mag << " " << q._mag << std::endl;
   _mag.modWithQuotient(b._mag, q._mag);
-
+  //  std::cout << "TRACE - this b q " << _mag << " " << b._mag << " " << q._mag << std::endl;
   if (_sign != b._sign) {
     q._mag++;
     _mag.subtract(b._mag, _mag);
     _mag--;
   }
-
+  //  std::cout << "TRACE - this b q " << _mag << " " << b._mag << " " << q._mag << std::endl;
   _sign = b._sign;
 
   if (_mag.isZero()) {
