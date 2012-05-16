@@ -13,7 +13,7 @@ ExpandedEuclideanAlgorithm::divide(BigInteger m, BigInteger n, BigInteger& q, Bi
 {
   q = m / n;
   r = m % n;
-  std::cout << "TRACE - " << m << " mod " << n << " = " << q << " & " << r << std::endl;
+  //  std::cout << "TRACE - " << m << " mod " << n << " = " << q << " & " << r << std::endl;
 }// divide
 
 void
@@ -34,7 +34,7 @@ ExpandedEuclideanAlgorithm::extendedGcd(BigInteger m, BigInteger n, BigInteger& 
     extendedGcd(n, r, s, t);
     x = t;
     y = s - q * t;
-    std::cout << "TRACE - " << m << " * " << x << " + " << n << " * " << y << std::endl;
+    //    std::cout << "TRACE - " << m << " * " << x << " + " << n << " * " << y << std::endl;
   }
 
   return;
