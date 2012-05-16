@@ -30,7 +30,7 @@ BabyStepGiantStepAlgorithm::compute(const BigInteger &p,
   for (BigInteger loop; loop < m; ++loop) {
     index = ea.pow_mod(b, loop, p);
     J[index] = loop;
-    std::cout << "TRACE - b^loop -> loop " << index << " -> " << J[index] << std::endl;
+    //    std::cout << "TRACE - b^loop -> loop " << index << " -> " << J[index] << std::endl;
   }
 
   tgl::ExpandedEuclideanAlgorithm eea;
@@ -46,7 +46,7 @@ BabyStepGiantStepAlgorithm::compute(const BigInteger &p,
 
   tgl::BigInteger c = ea.pow_mod(x, m, p);
 
-  std::cout << "TRACE - x^m mod p " << x << "^" << m << " mod " << p << " = " << c << std::endl;
+  //  std::cout << "TRACE - x^m mod p " << x << "^" << m << " mod " << p << " = " << c << std::endl;
 
   std::map< BigInteger, BigInteger>::key_compare comp;
   BigInteger seven(7);
@@ -58,7 +58,7 @@ BabyStepGiantStepAlgorithm::compute(const BigInteger &p,
 	 it != J.end();
 	 it++) {
       if ((*it).first == x) {
-	std::cout << "TRACE - i*m + j --> " << loop << "*" << m << "+" << (*it).second << std::endl; 
+        //	std::cout << "TRACE - i*m + j --> " << loop << "*" << m << "+" << (*it).second << std::endl; 
 	return (loop * m + (*it).second);
       }
     }  

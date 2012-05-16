@@ -35,7 +35,7 @@ MillerRabinTest::witness(const tgl::BigInteger& n, size_t k)
     ++r;
   }
 
-  std::cout << "TRACE - m r " << m << " " << r << std::endl;
+  //  std::cout << "TRACE - m r " << m << " " << r << std::endl;
 
   tgl::ExponentiationAlgorithm ea;
   size_t witnesses = 0;
@@ -43,10 +43,10 @@ MillerRabinTest::witness(const tgl::BigInteger& n, size_t k)
 
   for (size_t tests = 0; tests < k; ++tests) {
     tgl::BigInteger b = tgl::BigInteger(::rand()) % n;
-    std::cout << "TRACE - b m n " << b << " " << m << " " << n << std::endl;
+    //    std::cout << "TRACE - b m n " << b << " " << m << " " << n << std::endl;
     tgl::BigInteger x = ea.pow_mod(b, m, n);
 
-    std::cout << "TRACE - x " << x << std::endl;
+    //    std::cout << "TRACE - x " << x << std::endl;
 
     if (x == one || x == neg_one) {
       continue;
@@ -54,7 +54,7 @@ MillerRabinTest::witness(const tgl::BigInteger& n, size_t k)
 
     for (tgl::BigInteger loop(0); loop < r; ++loop) {
       x = ea.pow_mod(x, two, n);
-      std::cout << "TRACE - loop x " << loop << " " << x << std::endl;
+      //      std::cout << "TRACE - loop x " << loop << " " << x << std::endl;
       if (x == one) {
         return false;
       }
