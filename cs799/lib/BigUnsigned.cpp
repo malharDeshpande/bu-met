@@ -46,12 +46,12 @@ BigUnsigned::BigUnsigned(const std::string &str)
   unsigned long curr = 0;
   for (size_t loop = len, x = 0; loop > stop; --loop, ++x) {
     value = (str[loop - 1] - '0');
-    std::cout << "TRACE - next " << value*::pow(10,x) << std::endl;
+    //    std::cout << "TRACE - next " << value*::pow(10,x) << std::endl;
     temp = curr + value*::pow(10,x);
-    std::cout << "TRACE - temp curr " << loop << " " << temp << " " <<  curr << " " << value << " " << value*::pow(10,loop-1) << std::endl;
+    //    std::cout << "TRACE - temp curr " << loop << " " << temp << " " <<  curr << " " << value << " " << value*::pow(10,loop-1) << std::endl;
     if (temp < curr) {
       temp++;
-      std::cout << "TRACE - push_back " << temp << std::endl;
+      //      std::cout << "TRACE - push_back " << temp << std::endl;
       _value.push_back(temp);
       curr = 0;
     } else {
@@ -208,7 +208,7 @@ BigUnsigned::add(const BigUnsigned &a, const BigUnsigned &b)
 void
 BigUnsigned::subtract(const BigUnsigned &a, const BigUnsigned &b)
 {
-  ALIASED(this == &a || this == &b, add(a, b));
+  ALIASED(this == &a || this == &b, subtract(a, b));
 
   if (a.length() == 0) {
     operator =(b);
