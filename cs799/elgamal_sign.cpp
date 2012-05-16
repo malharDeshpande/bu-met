@@ -1,4 +1,5 @@
 #include "lib/ElGamalSign.h"
+#include "lib/Timer.h"
 
 #include <iostream>
 #include <ctime>
@@ -17,6 +18,8 @@ main(int argc, char* argv[])
   tgl::BigInteger m(argv[4]);
   tgl::BigInteger r(argv[5]);
 
+  tgl::Timer t;
+
   tgl::ElGamalSign sign(r);
   sign.run(e1, p, d, m);
 
@@ -27,12 +30,7 @@ main(int argc, char* argv[])
             << "S1 -> " << sign.getS1() << "\n"
             << "S2 -> " << sign.getS2() << std::endl;
 
-  time_t start, end;
-  ::time(&start);
-
-  ::time(&end);
-
-  std::cout << "Signing took " << ::difftime(end, start) << "secs."
+  std::cout << "Signing took " << t.elapsed() << "secs."
             << std::endl;
 
   return 0;
