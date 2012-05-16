@@ -1,4 +1,5 @@
 #include "lib/ExponentiationAlgorithm.h"
+#include "lib/timer.h"
 
 #include <iostream>
 #include <ctime>
@@ -11,21 +12,18 @@ main(int argc, char* argv[])
     exit(-1);
   }
 
-  tgl::BigInteger e(argv[1]);
+  tgl::BigInteger e(::atoi(argv[1]));
   tgl::BigInteger r(argv[2]);
   tgl::BigInteger p(argv[3]);
 
   tgl::ExponentiationAlgorithm ea;
 
-  time_t start, end;
-  ::time(&start);
+  tgl::Timer t;
 
   std::cout << e << "^" << r << " mod " << p << " = " << ea.pow_mod(e, r, p) 
             << std::endl;
 
-  ::time(&end);
-
-  std::cout << "Seconds to compute: " << ::difftime(end, start) << std::endl;
+  std::cout << "Seconds to compute: " << t.elapsed() << std::endl;
 
   return 0;
 }// main
