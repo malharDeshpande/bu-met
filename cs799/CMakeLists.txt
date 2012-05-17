@@ -44,3 +44,13 @@ ADD_EXECUTABLE(elgamal_exchange
         ${cs799_SOURCES}
         ${cs799_HEADERS}
         elgamal_exchange.cpp)
+
+ADD_EXECUTABLE(elgamal_exchange_and_break
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal_exchange_and_break.cpp)
+
+ADD_EXECUTABLE(elgamal
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal.cpp)
