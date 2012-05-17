@@ -1,5 +1,20 @@
+4bit keys
+For 100 iterations, average timings are:
+ Key generation took 0.00296574secs
+ DSS exchange took 0.00134893secs
+ Breaking took 0.00156227secs
+
 8bit keys
-For 100 iterations, timings are:
+For 100 iterations, average timings are:
  Key generation took 0.801087secs
  DSS exchange took 0.0025858secs
  Breaking took 0.00536235secs
+
+
+16bit keys
+For 100 iterations, average timings are:
+ Key generation took 5.85056secs
+ DSS exchange took 0.00559098secs
+ Breaking took 0.188948secs
+
+32bit keys
