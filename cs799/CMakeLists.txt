@@ -54,3 +54,8 @@ ADD_EXECUTABLE(elgamal
         ${cs799_SOURCES}
         ${cs799_HEADERS}
         elgamal.cpp)
+
+ADD_EXECUTABLE(elgamal_trials
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        elgamal_trials.cpp)
