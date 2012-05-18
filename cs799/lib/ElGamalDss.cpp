@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <cmath>
 
 using namespace tgl;
 
@@ -21,12 +22,13 @@ ElGamalDss::run(int n, int k, int digest)
 {
   ::srand(static_cast<size_t> (::time(NULL)));
 
-  int indx = ::rand() % tgl::PRIME_SIZE;
+  int limit = (::pow(2, n) < tgl::PRIME_SIZE) ? ::pow(2, n) : tgl::PRIME_SIZE;
+
+  int indx = ::rand() % limit;
   std::cout << "indx " << indx << std::endl;
   int p = tgl::PRIMES[indx];
 
-
-  indx = ::rand() % tgl::PRIME_SIZE;
+  indx = ::rand() % limit;
   std::cout << "indx " << indx << std::endl;
   int q = tgl::PRIMES[indx];
     
@@ -52,10 +54,10 @@ ElGamalDss::run(int n, int k, int digest)
   t.restart();
 
   tgl::BlumBlumShub bbs;
-  indx = ::rand() % tgl::PRIME_SIZE;
+  indx = ::rand() % limit;
   p = tgl::PRIMES[indx];
 
-  indx = ::rand() % tgl::PRIME_SIZE;
+  indx = ::rand() % limit;
   q = tgl::PRIMES[indx];
   std::cout << "Using p, q: " << p << ", " << q << std::endl;
   tgl::BigInteger r = bbs.generate(p, q, n - 1);
