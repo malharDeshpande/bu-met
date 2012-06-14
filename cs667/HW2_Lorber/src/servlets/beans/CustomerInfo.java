@@ -6,8 +6,9 @@ public class CustomerInfo {
 	private String customerID = "";
 	private String firstName = "";
 	private String lastName = "";
-	private String emailAddress = "";
-	
+   	private String emailAddress = "";
+        private boolean idTaken = false;
+
 	public String getCustomerID() {
 		return(customerID);
 	}
@@ -39,6 +40,14 @@ public class CustomerInfo {
 	public void setEmailAddress(String email) {
 		emailAddress = ServletUtilities.filter(email);
 	}
+
+        public boolean getIdTaken() {
+                return(idTaken);
+        }
+
+        public void setIdTaken(boolean taken) {
+                idTaken = taken;
+        }
 
 	public boolean isComplete() {
 		boolean flag = hasValue(customerID) &&
