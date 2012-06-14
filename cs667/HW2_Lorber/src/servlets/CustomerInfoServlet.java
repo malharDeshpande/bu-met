@@ -21,13 +21,14 @@ import javax.servlet.http.HttpServletResponse;
     public class CustomerInfoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-        private static HashMap customers;
+        private HashMap<String, CustomerInfo> customers;
         
         /**
          * @see HttpServlet#HttpServlet()
          */
         public CustomerInfoServlet() {
-            super();
+        	super();
+        	this.customers = new HashMap<String, CustomerInfo>();
         }
 
 	/**
@@ -57,10 +58,10 @@ import javax.servlet.http.HttpServletResponse;
 	}
 
 	private synchronized void submitInfo(CustomerInfo info) {
-            if (this->customers.containsKey(info.getCustomerID())) {
+            if (this.customers.containsKey(info.getCustomerID())) {
                 info.setIdTaken(true);
             } else  {
-                this->customers.put(info.getCustomerID(), info);
+                this.customers.put(info.getCustomerID(), info);
             }
 	}
 	
@@ -76,6 +77,7 @@ import javax.servlet.http.HttpServletResponse;
                         "<H1>" + title + "</H1>\n" +
                         "<DIV STYLE=\"width: 300\">\n" +
                         "<TABLE>\n" +
+                        ServletUtilities.displayRow("Customer ID", info.getCustomerID()) +
                         ServletUtilities.displayRow("First name", info.getFirstName()) +
                         ServletUtilities.displayRow("Last name", info.getLastName()) +
                         ServletUtilities.displayRow("E-mail address", info.getEmailAddress()) +
@@ -102,7 +104,7 @@ import javax.servlet.http.HttpServletResponse;
                         "<LEGEND>Customer Information</LEGEND>\n" +
                         "<TABLE>\n");
                         if (info.getIdTaken()) {
-
+                            out.println(ServletUtilities.inputElementValueTaken("Customer ID", "customerID", info.getCustomerID()));
                         } else {
                             out.println(ServletUtilities.inputElement("Customer ID", "customerID", info.getCustomerID(), true, isPartial));
                         }

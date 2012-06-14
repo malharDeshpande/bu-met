@@ -55,11 +55,7 @@ public class ServletUtilities {
     public static String inputElementValueTaken(String prompt,
                                                 String name,
                                                 String value) {
-
-        String style = "STYLE=\"background: red\"";
-        starred = "<SPAN STYLE=\"color: red; font: bold;\">*</SPAN>";
-
-        return("<TR><TD>Customer ID taken, choose new value.</TD></TR><TR " + style + "><TD>" + starred + "<LABEL FOR=\"" + name + "\">" + prompt + ":</LABEL></TD>\n" +
+        return("<TR><TD COLSPAN=\"2\">Customer ID taken, choose new value.</TD></TR><TR STYLE=\"background: red\"><TD><LABEL FOR=\"" + name + "\">" + prompt + ":</LABEL></TD>\n" +
                "<TD><INPUT TYPE=\"TEXT\" NAME=\"" + name + "\"" + " VALUE=\"" + value + "\"></TD></TR>\n");
     }
 	
