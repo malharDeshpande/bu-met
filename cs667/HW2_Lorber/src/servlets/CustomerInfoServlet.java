@@ -21,14 +21,12 @@ import javax.servlet.http.HttpServletResponse;
     public class CustomerInfoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-        private HashMap<String, CustomerInfo> customers;
-        
+        private static HashMap<String, CustomerInfo> customers = new HashMap<String, CustomerInfo>();
         /**
          * @see HttpServlet#HttpServlet()
          */
         public CustomerInfoServlet() {
         	super();
-        	this.customers = new HashMap<String, CustomerInfo>();
         }
 
 	/**
@@ -58,10 +56,10 @@ import javax.servlet.http.HttpServletResponse;
 	}
 
 	private synchronized void submitInfo(CustomerInfo info) {
-            if (this.customers.containsKey(info.getCustomerID())) {
+            if (CustomerInfoServlet.customers.containsKey(info.getCustomerID())) {
                 info.setIdTaken(true);
             } else  {
-                this.customers.put(info.getCustomerID(), info);
+                CustomerInfoServlet.customers.put(info.getCustomerID(), info);
             }
 	}
 	
@@ -83,6 +81,7 @@ import javax.servlet.http.HttpServletResponse;
                         ServletUtilities.displayRow("E-mail address", info.getEmailAddress()) +
                         "</TABLE>\n" +
                         "</DIV>\n" +
+                        "<P><A HREF=\"CustomerInfoServlet\">RETURN</A></P>\n" +
                         "</BODY></HTML>");
 	}
 	
