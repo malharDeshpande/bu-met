@@ -38,12 +38,11 @@ import javax.servlet.http.HttpServletResponse;
             populateBean(info, request);
 		
             if (info.isComplete()) {
-                if (!this->customers.containsKey(info.getCustomerID())) {
-                    submitInfo(info);
-                    showInfo(request, response, info);
-                } else {
-                    info.setIdTaken(true);
+                submitInfo(info);
+                if (info.getIdTaken()) {
                     showForm(request, response, info);
+                } else {
+                    showInfo(request, response, info);
                 }
             } else {
                 showForm(request, response, info);
@@ -57,8 +56,12 @@ import javax.servlet.http.HttpServletResponse;
             doGet(request, response);
 	}
 
-	private void submitInfo(CustomerInfo info) {
-            this->customers.put(info.getCustomerID(), info);
+	private synchronized void submitInfo(CustomerInfo info) {
+            if (this->customers.containsKey(info.getCustomerID())) {
+                info.setIdTaken(true);
+            } else  {
+                this->customers.put(info.getCustomerID(), info);
+            }
 	}
 	
 	private void showInfo(HttpServletRequest request,
