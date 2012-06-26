@@ -41,7 +41,14 @@ import javax.servlet.http.HttpServletResponse;
                 if (info.getIdTaken()) {
                     showForm(request, response, info);
                 } else {
-                    showInfo(request, response, info);
+                    
+                    HttpSession session = request.getSession();
+                    session.setAttribute("cust", info);
+
+                    String page = "/jsp/CustomerInfo.jsp";
+                    RequestDispatcher rd = new request.getRequestDispatcher(page);
+                    rd.forward(request, response);
+                    return;
                 }
             } else {
                 showForm(request, response, info);
