@@ -8,7 +8,7 @@ public class ServletUtilities {
     public static String headWithTitle(String title) {
         return(DOCTYPE + "\n" +
                "<HTML>\n" + 
-               "<HEAD><TITLE>" + title + "</TITLE></HEAD>\n");
+               "<HEAD><TITLE>HW2_Lorber | " + title + "</TITLE></HEAD>\n");
     }
 	
     public static String filter(String input) {

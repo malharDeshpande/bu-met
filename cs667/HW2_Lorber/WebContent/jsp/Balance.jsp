@@ -6,6 +6,8 @@
 </HEAD>
 <BODY>
 
+<EM>Almost every wise saying has an opposite one, no less wise, to balance it.</EM>
+
 <FORM action="CustomerOrderServlet">
      <%@ include file="/jsp/Actions.jsp" %>
 <INPUT TYPE = "SUBMIT" VALUE="Submit">

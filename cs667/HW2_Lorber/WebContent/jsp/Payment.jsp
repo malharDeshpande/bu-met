@@ -6,6 +6,8 @@
 </HEAD>
 <BODY>
 
+<EM>Just got paid today, got me a pocket full of change.</EM>
+
 <FORM action="CustomerOrderServlet">
      <%@ include file="/jsp/Actions.jsp" %>
 <INPUT TYPE = "SUBMIT" VALUE="Submit">

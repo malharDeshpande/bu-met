@@ -4,8 +4,13 @@ import servlets.*;
 
 public class ProductBean {
 	private String name = "";
-	private double price = "";
+	private double price = 0.;
 
+	public ProductBean(String name, double price) {
+		this.name = name;
+		this.price = price;
+	}
+	
 	public String getName() {
 		return(name);
 	}
@@ -22,4 +27,10 @@ public class ProductBean {
 		price = value;
 	}
 
+	public String formattedPrice() {
+		StringBuffer fmted = new StringBuffer();
+		fmted.append("$");
+		fmted.append(price);
+		return fmted.toString();
+	}
 }

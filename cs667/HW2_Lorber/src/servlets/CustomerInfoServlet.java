@@ -8,11 +8,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class CustomerInfoServlet
@@ -46,7 +48,7 @@ import javax.servlet.http.HttpServletResponse;
                     session.setAttribute("cust", info);
 
                     String page = "/jsp/CustomerInfo.jsp";
-                    RequestDispatcher rd = new request.getRequestDispatcher(page);
+                    RequestDispatcher rd = request.getRequestDispatcher(page);
                     rd.forward(request, response);
                     return;
                 }
@@ -68,28 +70,6 @@ import javax.servlet.http.HttpServletResponse;
             } else  {
                 CustomerInfoServlet.customers.put(info.getCustomerID(), info);
             }
-	}
-	
-	private void showInfo(HttpServletRequest request,
-                              HttpServletResponse response,
-                              CustomerInfo info)
-            throws ServletException, IOException {
-            response.setContentType("text/html");
-            PrintWriter out = response.getWriter();
-            String title = "Customer Information Registered";
-            out.println(ServletUtilities.headWithTitle(title) +
-                        "<BODY BGCOLOR=\"\"><CENTER>\n" +
-                        "<H1>" + title + "</H1>\n" +
-                        "<DIV STYLE=\"width: 300\">\n" +
-                        "<TABLE>\n" +
-                        ServletUtilities.displayRow("Customer ID", info.getCustomerID()) +
-                        ServletUtilities.displayRow("First name", info.getFirstName()) +
-                        ServletUtilities.displayRow("Last name", info.getLastName()) +
-                        ServletUtilities.displayRow("E-mail address", info.getEmailAddress()) +
-                        "</TABLE>\n" +
-                        "</DIV>\n" +
-                        "<P><A HREF=\"CustomerInfoServlet\">RETURN</A></P>\n" +
-                        "</BODY></HTML>");
 	}
 	
 	private void showForm(HttpServletRequest request,
