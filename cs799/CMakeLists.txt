@@ -10,6 +10,11 @@ ADD_EXECUTABLE(elgamal_key_generation
         ${cs799_HEADERS}
         elgamal_key_generation.cpp)
 
+ADD_EXECUTABLE(rsa_key_generation
+        ${cs799_SOURCES}
+        ${cs799_HEADERS}
+        rsa_key_generation.cpp)
+
 ADD_EXECUTABLE(elgamal_sign    
         ${cs799_SOURCES}
         ${cs799_HEADERS}
