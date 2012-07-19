@@ -19,68 +19,119 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class CustomerOrderServlet
+ * Servlet implementation class EmployeeServlet
  */
-@WebServlet("/CustomerOrderServlet")
-    public class CustomerOrderServlet extends HttpServlet {
-		private static final long serialVersionUID = 1L;
-		
-		/**
+@WebServlet("/EmployeeServlet")
+    public class EmployeeServlet extends HttpServlet {
+        private static final long serialVersionUID = 1L;
+
+        /**
      	 * @see HttpServlet#HttpServlet()
          */
-        public CustomerOrderServlet() {
+        public EmployeeServlet() {
             super();
         }
-
-   
+        
+        
         public void init() throws ServletException
         {
-        	synchronized (this) {
-        		ProductBeanCollection products = new ProductBeanCollection();
-        		
-        		products.append(new ProductBean("apple", 0.25));
-        		products.append(new ProductBean("peach", 0.50));
-        		products.append(new ProductBean("avocado", 1.50));
-        	    getServletContext().setAttribute("products", products);
-        	}
+            synchronized (this) {
+                HashMap<String, EmployeeBean> employees = new HashMap<String, EmployeeBean>();
+                getServletContext().setAttribute("employees", employees);
+            }
         }
-    
+        
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 HttpSession session = request.getSession();
-         CustomerInfo info = (CustomerInfo) session.getAttribute("cust");
-         if (null == info) {
-        	 String register = new String("CustomerInfoServlet");
-        	 response.setContentType("text/html");
-        	 response.sendRedirect(register);
-        	 return;
-         }
- 
-         String operation = request.getParameter("operation");
+            String action = request.getParameter("action");
 
-         String page;         
-         if (operation.contentEquals("balance")) {
-        	 page = new String("/jsp/Balance.jsp");
-         } else if (operation.contentEquals("order")) {
-        	 page = new String("/jsp/Order.jsp");
-         } else if (operation.contentEquals("payment")) {
-    		 page = new String("/jsp/Payment.jsp");
-         } else {
-        	 page = new String("/jsp/CustomerInfo.jsp");
-         }
-        
-         RequestDispatcher rd = request.getRequestDispatcher(page);
-         rd.forward(request, response);
-         return;
-    }
+            String page;         
+            if (action.contentEquals("newEmployee")) {
+                page = new String("NewEmployee.html");
+            } else if (operation.contentEquals("existingEmployee")) {
+                page = new String("ExistingEmployee.html");
+            }
+                        
+            response.setContentType("text/html");
+            response.sendRedirect(page);
+            return;
+        }
+
             
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            doGet(request, response);
+            EmployeeBean employee = new EmployeeBean;
+            this.populateBean(employee, request);
+            
+            HashMap<String, EmployeeBean> employees = getServletContext().getAttribute("employees");
+
+            synchronized (this) {
+                if (employee.getFullName().equals("")) {
+                    // no name, must be an existing employee
+                    if (employees.containsKey(employees.getEmployeeId())) {
+                        employee = employees.get(employee.getEmployeeId());
+                        
+                        HttpSession session = request.getSession();
+                        session.setAttribute("currentEmployee", employee);
+                        
+                        String page = "/jsp/Employee.jsp";
+                        RequestDispatcher rd = request.getRequestDispatcher(page);
+                        rd.forward(request, response);
+                        return;
+
+                    } else {
+                        // not found
+                        response.setContentType("text/html");
+                        response.sendRedirect("ErrorPage.html");
+                        return;
+                    }
+                    
+                } else {
+                    // a new employee!
+                   
+                    String page;
+                    if (employees.containsKey(employees.getEmployeeId())) {
+                        // already exists
+                        page = new String("ErrorPage.html");
+                    } else {
+                        // store and return to Welcome page
+                        employees.put(employee.getEmployeeId(), employee);
+                        page = new String("Welcome.html");
+                    }
+                    
+                    response.setContentType("text/html");
+                    response.sendRedirect(page);
+                    return;
+                }
+            }
+	}
+
+ 	private void populateBean(EmployeeBean employee, HttpServletRequest request) {
+            String value = request.getParameter("employeeID");
+            if ((value != null) && (!value.equals(""))) {
+                employee.setEmployeeID(value);
+            }
+
+            value = request.getParameter("fullName");
+            if ((value != null) && (!value.equals(""))) {
+                employee.setFullName(value);
+            }
+
+            value = request.getParameter("employeeType");
+            if ((value != null) && (!value.equals(""))) {
+                employee.setEmployeeType(Integer.parseInt(value));
+            }
+
+            value = request.getParameter("wageRate");
+            if ((value != null) && (!value.equals(""))) {
+                employee.setWageRate(Double.parseDouble(value));
+            }
+
+
 	}
 
 
