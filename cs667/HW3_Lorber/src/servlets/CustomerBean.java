@@ -1,16 +1,21 @@
 package servlets;
 
-import javax.faces.application.*;
-import javax.faces.bean.*;
-import javax.faces.context.*;
-
-@ManagedBean
 public class CustomerBean {
 	private String customerID = "";
 	private String firstName = "";
 	private String lastName = "";
    	private String emailAddress = "";
-    private boolean idTaken = false;
+
+   	public CustomerBean() {
+   		
+   	}
+   	
+    public CustomerBean(String id, String firstName, String lastName, String emailAddress) {
+        this.customerID = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailAddress = emailAddress;
+    }
 
 	public String getCustomerID() {
 		return(customerID);
@@ -44,45 +49,4 @@ public class CustomerBean {
 		emailAddress = ServletUtilities.filter(email);
 	}
 
-	public String doRegister() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		if (isComplete()) {
-			
-		} else {
-			
-		}
-		if (context.getMessageList().size() > 0) {
-			return(null);
-		} else {
-			return("register");
-		}
-	}
-	
-        public boolean getIdTaken() {
-                return(idTaken);
-        }
-
-        public void setIdTaken(boolean taken) {
-                idTaken = taken;
-        }
-
-	public boolean isComplete() {
-		boolean flag = hasValue(customerID) &&
-				hasValue(firstName) &&
-				hasValue(lastName) &&
-				hasValue(emailAddress);
-		return(flag);
-	}	
-
-	public boolean isPartial() {
-		boolean flag = hasValue(customerID) ||
-				hasValue(firstName) ||
-				hasValue(lastName) ||
-				hasValue(emailAddress);
-		return(flag);
-	}	
-
-	public boolean hasValue(String str) {
-	  return((str != null) && (!str.equals("")));
-	}
 }

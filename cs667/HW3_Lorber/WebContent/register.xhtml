@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+<title>HW3_Lorber | Register</title>
+<link href="./css/styles.css" rel="stylesheet" type="text/css" />
+</h:head>
+<body>
+<h2>HW3_Lorber | Register</h2>
+
+<fieldset>
+<legend>Customer Information</legend>
+<h:form>
+<h:messages styleClass="error" />
+<table>
+<tr>
+<td>Customer ID: </td>
+<td><h:inputText value="#{simpleController.currentCustomer.customerID}"/></td>
+</tr>
+<tr>
+<td>First name: </td>
+<td><h:inputText value="#{simpleController.currentCustomer.firstName}"/></td>
+</tr>
+<tr>
+<td>Last name: </td>
+<td><h:inputText value="#{simpleController.currentCustomer.lastName}"/></td>
+</tr>
+<tr>
+<td>E-mail address: </td>
+<td><h:inputText value="#{simpleController.currentCustomer.emailAddress}"/></td>
+</tr>
+<tr>
+<td colspan="2"><h:commandButton value="Register" action="#{simpleController.doRegister}" /></td>
+</tr>
+</table>   
+</h:form>
+</fieldset>
+                        
+</body>
+</html>
