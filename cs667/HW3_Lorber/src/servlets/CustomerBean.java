@@ -1,13 +1,16 @@
-package servlets.beans;
+package servlets;
 
-import servlets.*;
+import javax.faces.application.*;
+import javax.faces.bean.*;
+import javax.faces.context.*;
 
-public class CustomerInfo {
+@ManagedBean
+public class CustomerBean {
 	private String customerID = "";
 	private String firstName = "";
 	private String lastName = "";
    	private String emailAddress = "";
-        private boolean idTaken = false;
+    private boolean idTaken = false;
 
 	public String getCustomerID() {
 		return(customerID);
@@ -41,6 +44,20 @@ public class CustomerInfo {
 		emailAddress = ServletUtilities.filter(email);
 	}
 
+	public String doRegister() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (isComplete()) {
+			
+		} else {
+			
+		}
+		if (context.getMessageList().size() > 0) {
+			return(null);
+		} else {
+			return("register");
+		}
+	}
+	
         public boolean getIdTaken() {
                 return(idTaken);
         }
