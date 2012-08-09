@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -43,7 +44,7 @@ public class Project implements java.io.Serializable {
         this.getEmployees().remove(employee);
     }
 
-    @OneToMany
+    @ManyToOne
     public Company getCompany() {
         return this.company;
     }

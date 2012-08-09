@@ -30,7 +30,9 @@ public class Employee implements java.io.Serializable {
     }
 
     @ManyToMany(cascade = REMOVE, fetch = FetchType.EAGER)
-    @JoinTable(name = "EMPLOYEES_PROJECTS", joinColumns = @JoinColumn(name = "EMPLOYEE_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "PROJECT_ID", referencedColumnName = "ID"))
+    @JoinTable(name = "EMPLOYEES_PROJECTS", 
+      joinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "employeeId"), 
+      inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "projectCode"))
     public Collection<Project> getProjects() {
         return this.projects;
     }

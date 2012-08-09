@@ -2,6 +2,8 @@ package project.entity;
 
 import java.util.Collection;
 import static javax.persistence.CascadeType.ALL;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
