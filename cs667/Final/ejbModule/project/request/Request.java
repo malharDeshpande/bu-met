@@ -1,8 +1,8 @@
 package project.request;
 
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
-@Local
+@Remote
 public interface Request {
     void test1();
 

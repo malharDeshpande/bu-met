@@ -1,5 +1,6 @@
 package project.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import static javax.persistence.CascadeType.ALL;
 
@@ -23,6 +24,8 @@ public class Company implements java.io.Serializable {
     }
 
     public Company(String id, String name) {
+        this.employees = new ArrayList<Employee>();
+        this.projects = new ArrayList<Project>();
         this.companyId = id;
         this.companyName = name;
     }

@@ -25,33 +25,66 @@ public class RequestBean implements Request {
 	@Override
 	public void test1() {
 		try {
-			Company company = new Company("NBM", "National Business Machines");
+			System.out.println("project.request.RequestBean.test1");
+
+			Company company = em.find(Company.class, "NBM");
+			if (company == null) {
+				company = new Company("NBM", "National Business Machines");
+			}
 			
-			Employee emp1 = new Employee("001", "Karl Fardman");
-			company.addEmployee(emp1);
+			System.out.println("Company " + company.getCompanyId() + ": " + company.getCompanyName());
+			
+			Employee emp1 = em.find(Employee.class, "001");
+			if (emp1 == null) {
+				emp1 = new Employee("001", "Karl Fardman");
+
+				company.addEmployee(emp1);
+				emp1.setCompany(company);
+			}
+
 	
-			Employee emp2 = new Employee("002", "Newman");
-			company.addEmployee(emp2);
-	
+			Employee emp2 = em.find(Employee.class, "002");
+			if (emp2 == null) {
+				emp2 = new Employee("002", "Newman");
+
+				company.addEmployee(emp2);
+				emp2.setCompany(company);
+			}
+
 			ArrayList<Project> projs = new ArrayList<Project>();
 	
-			Project proj1 = new Project("P-001", "Integration");
+			Project proj1 = em.find(Project.class, "P-001");
+			if (proj1 == null) {
+				proj1 = new Project("P-001", "Integration");
+			}
+
+			Project proj2 = em.find(Project.class, "P-002");
+			if (proj2 == null) {
+				proj2 = new Project("P-002", "Training");
+			}
+
+			Project proj3 = em.find(Project.class, "P-003");
+			if (proj3 == null) {
+				proj3 = new Project("P-003", "ISO Compliance");
+			}
+
+			Project proj4 = em.find(Project.class, "P-004");
+			if (proj4 == null) {
+				proj4 = new Project("P-004", "Top Secret");
+			}
+			
 			projs.add(proj1);
-	
-			Project proj2 = new Project("P-002", "Training");
 			projs.add(proj2);
-	
-			Project proj3 = new Project("P-003", "ISO Compliance");
 			projs.add(proj3);
-	
-			Project proj4 = new Project("P-004", "Top Secret");
 			projs.add(proj4);
+
+			proj1.setCompany(company);
+			proj2.setCompany(company);
+			proj3.setCompany(company);
+			proj4.setCompany(company);
 			
 			company.setProjects(projs);
-			
-
-	        em.persist(company);
-	        
+			em.persist(company);
 	        
 	        for(Employee emp : company.getEmployees()) {
 	        	System.out.println("Employee " + emp.getEmployeeId() + ": " + emp.getFullName());
@@ -68,26 +101,37 @@ public class RequestBean implements Request {
 
 	@Override
 	public void test2() {
-		try {			
+		try {
+			System.out.println("project.request.RequestBean.test2");
+			
 			Company company = em.find(Company.class, "NBM");
 			
 			int e_count = 0;
 			int p_count = 0;
 			for(Employee emp : company.getEmployees()) {
 				for(Project proj : company.getProjects()) {
-					if (e_count == 0 && p_count < 4) {
-						emp.addProject(proj);
+					if (e_count == 0 && p_count < 3) {
+						if (!proj.getEmployees().contains(emp)) {
+							emp.addProject(proj);
+							proj.addEmployee(emp);
+						}
 					}
 
 					if (e_count == 1 && p_count > 0) {
-						emp.addProject(proj);
+						if (!proj.getEmployees().contains(emp)) {
+							emp.addProject(proj);
+							proj.addEmployee(emp);
+						}
 					}
 					
 					p_count++;
 				}
 				
+				p_count = 0;
 				e_count++;
 			}
+			
+			em.persist(company);
 			
 			for(Project proj : company.getProjects()) {
 				System.out.println("Project " + proj.getProjectCode() + " employees:");

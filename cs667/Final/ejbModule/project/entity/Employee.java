@@ -1,5 +1,6 @@
 package project.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
@@ -25,6 +26,8 @@ public class Employee implements java.io.Serializable {
     }
 
     public Employee(String id, String name) {
+        this.projects = new ArrayList<Project>();
+        
         this.employeeId = id;
         this.fullName = name;
     }

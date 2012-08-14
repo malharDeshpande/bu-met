@@ -1,12 +1,12 @@
 package project.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,6 +23,7 @@ public class Project implements java.io.Serializable {
     }
 
     public Project(String code, String name) {
+    	this.employees = new ArrayList<Employee>();
         this.projectCode = code;
         this.projectName = name;
     }
