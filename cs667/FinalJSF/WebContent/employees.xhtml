@@ -24,22 +24,40 @@
 <div id="employees">
 <strong>Employees</strong>
 <table>
+<thead>
 <tr>
 <th>ID</th>
-<th>Full Name</th>
+<th colspan="2">Actions</th>
 </tr>
+</thead>
 
 
 <ui:repeat var="employee" value="#{managerBean.allEmployees}">
 <tr>
-<td>#{employee.id}</td>
-<td>#{employee.name}</td>
+<td valign="top">
+#{employee.id}
+</td>
+<td>
+<h:commandLink value="View" action="#{managerBean.viewEmployee}">
+<f:param name="employeeId" value="#{employee.id}" />
+</h:commandLink>
+</td>
+<td>
+<h:commandLink value="Edit" action="#{managerBean.editEmployee}">
+<f:param name="employeeId" value="#{employee.id}" />
+</h:commandLink>
+</td>
 </tr>
 </ui:repeat>
 
 
+
 </table>
 </div>
+
+
+
+
 			<div id="links">
 			<a href="companies.jsf">Companies</a> | <a href="projects.jsf">Projects</a> | <a href="employees.jsf">Employees</a>
 			</div>

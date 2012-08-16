@@ -5,6 +5,7 @@ import tgl.project.util.CompanyDetails;
 import tgl.project.util.EmployeeDetails;
 import tgl.project.util.ProjectDetails;
 import tgl.project.entity.Company;
+import tgl.project.entity.Employee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 @ManagedBean 
 @SessionScoped
@@ -23,6 +26,29 @@ public class ManagerBean {
 	
 	private String companyId;
 	private Company currentCompany;
+	private String page;
+	private String employeeId;
+	private Employee currentEmployee;
+
+	public String viewEmployee() {
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	    String id = request.getParameter("employeeId");
+	    this.setEmployeeId(id);
+		return("view-employee");
+	}
+	
+	public String updateEmployee() {
+    	bean.update(this.currentEmployee);
+    	return("employees");
+	
+	}
+	
+	public String editEmployee() {
+		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	    String id = request.getParameter("employeeId");
+	    this.setEmployeeId(id);
+		return("edit-employee");	    
+	}
 	
 	public List<SelectItem> getCompanies() {
 		List<SelectItem> companies = new ArrayList<SelectItem>();
@@ -44,8 +70,29 @@ public class ManagerBean {
 		this.currentCompany = bean.getCompanyBean(companyId);
 	}
 
+	public String getEmployeeId() {
+		return this.employeeId;
+	}
+	
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
+		this.currentEmployee = bean.getEmployeeBean(employeeId);
+	}
+
 	public Company getCurrentCompany() {
 		return this.currentCompany;
+	}
+
+	public Employee getCurrentEmployee() {
+		return this.currentEmployee;
+	}
+
+	public String getPage() {
+		return this.page;
+	}
+	
+	public void openPage(String page) {
+		this.page = page;
 	}
 	
 	public List<ProjectDetails> getAllProjects() {
