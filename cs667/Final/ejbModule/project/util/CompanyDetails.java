@@ -1,4 +1,4 @@
-package project.util;
+package tgl.project.util;
 
 public class CompanyDetails implements java.io.Serializable {
     private static final long serialVersionUID = 1L;

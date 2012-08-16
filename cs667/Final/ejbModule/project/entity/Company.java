@@ -1,17 +1,26 @@
-package project.entity;
+package tgl.project.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import static javax.persistence.CascadeType.ALL;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "COMPANIES")
+@Table(name = "TGL_COMPANIES")
+
+
+@NamedQueries({
+	@NamedQuery(name = "tgl.project.entity.Company.findAllCompanies",query = "SELECT c FROM Company c"),
+	@NamedQuery(name = "tgl.project.entity.Company.findAllProjectsByCompany", query = "SELECT DISTINCT p FROM Project p WHERE p.company = :company"),
+	@NamedQuery(name = "tgl.project.entity.Company.findAllEmployeesByCompany", query = "SELECT DISTINCT e FROM Employee e WHERE e.company = :company")
+    
+})
 public class Company implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	

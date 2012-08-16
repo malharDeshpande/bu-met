@@ -1,31 +1,31 @@
-package project.request;
+package tgl.project.request;
 
 import javax.ejb.EJBException;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import project.entity.Company;
-import project.entity.Employee;
-import project.entity.Project;
+import tgl.project.entity.Company;
+import tgl.project.entity.Employee;
+import tgl.project.entity.Project;
+import tgl.project.util.CompanyDetails;
+import tgl.project.util.EmployeeDetails;
+import tgl.project.util.ProjectDetails;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.logging.Logger;
+import java.util.Iterator;
+import java.util.List;
 
 @Stateful
 public class RequestBean implements Request {
 
-    private static final Logger logger = Logger.getLogger(
-            "project.request.RequestBean");
-
-    @PersistenceContext(unitName="finalDB")
+    @PersistenceContext(unitName="TGL_finalDB")
     private EntityManager em;
 
 	@Override
 	public void test1() {
 		try {
-			System.out.println("project.request.RequestBean.test1");
+			System.out.println("tgl.project.request.RequestBean.test1");
 
 			Company company = em.find(Company.class, "NBM");
 			if (company == null) {
@@ -102,7 +102,7 @@ public class RequestBean implements Request {
 	@Override
 	public void test2() {
 		try {
-			System.out.println("project.request.RequestBean.test2");
+			System.out.println("tgl.project.request.RequestBean.test2");
 			
 			Company company = em.find(Company.class, "NBM");
 			
@@ -145,5 +145,106 @@ public class RequestBean implements Request {
 		}
 		
 	}
+	
+	@Override
+	public void test3() { 
+		
+		
+	}
+
+	@Override
+	public Project getProjectBean(String projectCode) {
+		Project project = null;
+		try {
+			project = em.find(Project.class, projectCode);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}
+		return project;
+	}
+
+	@Override
+	public Company getCompanyBean(String companyId) {
+		Company company = null;
+		try {
+			company = em.find(Company.class, companyId);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}
+		return company;
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	public List<CompanyDetails> getAllCompanies() {
+		List<Company> companies = null;
+		try {
+			companies = (List<Company>) em.createNamedQuery("tgl.project.entity.Company.findAllCompanies").getResultList();
+			return copyCompaniesToDetails(companies);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}	
+	}
+	
+	private List<CompanyDetails> copyCompaniesToDetails(List<Company> companies) {
+		List<CompanyDetails> detailsList = new ArrayList<CompanyDetails>();
+		Iterator<Company> iter = companies.iterator();
+		
+		while (iter.hasNext()) {
+			Company company = (Company) iter.next();
+			CompanyDetails companyDetails = new CompanyDetails(company.getCompanyId(), company.getCompanyName());
+			detailsList.add(companyDetails);
+		}
+		return detailsList;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ProjectDetails> getAllProjects(Company company) {
+		List<Project> projects = null;
+		try {
+			projects = (List<Project>) em.createNamedQuery("tgl.project.entity.Company.findAllProjectsByCompany").setParameter("company", company).getResultList();
+			return copyProjectsToDetails(projects);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}	
+	}
+	
+	private List<ProjectDetails> copyProjectsToDetails(List<Project> projects) {
+		List<ProjectDetails> detailsList = new ArrayList<ProjectDetails>();
+		Iterator<Project> iter = projects.iterator();
+		
+		while (iter.hasNext()) {
+			Project project = (Project) iter.next();
+			ProjectDetails projectDetails = new ProjectDetails(project.getProjectCode(), project.getProjectName());
+			detailsList.add(projectDetails);
+		}
+		return detailsList;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<EmployeeDetails> getAllEmployees(Company company) {
+		List<Employee> employees = null;
+		try {
+			employees = (List<Employee>) em.createNamedQuery("tgl.project.entity.Company.findAllEmployeesByCompany").setParameter("company", company).getResultList();
+			return copyEmployeesToDetails(employees);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}	
+	}
+
+	private List<EmployeeDetails> copyEmployeesToDetails(List<Employee> employees) {
+		List<EmployeeDetails> detailsList = new ArrayList<EmployeeDetails>();
+		Iterator<Employee> iter = employees.iterator();
+		
+		while (iter.hasNext()) {
+			Employee employee = (Employee) iter.next();
+			EmployeeDetails employeeDetails = new EmployeeDetails(employee.getEmployeeId(), employee.getFullName());
+			detailsList.add(employeeDetails);
+		}
+		return detailsList;
+	}
+
 
 }

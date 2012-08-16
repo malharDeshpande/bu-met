@@ -1,26 +1,26 @@
-package project.util;
+package tgl.project.util;
 
 public class ProjectDetails implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String id;
-    private String code;
+	private String code;
+    private String name;
 
-    public ProjectDetails(String id, String code) {
-        this.id = id;
+    public ProjectDetails(String code, String name) {
         this.code = code;
-    }
-
-    public String getId() {
-        return this.id;
+        this.name = name;
     }
 
     public String getCode() {
         return this.code;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public String getString() {
-        String s = this.id + " " + this.code;
+        String s = this.code + " " + this.name;
         return s;
     }
 

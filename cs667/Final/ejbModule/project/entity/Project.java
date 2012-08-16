@@ -1,4 +1,4 @@
-package project.entity;
+package tgl.project.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PROJECTS")
+@Table(name = "TGL_PROJECTS")
 public class Project implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 	

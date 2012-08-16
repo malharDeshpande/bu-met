@@ -1,4 +1,4 @@
-package project.entity;
+package tgl.project.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.JoinTable;
 
 @Entity
-@Table(name = "EMPLOYEES")
+@Table(name = "TGL_EMPLOYEES")
 public class Employee implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -33,7 +33,7 @@ public class Employee implements java.io.Serializable {
     }
 
     @ManyToMany(cascade = REMOVE, fetch = FetchType.EAGER)
-    @JoinTable(name = "EMPLOYEES_PROJECTS", 
+    @JoinTable(name = "TGL_EMPLOYEES_PROJECTS", 
       joinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "employeeId"), 
       inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "projectCode"))
     public Collection<Project> getProjects() {
