@@ -23,17 +23,24 @@
 
 <div id="projects">
 <strong>Projects</strong>
-<table>
+<table border="1">
+<thead>
 <tr>
 <th>CODE</th>
 <th>Name</th>
+<th>Employees</th>
 </tr>
-
+</thead>
 
 <ui:repeat var="project" value="#{managerBean.allProjects}">
 <tr>
 <td>#{project.code}</td>
-<td>#{project.name}</td>
+<td align="left">#{project.name}</td>
+<td align="left">
+<ui:repeat var="employee" value="#{project.employees}">
+<h:outputText value="#{employee.string}"></h:outputText><br/>
+</ui:repeat>
+</td>
 </tr>
 </ui:repeat>
 
