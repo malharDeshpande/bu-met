@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>FinalProject_Lorber | Companies</title>
+</h:head>
+<h:body>
+	<div align="center">
+		<table border="5">
+			<tr>
+				<th class="title">FinalProject_Lorber | Companies</th>
+			</tr>
+		</table>
+		<p />
+		<h:form>
+			<fieldset>
+				<legend>Company Lookup</legend>
+				Company:
+				<h:selectOneMenu value="#{managerBean.companyId}">
+					<f:selectItems value="#{managerBean.companies}" />
+					<f:ajax render="companySummary" />
+				</h:selectOneMenu>
+			</fieldset>
+			<br></br>
+			
+			<div id="summary">
+				Company :
+				<h:outputText value="#{managerBean.currentCompany.companyName}" id="companySummary" />
+			</div>
+
+			<div id="links">
+			<a href="projects.jsf">Projects</a> | <a href="employees.jsf">Employees</a>
+			</div>
+		</h:form>
+		<br />
+
+	</div>
+</h:body>
+</html>
