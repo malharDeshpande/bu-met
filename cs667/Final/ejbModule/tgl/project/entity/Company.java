@@ -18,7 +18,8 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(name = "tgl.project.entity.Company.findAllCompanies",query = "SELECT c FROM Company c"),
 	@NamedQuery(name = "tgl.project.entity.Company.findAllProjectsByCompany", query = "SELECT DISTINCT p FROM Project p WHERE p.company = :company"),
-	@NamedQuery(name = "tgl.project.entity.Company.findAllEmployeesByCompany", query = "SELECT DISTINCT e FROM Employee e WHERE e.company = :company")
+	@NamedQuery(name = "tgl.project.entity.Company.findAllEmployeesByCompany", query = "SELECT DISTINCT e FROM Employee e WHERE e.company = :company"),
+	@NamedQuery(name = "tgl.project.entity.Company.findAllEmployeesByProject", query = "SELECT DISTINCT e FROM Employee e, IN (e.projects) p WHERE p.projectCode = :projectCode")
     
 })
 public class Company implements java.io.Serializable {

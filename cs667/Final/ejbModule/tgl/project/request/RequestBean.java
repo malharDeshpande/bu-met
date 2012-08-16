@@ -146,12 +146,7 @@ public class RequestBean implements Request {
 		
 	}
 	
-	@Override
-	public void test3() { 
-		
-		
-	}
-
+	
 	@Override
 	public Project getProjectBean(String projectCode) {
 		Project project = null;
@@ -210,13 +205,21 @@ public class RequestBean implements Request {
 		}	
 	}
 	
+	
+	@SuppressWarnings("unchecked")
 	private List<ProjectDetails> copyProjectsToDetails(List<Project> projects) {
 		List<ProjectDetails> detailsList = new ArrayList<ProjectDetails>();
 		Iterator<Project> iter = projects.iterator();
 		
 		while (iter.hasNext()) {
 			Project project = (Project) iter.next();
-			ProjectDetails projectDetails = new ProjectDetails(project.getProjectCode(), project.getProjectName());
+			
+			List<Employee> employees = (List<Employee>) em.createNamedQuery("tgl.project.entity.Company.findAllEmployeesByProject").setParameter("projectCode", project.getProjectCode()).getResultList();
+			List<EmployeeDetails> employeeDetails = copyEmployeesToDetails(employees);
+			
+			ProjectDetails projectDetails = new ProjectDetails(project.getProjectCode(), 
+															   project.getProjectName(),
+															   employeeDetails);
 			detailsList.add(projectDetails);
 		}
 		return detailsList;
@@ -244,6 +247,34 @@ public class RequestBean implements Request {
 			detailsList.add(employeeDetails);
 		}
 		return detailsList;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<EmployeeDetails> getAllEmployees(Project project) {
+		List<Employee> employees = null;
+		try {
+			employees = (List<Employee>) em.createNamedQuery("tgl.project.entity.Company.findAllEmployeesByProject").setParameter("projectCode", project.getProjectCode()).getResultList();
+			return copyEmployeesToDetails(employees);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}	
+	}
+
+	@Override
+	public Employee getEmployeeBean(String id) {
+		Employee employee = null;
+		try {
+			employee = em.find(Employee.class, id);
+		} catch (Exception ex) {
+			throw new EJBException(ex);
+		}
+		return employee;
+	}
+
+	@Override
+	public void update(Employee employee) {
+		em.persist(employee);
 	}
 
 
