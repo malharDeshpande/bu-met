@@ -1,11 +1,11 @@
-package project.client;
+package tgl.project.client;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
 
-import project.request.Request;
-import project.client.ClientUtility;
-import project.request.RequestBean;
+import tgl.project.client.ClientUtility;
+import tgl.project.request.Request;
+import tgl.project.request.RequestBean;
 
 public class TestClient {
 	
@@ -48,7 +48,7 @@ public class TestClient {
     	        /* The module name is the JAR name of the deployed EJB
     	        without the .jar suffix.
     	        */
-    	        String moduleName = "Final";
+    	        String moduleName = "Final_Lorber";
     	 
     	/*AS7 allows each deployment to have an (optional) distinct name.
     	This can be an empty string if distinct name is not specified.

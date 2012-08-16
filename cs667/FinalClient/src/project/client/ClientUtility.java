@@ -1,4 +1,4 @@
-package project.client;
+package tgl.project.client;
 
 import java.util.Properties;
 import javax.naming.Context;
