@@ -6,6 +6,7 @@ import tgl.project.util.EmployeeDetails;
 import tgl.project.util.ProjectDetails;
 import tgl.project.entity.Company;
 import tgl.project.entity.Employee;
+import tgl.project.entity.Project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,5 +105,9 @@ public class ManagerBean {
 		List<EmployeeDetails> employeeDetails = bean.getAllEmployees(this.currentCompany);
 		return employeeDetails;
  	}
-
+	
+	public List<EmployeeDetails> getAllEmployees(Project project) {
+		List<EmployeeDetails> employeeDetails = bean.getAllEmployees(project);
+		return employeeDetails;
+ 	}
 }

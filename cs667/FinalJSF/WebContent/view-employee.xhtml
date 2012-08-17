@@ -15,10 +15,39 @@
 			</tr>
 		</table>
 		<p />
-		
-<h3>ID: #{managerBean.currentEmployee.employeeId}</h3>
-	#{managerBean.currentEmployee.fullName}	
 
+<div>
+<h3>ID: #{managerBean.currentEmployee.employeeId}</h3>
+	Full name: #{managerBean.currentEmployee.fullName}	
+</div>		
+
+
+<hr></hr>
+
+Projects:
+<div>
+<h:dataTable var="project" value="#{managerBean.currentEmployee.projects}" border="1">
+<h:column>
+<f:facet name="header">Code</f:facet>
+#{project.projectCode}
+</h:column>
+<h:column>
+<f:facet name="header">Name</f:facet>
+#{project.projectName}
+</h:column>
+<h:column>
+<f:facet name="header">Employees</f:facet>
+
+<h:dataTable var="employee" value="#{managerBean.getAllEmployees(project)}">
+<h:column>
+#{employee.name}
+</h:column>
+</h:dataTable>
+
+</h:column>
+</h:dataTable>
+
+	</div>
 			<div id="links">
 			<a href="employees.jsf">Employees</a>
 			</div>
