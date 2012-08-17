@@ -274,7 +274,7 @@ public class RequestBean implements Request {
 
 	@Override
 	public void update(Employee employee) {
-		em.persist(employee);
+		em.merge(employee);
 	}
 
 

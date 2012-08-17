@@ -1,9 +1,11 @@
 package tgl.project.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
+
 import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -14,7 +16,7 @@ import javax.persistence.Table;
 public class Project implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 	
-    private Collection<Employee> employees;
+    private Set<Employee> employees;
     private Company company;
     private String projectCode;
     private String projectName;
@@ -23,17 +25,17 @@ public class Project implements java.io.Serializable {
     }
 
     public Project(String code, String name) {
-    	this.employees = new ArrayList<Employee>();
+    	this.employees = new TreeSet<Employee>();
         this.projectCode = code;
         this.projectName = name;
     }
 
-    @ManyToMany(cascade = REMOVE, mappedBy = "projects")
-    public Collection<Employee> getEmployees() {
+    @ManyToMany(cascade = REMOVE, mappedBy = "projects", fetch = FetchType.EAGER)
+    public Set<Employee> getEmployees() {
         return this.employees;
     }
 
-    public void setEmployees(Collection<Employee> employees) {
+    public void setEmployees(Set<Employee> employees) {
         this.employees = employees;
     }
 
