@@ -40,7 +40,10 @@ public class MarkovRoulette
 	
 	Matrix T = new Matrix(states, states);
 	
+        double[] in_hand = new double[states];
+
 	for (int idx = 0; idx < states; idx++) {
+            in_hand[idx] = idx * wager;
 	    if (idx > 0 && idx < (states - 1)) {
 		T.set(idx - 1, idx, 20./38.); // a loss
 		T.set(idx + 1, idx, 18./38.); // a win
@@ -52,10 +55,21 @@ public class MarkovRoulette
 	T.set(states-1, states-1, 1.); // no change, a winner is a winner
 	
 	// look see
-	System.out.println("This is the transition matrix...");
-	T.print(10, 3);
+	System.out.println("This is the 'spin' matrix...");
+	T.print(states, 2);
 
-	// trust, but verify
+	System.out.println("Each state represents this value 'in hand':");
+        int initial_state = -1;
+	for (int idx = 0; idx < states; idx++) {
+            System.out.printf("  $%.2f", in_hand[idx]);
+            if (in_hand[idx] == initial_stake) {
+                initial_state = idx;
+            }
+        }
+	
+	System.out.println("");
+
+        // trust, but verify
 	for (int col = 0; col < states; col++) {
 	    double sr = 0.0;
 	    for (int row = 0; row < states; row++) {
@@ -68,11 +82,11 @@ public class MarkovRoulette
 
 
 	Matrix P = new Matrix(states, 1);
-	P.set(states/2, 0, 1.);
+	P.set(initial_state, 0, 1.);
 	
 	System.out.println("Here are the probability vectors for each run...");
 	for (int idx = 0; idx < runs; idx++) {
-	    System.out.printf("P%d: ", 0);
+	    System.out.printf("P%d: ", idx);
 	    P.print(states, 3);
 
 	    P = T.times(P);
@@ -84,7 +98,29 @@ public class MarkovRoulette
 	// use eigenvalue decomposition
 	System.out.println("OK, now see what eigenvalue decomposition gives us...");
 
-	EigenvalueDecomposition E = T.eig();
+
+        // Special transition matrix.  States 0 & (n-1) always
+        // transition to themselves.  Because of the betting
+        // strategey, from the starting state, one can either move up
+        // or down one state.
+        
+        Matrix S = new Matrix(states,states);
+	for (int idx = 0; idx < states; idx++) {
+	    if (idx > 0 && idx < (states - 1)) {
+		S.set(idx - 1, idx, 1.); // a loss
+		S.set(idx + 1, idx, 1.); // a win
+	    }
+	}
+        
+        S.set(0,0,1.);
+        S.set(states-1,states-1,1.);
+
+	// look see
+	System.out.println("This is the special transition matrix...");
+	S.print(states, 2);
+
+
+	EigenvalueDecomposition E = S.times(T).eig();
 
 	System.out.println("Eigenvalues:");
 	E.getD().print(states, 3);
@@ -119,16 +155,17 @@ public class MarkovRoulette
             }
 	}
 
+        // while need to normalize
+
         System.out.printf("The selected eigenvector for eigenvalue %.3f:\n", e);
 
-        // normalize
         double sv = 0.0;
         for (int idx = 0; idx < states; idx++) {
-            System.out.printf("%d -> %.3f\n", idx, v[idx]);
+            System.out.printf("   %.3f", v[idx]);
             sv += v[idx];
         }
 
-        System.out.printf("Scale by %.3f\n", sv);
+        System.out.printf("\nScale by %.3f\n", sv);
 
         double[] p = new double[states];
         for (int idx = 0; idx < states; idx++) {
@@ -137,7 +174,7 @@ public class MarkovRoulette
 
         System.out.println("Probabilities by eigenvalue decomposition...");
         for (int indx = 0; indx < states; indx++) {
-            System.out.printf("%d -> %.3f\n", indx, p[indx]);
+            System.out.printf("   %.3f", p[indx]);
         }
         
         System.out.println("\n\nFINI");
