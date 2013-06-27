@@ -18,7 +18,10 @@ public class MarkovRoulette
 
     public static void usage()
     {
-	System.out.println("USAGE: java MarkovRoulette initialStake wager goal runs");
+	System.out.println("USAGE: java -jar MarkovRoulette.jar initialStake wager goal runs\n");
+	System.out.println("Via a conservative betting strategy, try to reach the goal from the initial");
+        System.out.println("stake by wagering on red or black.  The same wager is used each time.");
+        System.out.println("What are the probable outcomes after each round of betting?\n");
     }
     
     public static void main(String[] args)
@@ -90,12 +93,54 @@ public class MarkovRoulette
 	E.getV().print(states, 3);
 
 	System.out.println("Now for imaginary & real eigenvalue values (respectively)...");
+
+        // find the dominant eigenvector, ignore imaginary
+        // values when comparing.
+        double e = 0.0;
+        double v[] = new double[states];
 	for (int idx = 0; idx <  E.getRealEigenvalues().length; idx++) {
 	    System.out.printf("%d : %f %f\n", 
 			      idx, 
 			      E.getImagEigenvalues()[idx],
 			      E.getRealEigenvalues()[idx]);
+            
+            if (Math.abs(E.getImagEigenvalues()[idx]) > 1.0e-15) {
+		throw new RuntimeException("Somthing is wrong, should not have non-zero imaginary component of the eigenvalue.");
+            }
+
+            double ei = E.getRealEigenvalues()[idx];
+
+            if (Math.abs(ei) > Math.abs(e)) {
+                e = ei;
+
+                for (int row = 0; row < E.getV().getRowDimension(); row++) {
+                    v[row] = E.getV().get(row, idx);
+                }
+            }
 	}
+
+        System.out.printf("The selected eigenvector for eigenvalue %.3f:\n", e);
+
+        // normalize
+        double sv = 0.0;
+        for (int idx = 0; idx < states; idx++) {
+            System.out.printf("%d -> %.3f\n", idx, v[idx]);
+            sv += v[idx];
+        }
+
+        System.out.printf("Scale by %.3f\n", sv);
+
+        double[] p = new double[states];
+        for (int idx = 0; idx < states; idx++) {
+            p[idx] = v[idx] / sv;
+        }
+
+        System.out.println("Probabilities by eigenvalue decomposition...");
+        for (int indx = 0; indx < states; indx++) {
+            System.out.printf("%d -> %.3f\n", indx, p[indx]);
+        }
+        
+        System.out.println("\n\nFINI");
     }// Main
     
     
