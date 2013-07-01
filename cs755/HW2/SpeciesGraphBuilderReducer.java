@@ -21,12 +21,18 @@ package BU.MET.CS755;
  import org.apache.hadoop.mapred.OutputCollector; 
  import org.apache.hadoop.mapred.Reducer; 
  import org.apache.hadoop.mapred.Reporter; 
+ import org.apache.hadoop.mapred.JobConf; 
  import java.lang.StringBuilder; 
  import java.util.*; 
   
  public class SpeciesGraphBuilderReducer extends MapReduceBase implements Reducer<Text, Text, Text, Text>
 { 
+    public static String startRank;
   
+    public void configure(JobConf job) {
+        startRank = job.get("StartRank");
+    }
+
    public void reduce(Text key, Iterator<Text> values, 
                       OutputCollector<Text, Text> output, Reporter reporter) throws IOException { 
   
@@ -50,9 +56,9 @@ package BU.MET.CS755;
      //   toWrite += " " + page;
      //} 
   
-     IntWritable i = new IntWritable(count);
-     String num = (i).toString(); 
-     toWrite = num + ":" + toWrite; 
+     //     IntWritable i = new IntWritable(count);
+     //     String num = (i).toString(); 
+     toWrite = startRank + ":" + toWrite; 
      output.collect(key, new Text(toWrite)); 
    } 
 

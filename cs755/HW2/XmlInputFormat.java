@@ -28,7 +28,6 @@ public class XmlInputFormat extends FileInputFormat<LongWritable, Text> {
 	public RecordReader<LongWritable, Text> getRecordReader(
 			InputSplit inputSplit, JobConf jobConf, Reporter reporter)
 			throws IOException {
-
 		reporter.setStatus(inputSplit.toString());
 		return new XmlRecordReader(jobConf, (FileSplit) inputSplit);
 	}
@@ -45,8 +44,9 @@ public class XmlInputFormat extends FileInputFormat<LongWritable, Text> {
 		public XmlRecordReader(JobConf jobConf, FileSplit inputSplit)
 				throws IOException {
 			FileSplit fileSplit = (FileSplit) inputSplit;
-			startTag = jobConf.get(START_TAG_KEY).getBytes("utf-8");
-			endTag = jobConf.get(END_TAG_KEY).getBytes("utf-8");
+
+			startTag = (START_TAG_KEY).getBytes("utf-8");
+			endTag = (END_TAG_KEY).getBytes("utf-8");
 
 			start = fileSplit.getStart();
 			end = start + fileSplit.getLength();

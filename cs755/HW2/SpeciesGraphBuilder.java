@@ -30,7 +30,8 @@ package BU.MET.CS755;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
   
-  
+import BU.MET.CS755.XmlInputFormat;
+
  public class SpeciesGraphBuilder { 
   
    public static void main(String[] args)  throws Exception
@@ -45,6 +46,8 @@ import org.apache.hadoop.mapred.FileOutputFormat;
      conf.setMapOutputKeyClass(Text.class);
      conf.setMapOutputValueClass(Text.class);
   
+     conf.setInputFormat(XmlInputFormat.class);
+
      //conf.setInputFormat(org.apache.hadoop.mapred.TextInputFormat.class); 
      //conf.setOutputFormat(org.apache.hadoop.mapred.SequenceFileOutputFormat.class); 
 
@@ -56,7 +59,8 @@ import org.apache.hadoop.mapred.FileOutputFormat;
      // take the input and output from the command line
      FileInputFormat.setInputPaths(conf, new Path(args[0]));
      FileOutputFormat.setOutputPath(conf, new Path(args[1]));
-  
+
+     conf.set("StartRank", args[2]);
   
      client.setConf(conf); 
      try { 

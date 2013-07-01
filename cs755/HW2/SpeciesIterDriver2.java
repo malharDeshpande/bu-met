@@ -40,13 +40,16 @@ import org.apache.hadoop.mapred.FileOutputFormat;
  conf.setOutputValueClass(Text.class); 
   
  if (args.length < 2) { 
- System.out.println("Usage: PageRankIter <input path> <output path>"); 
+ System.out.println("Usage: PageIterDriver2 <input path> <output path>"); 
  System.exit(0); 
  } 
 
  //~dk
  //conf.setInputPath(new Path(args[0])); 
  //conf.setOutputPath(new Path(args[1])); 
+
+
+
  FileInputFormat.setInputPaths(conf, new Path(args[0]));
  FileOutputFormat.setOutputPath(conf, new Path(args[1]));
   

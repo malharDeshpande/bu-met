@@ -33,58 +33,73 @@ import java.lang.StringBuilder;
   * 
   * 
   */ 
- public class SpeciesGraphBuilderMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> { 
+public class SpeciesGraphBuilderMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, Text> { 
   
-  
-   public void map(LongWritable key, Text value, 
-                   OutputCollector output, Reporter reporter) throws IOException
-{
-     // Prepare the input data. 
-     String page = value.toString(); 
-  
-     System.out.println("Page:" + page); 
-     String title = this.GetTitle(page, reporter); 
-     if (title.length() > 0) { 
-       reporter.setStatus(title); 
-     } else { 
-       return; 
-     } 
-  
-     ArrayList<String> outlinks = this.GetOutlinks(page); 
-     StringBuilder builder = new StringBuilder(); 
-     for (String link : outlinks) { 
-       link = link.replace(" ", "_"); 
-       builder.append(" "); 
-       builder.append(link); 
-     } 
-     output.collect(new Text(title), new Text(builder.toString())); 
-   } 
-  
-   public String GetTitle(String page, Reporter reporter) throws IOException{ 
-            int end = page.indexOf(",");
-            if (-1 == end)
-                return "";
-            return page.substring(0, end);
-   } 
-  
-   public ArrayList<String> GetOutlinks(String page){ 
-     int end; 
-     ArrayList<String> outlinks = new ArrayList<String>(); 
-     int start=page.indexOf("[["); 
-     while (start > 0) { 
-       start = start+2; 
-       end = page.indexOf("]]", start); 
-       //if((end==-1)||(end-start<0)) 
-       if (end == -1) { 
-         break; 
-       } 
-  
-       String toAdd = page.substring(start); 
-       toAdd = toAdd.substring(0, end-start); 
-       outlinks.add(toAdd); 
-       start = page.indexOf("[[", end+1); 
-     } 
-     return outlinks; 
-   } 
- }
+    
+    public void map(LongWritable key,
+                    Text value, 
+                    OutputCollector output, 
+                    Reporter reporter) throws IOException
+    {
+        // Prepare the input data. 
+        String page = value.toString(); 
+        
+
+        String title = this.getTitle(page, reporter); 
+        //        System.out.printf("Title: %s\n", title);
+        if (title.length() > 0) { 
+            reporter.setStatus(title); 
+        } else { 
+            return; 
+        } 
+
+        ArrayList<String> outlinks = new ArrayList<String>(); 
+        
+        Pattern regex = Pattern.compile("(== Taxonavigation ==|==Taxonavigation==)([^(==)]+)");
+        Matcher match = regex.matcher(page);
+        while (match.find()) {
+            String p = match.group();
+            this.getLinks(p, outlinks);
+        }
+
+        StringBuilder builder = new StringBuilder(); 
+        for (String link : outlinks) { 
+            link = link.replace(" ", "_"); 
+            builder.append(" "); 
+            builder.append(link); 
+        } 
+        output.collect(new Text(title), new Text(builder.toString())); 
+    } 
+    
+    public String getTitle(String page, Reporter reporter) throws IOException
+    { 
+        int pos = page.indexOf("<title>");
+        int npos = page.indexOf("</title>");
+
+        if (-1 == pos)
+            return "";
+        return page.substring(pos + 7, npos);
+    } 
+    
+    public void getLinks(String page, List<String> links)
+    { 
+        int start = page.indexOf("[[");
+        int end; 
+        while (start > 0) {
+            start = start + 2;
+            end = page.indexOf("]]", start);
+
+            if (end == -1) {
+                break;
+            }
+
+            String toAdd = page.substring(start);
+            toAdd = toAdd.substring(0, (end - start));
+            links.add(toAdd);
+            start = page.indexOf("[[", end + 1);
+        }
+
+        return;
+    } 
+}
 
