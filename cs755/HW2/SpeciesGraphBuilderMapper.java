@@ -48,6 +48,9 @@ public class SpeciesGraphBuilderMapper extends MapReduceBase implements Mapper<L
         String title = this.getTitle(page, reporter); 
         //        System.out.printf("Title: %s\n", title);
         if (title.length() > 0) { 
+	    title.replace(" ", "_");
+	    title.replace(":", "-");
+	    
             reporter.setStatus(title); 
         } else { 
             return; 
@@ -65,9 +68,19 @@ public class SpeciesGraphBuilderMapper extends MapReduceBase implements Mapper<L
         StringBuilder builder = new StringBuilder(); 
         for (String link : outlinks) { 
             link = link.replace(" ", "_"); 
+            link = link.replace(":", "-"); 
             builder.append(" "); 
             builder.append(link); 
         } 
+
+     if (title == "Calcaria") {
+	 System.out.printf("%s -> %s", title, builder.toString());
+     }
+
+     if (title.indexOf("Template") != 0) {
+	 System.out.printf("%s -> %s", title, builder.toString());
+     }
+
         output.collect(new Text(title), new Text(builder.toString())); 
     } 
     

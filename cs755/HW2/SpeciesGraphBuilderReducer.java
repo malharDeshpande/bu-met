@@ -44,21 +44,23 @@ package BU.MET.CS755;
      { 
         String page = ((Text)values.next()).toString(); 
         page.replaceAll(" ", "_"); 
+        page.replaceAll(":", "-"); 
         toWrite += " " + page; 
         count += 1; 
      } 
 
-     //while (values.hasNext())
-     //{
-     //   String page = ((Text)values.next()).toString(); 
-     //   count = GetNumOutlinks(page);      
-     //   page.replaceAll(" ", "_"); 
-     //   toWrite += " " + page;
-     //} 
-  
-     //     IntWritable i = new IntWritable(count);
-     //     String num = (i).toString(); 
+
      toWrite = startRank + ":" + toWrite; 
+
+     if (key.toString() == "Calcaria") {
+	 System.out.printf("%s -> %s", key, toWrite);
+     }
+
+     if (key.toString().indexOf("Template") == 0) {
+	 System.out.printf("%s -> %s", key, toWrite);
+     }
+
+
      output.collect(key, new Text(toWrite)); 
    } 
 

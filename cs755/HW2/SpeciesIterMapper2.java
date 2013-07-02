@@ -14,6 +14,7 @@ package BU.MET.CS755;
   
  import org.apache.hadoop.io.Writable; 
  import org.apache.hadoop.io.WritableComparable; 
+ import org.apache.hadoop.mapred.JobConf; 
  import org.apache.hadoop.mapred.MapReduceBase; 
  import org.apache.hadoop.mapred.Mapper; 
  import org.apache.hadoop.mapred.OutputCollector; 
@@ -22,6 +23,11 @@ package BU.MET.CS755;
   
   
  public class SpeciesIterMapper2 extends MapReduceBase implements Mapper<WritableComparable, Writable, Text, Text> { 
+    public static double dampFactor;
+  
+    public void configure(JobConf job) {
+        dampFactor = Double.parseDouble(job.get("DampFactor"));
+    }
   
    public void map(WritableComparable key, 
                    Writable value, 
@@ -35,7 +41,7 @@ package BU.MET.CS755;
        if (index == -1) { 
            return; 
        } 
-       
+     
        // split into title and PR (tab or variable number of blank spaces)
        String toParse = data.substring(0, index).trim(); 
        String[] splits = toParse.split("\t"); 
@@ -71,7 +77,7 @@ package BU.MET.CS755;
        }
        
        // collect each outlink, with the dampened PR of its inlink, and its inlink
-       Text toEmit = new Text((new Double(.98 * currScore / numoutlinks)).toString()); 
+       Text toEmit = new Text((new Double(dampFactor * currScore / numoutlinks)).toString()); 
        for (String page : pages) { 
            if(page.length() > 0) {
                output.collect(new Text(page), toEmit); 
@@ -79,8 +85,17 @@ package BU.MET.CS755;
            }
        } 
        
+
+       if (pagetitle == "Calcaria") {
+	   System.out.printf("%s -> %s", pagetitle, data);
+       }
+
+       if (pagetitle.indexOf("Template") == 0) {
+	   System.out.printf("%s -> %s", pagetitle, data);
+       }
+
        // collect the inlink with its dampening factor, and all outlinks
-       output.collect(new Text(pagetitle), new Text(".02")); 
+       output.collect(new Text(pagetitle), new Text(Double.toString(1. - dampFactor))); 
        output.collect(new Text(pagetitle), new Text(" " + data)); 
    } 
  } 
