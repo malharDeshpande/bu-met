@@ -48,8 +48,8 @@ public class SpeciesGraphBuilderMapper extends MapReduceBase implements Mapper<L
         String title = this.getTitle(page, reporter); 
         //        System.out.printf("Title: %s\n", title);
         if (title.length() > 0) { 
-	    title.replace(" ", "_");
-	    title.replace(":", "-");
+	    title = title.replace(" ", "_");
+	    title = title.replace(":", "-");
 	    
             reporter.setStatus(title); 
         } else { 
