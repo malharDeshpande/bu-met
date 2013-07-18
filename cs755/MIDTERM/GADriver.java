@@ -10,6 +10,36 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.*; 
 import org.apache.hadoop.mapred.*; 
 
+/**
+ * Mappers and Reducer to solve this genetic algorithm for finding
+ * equations who evaluate to a given number.
+ *
+ * Relied ideas on using MapReduce on Genetic Algorithms from 
+ * http://www.kickasslabs.com/2011/10/10/traveling-salesman-attack/
+ *
+ * In three nutshells:
+ * 1. Generate a random pool of chromosomes
+ * 2. Use a mapper and identity reducer to calculate this first
+ * generation's scores.
+ * 3. Arbitrarily make sub-populations, use the sub-population in the
+ * reducer to select high-scoring individuals for cross over and
+ * mutation.
+ * 4. Repeat Step 3.
+ *
+ * NOTES:
+ *
+ * Solutions are printed to System.out, hard to tell when one is
+ * found.  Should write to an output file on HDFS.
+ *
+ * I ended up using a single group.  Partly because I wasn't sure more
+ * than one group was working (different groups are made for each
+ * MapReduce iteration, so the highest-scoring individuals in the
+ * population aren't necessarily in the same group.
+ *
+ * Better output is needed.
+ *
+ * Terry Lorber
+ */
 public class GADriver {
 
     public static void usage() throws Exception
@@ -19,6 +49,13 @@ public class GADriver {
 	System.exit(0);
     }
 
+    /**
+     * Creates the initial population of individuals.
+     *
+     * @param output the name of the output directory
+     * @param poolSize the size of the population
+     * @param target the target value to find an equation for
+     */
     public static void createInitChromosomes(String output,
 					     int poolSize,
 					     int target) throws Exception
@@ -46,6 +83,9 @@ public class GADriver {
 	out.close();
     }// createGen0
 
+    /**
+     * Scores the first generation.
+     */
     public static class ScoreMapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, DoubleWritable> {  
 	public static int target;
 	public void configure(JobConf job) {
@@ -91,8 +131,12 @@ public class GADriver {
 	public VIntWritable out = new VIntWritable();
 
 	public void map(LongWritable key, Text value, OutputCollector<VIntWritable, Text> output, Reporter reporter) throws IOException {
-	    out.set(random.nextInt(groups));
-	    output.collect(out, value);
+            String[] incoming = value.toString().split("\t");
+            // :NOTE: 20130718 tgl: Not sure if the groups are
+            // helping.  Not straining my pseudo-distributed system,
+            // so use a single group for now.
+	    out.set(1);
+	    output.collect(out, new Text(incoming[0]));
 	}
     }
 
@@ -115,16 +159,7 @@ public class GADriver {
 	    while (tr.hasNext()) {
 		v = tr.next();
 		
-		StringBuffer sb = new StringBuffer();
-		// :KLUGE: 20130717 tgl: This again.
-		for (int idx = 1; idx < v.getLength(); idx=idx+2) {
-		    if (49 == v.charAt(idx)) {
-			sb.append("1");
-		    } else {
-			sb.append("0");
-		    }
-		}
-		
+		StringBuffer sb = new StringBuffer(v.toString());
 		Chromosome c = new Chromosome(sb);
 		pool.add(c);
 	    }
@@ -144,8 +179,8 @@ public class GADriver {
 		n2.scoreChromo(target);
 				
 		// Check to see if either is the solution
-		if (n1.total == target && n1.isValid()) { System.out.println("Generations: " + gen + "  Solution: " + n1.decodeChromo()); return; }
-		if (n2.total == target && n2.isValid()) { System.out.println("Generations: " + gen + "  Solution: " + n2.decodeChromo()); return; }
+		if (n1.total == target && n1.isValid()) { System.out.println("SOLVED -- Generations: " + gen + "  Solution: " + n1.decodeChromo()); }
+		if (n2.total == target && n2.isValid()) { System.out.println("SOLVED -- Generations: " + gen + "  Solution: " + n2.decodeChromo()); }
 				
 		// Add to the new pool
 		output.collect(new Text(n1.chromo.toString()),
