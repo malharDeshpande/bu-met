@@ -152,6 +152,8 @@ public class GADriver {
 	    gen = Integer.parseInt(job.get("Generation"));
 	}
 
+
+
 	public void reduce(VIntWritable key, Iterator<Text> values, OutputCollector<Text, DoubleWritable> output, Reporter reporter) throws IOException {  
 	    ArrayList pool = new ArrayList();
 	    Iterator<Text> tr = values;
@@ -211,6 +213,12 @@ public class GADriver {
 	}// selectMember
     }  
     
+    /**
+     * This runs the mapper & reducer which scores the first generation.
+     *
+     * @param path the output directory
+     * @param target the value we want an equation for
+     */
     public static void scoreGen0(String path, int target) throws Exception
     {
 	JobClient client = new JobClient(); 
@@ -236,6 +244,14 @@ public class GADriver {
 	} 
     }// scoreGen0
 
+    /**
+     * This runs the mappper & reducer which does selection,
+     * crossover, mutation and checks for a "fit" individual.
+     *
+     * @param path the output directory
+     * @param index the identifier of the starting generation
+     * @param target the value we want an equation for
+     */
     public static void reproduce(String path, int index, int target) throws Exception
     {
 	JobClient client = new JobClient(); 
@@ -263,6 +279,8 @@ public class GADriver {
 
     }// reproduce
 
+
+    /// Main entry point
     public static void main(String[] args) throws Exception
     {
 	if (args.length < 4) {
